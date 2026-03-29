@@ -1,7 +1,6 @@
 import Lake
 open Lake DSL
 
-package Chronofold where
+package «Chronofold» where
 
-@[default_target]
-lean_lib Chronofold
+lean_lib «Chronofold» where

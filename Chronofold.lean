@@ -1,1 +1,2 @@
 import Chronofold.T1_Operator
+import Chronofold.T2_Curvature

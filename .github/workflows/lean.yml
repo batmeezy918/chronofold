@@ -1,29 +1,23 @@
 name: Lean Build
 
-on:
-  push:
-  pull_request:
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Install Lean
+      - name: Install Elan
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Set Toolchain
+      - name: Set toolchain
         run: |
           elan default stable
-          lean --version
-
-      - name: Initialize Lake Project (FORCE)
-        run: |
-          lake init Chronofold || true
 
       - name: Build
-        run: lake build
+        run: |
+          lake build
