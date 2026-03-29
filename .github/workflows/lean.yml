@@ -12,8 +12,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Lean
-        uses: leanprover/lean-action@v1
+      - name: Install Elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Build
+      - name: Set Lean Toolchain
+        run: |
+          elan default stable
+          lean --version
+
+      - name: Build Project
         run: lake build
