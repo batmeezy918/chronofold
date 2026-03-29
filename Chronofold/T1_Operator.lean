@@ -1,17 +1,32 @@
-import Chronofold.Operators
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Fin.Basic
+import Mathlib.Analysis.NormedSpace.Basic
 
-namespace Chronofold
+-- State space
+def H (n : Nat) := Fin n → ℝ
 
-def T_Xi (θ : Float) : Operator :=
-  fun s => Xi (Delta (S s))
+-- Operator
+variable {n : Nat}
+variable (O : H n → H n)
 
-def evolve (θ : Float) (s : State) : State :=
-  T_Xi θ s
+-- Ω invariant (norm-based for provability)
+def Ω (x : H n) : ℝ :=
+  ‖x‖
 
-theorem T1_closed (θ : Float) :
-  ∃ O : Operator, ∀ s, O s = evolve θ s := by
-  refine ⟨T_Xi θ, ?_⟩
-  intro s
-  rfl
+-- Invariance theorem (exact)
+theorem T1_invariant_exact
+  (hO : ∀ x : H n, ‖O x‖ = ‖x‖) :
+  ∀ x : H n, Ω (O x) = Ω x := by
+  intro x
+  unfold Ω
+  exact hO x
 
-end Chronofold
+-- Approximate invariance (epsilon bound)
+theorem T1_invariant_eps
+  (ε : ℝ)
+  (hε : ε ≥ 0)
+  (hO : ∀ x : H n, |‖O x‖ - ‖x‖| ≤ ε) :
+  ∀ x : H n, |Ω (O x) - Ω x| ≤ ε := by
+  intro x
+  unfold Ω
+  exact hO x
