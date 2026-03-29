@@ -4,3 +4,4 @@ open Lake DSL
 package Chronofold where
 
 @[default_target]
+lean_lib Chronofold
