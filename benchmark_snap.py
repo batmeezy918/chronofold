@@ -23,4 +23,3 @@ with open("snap_result.json", "w") as f_out:
     json.dump(result, f_out)
 
 print(result)
-

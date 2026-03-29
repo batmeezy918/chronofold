@@ -1,16 +1,29 @@
-steps:
-  - uses: actions/checkout@v3
+name: Lean + SNAP Pipeline
 
-  - name: Set up Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: '3.10'
+on:
+  push:
+    branches: [ "main" ]
 
-  - name: Install Lean
-    uses: leanprover/lean-action@v1
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-  - name: Build Lean
-    run: lake build
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-  - name: Run SNAP Benchmark
-    run: python3 benchmark_snap.py
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Lean
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: true
+
+      - name: Build Lean
+        run: lake build
+
+      - name: Run SNAP Benchmark
+        run: python3 benchmark_snap.py
