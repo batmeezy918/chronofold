@@ -1,17 +1,22 @@
 namespace Chronofold
 
-def H (n : Nat) := Nat → Nat
+def H := Nat → Int
 
-variable {n : Nat}
-variable (O : H n → H n)
+def Ξ (x : H) : Int :=
+  x 2 - 2 * x 1 + x 0
 
-def Ξ (x : H n) : Int :=
-  (x 2 : Int) - 2 * (x 1 : Int) + (x 0 : Int)
+def O (x : H) : H :=
+  fun i =>
+    match i with
+    | 0 => x 0
+    | 1 => x 1
+    | 2 => 2 * x 1 - x 0 + Ξ x
+    | _ => x i
 
-theorem T2_curvature
-  (hO : ∀ x : H n, Ξ (O x) = Ξ x) :
-  ∀ x : H n, Ξ (O x) = Ξ x := by
+theorem T2_curvature_preserved :
+  ∀ x : H, Ξ (O x) = Ξ x := by
   intro x
-  exact hO x
+  unfold Ξ O
+  simp
 
 end Chronofold
