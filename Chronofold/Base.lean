@@ -1,17 +1,10 @@
-import Mathlib
-
 namespace Chronofold
 
 structure State where
-  x : ℝ
+  vec : List Float
 
-def Δ (s : State) : State :=
-  ⟨s.x + 1⟩
+def Operator := State → State
 
-def Ω (s : State) : State :=
-  ⟨s.x * s.x⟩
-
-def Ξ (s : State) : State :=
-  ⟨Real.log (1 + s.x^2)⟩
+def id_op : Operator := fun s => s
 
 end Chronofold
