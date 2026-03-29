@@ -21,3 +21,6 @@ jobs:
       - name: Build
         run: |
           lake build
+
+- name: Run SNAP Benchmark
+  run: python3 benchmark_snap.py
