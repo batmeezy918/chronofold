@@ -22,5 +22,11 @@ jobs:
           elan default stable
           lean --version
 
+      - name: Install Lake dependencies (Mathlib)
+        run: |
+          lake update
+          lake exe cache get
+
       - name: Build Project
         run: lake build
+
