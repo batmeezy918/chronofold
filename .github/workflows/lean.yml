@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Elan
+      - name: Install Lean
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
@@ -21,13 +21,9 @@ jobs:
           elan default stable
           lean --version
 
-      - name: Init Lake
+      - name: Initialize Lake Project (FORCE)
         run: |
-          rm -rf .lake
-          lake update
-
-      - name: Fetch Mathlib Cache
-        run: lake exe cache get
+          lake init Chronofold || true
 
       - name: Build
         run: lake build
