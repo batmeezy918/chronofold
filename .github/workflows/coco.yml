@@ -12,14 +12,27 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
-        pip install numpy cocoex
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake git python3-numpy
+
+    - name: Clone COCO
+      run: |
+        git clone https://github.com/numbbo/coco.git
+
+    - name: Build COCO Python interface
+      run: |
+        cd coco
+        mkdir build
+        cd build
+        cmake ..
+        make -j4
+
+    - name: Install cocoex
+      run: |
+        cd coco/code-experiments/build/python
+        pip install .
 
     - name: Run S6 COCO Benchmark
       run: |
