@@ -1,3 +1,15 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -e
+
+echo "======================================="
+echo "CHRONOFOLD COCO BUILD FIX"
+echo "======================================="
+
+cd $HOME/chronofold
+
+mkdir -p .github/workflows
+
+cat > .github/workflows/coco.yml << 'EOF'
 name: S6 COCO Benchmark
 
 on:
@@ -47,3 +59,13 @@ jobs:
       with:
         name: s6-coco-results
         path: S6_RESULTS/
+EOF
+
+git add .
+git commit -m "FIX: COCO build idempotent" || true
+git pull origin main --rebase
+git push origin main
+
+echo "======================================="
+echo "FIX DEPLOYED"
+echo "======================================="
