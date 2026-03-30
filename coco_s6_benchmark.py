@@ -1,16 +1,8 @@
 import cocoex
 import numpy as np
 
-# ===============================
-# INVARIANTS (LEAN GUARANTEED)
-# ===============================
-def Omega(x):
-    return x[0]
-
-def Xi(x):
-    if len(x) < 3:
-        return 0
-    return x[2] - 2*x[1] + x[0]
+def Omega(x): return x[0]
+def Xi(x): return x[2] - 2*x[1] + x[0] if len(x) > 2 else 0
 
 def project(x, omega_ref, xi_ref):
     x = x.copy()
@@ -19,43 +11,32 @@ def project(x, omega_ref, xi_ref):
         x[2] = 2*x[1] - x[0] + xi_ref
     return x
 
-# ===============================
-# S6 OPTIMIZER (GENETIC + Λ)
-# ===============================
-def s6_optimize(problem, budget=2000, pop_size=20):
-
+def s6_optimize(problem, budget=1000):
     dim = problem.dimension
+    x = np.random.uniform(problem.lower_bounds, problem.upper_bounds)
 
-    # init population
-    population = [
-        np.random.uniform(problem.lower_bounds, problem.upper_bounds)
-        for _ in range(pop_size)
-    ]
+    omega_ref = Omega(x)
+    xi_ref = Xi(x)
 
-    omega_ref = Omega(population[0])
-    xi_ref = Xi(population[0])
+    for _ in range(budget):
+        z = np.random.randn(dim)
+        candidate = x + 0.5*z + 0.05*np.linalg.norm(z)*z
+        candidate = project(candidate, omega_ref, xi_ref)
 
-    for _ in range(budget // pop_size):
+        if problem(candidate) < problem(x):
+            x = candidate
+        else:
+            x = 0.7*x + 0.3*candidate
 
-        fitness = [problem(x) for x in population]
+    return problem(x)
 
-        # SELECTION (S)
-        idx = np.argsort(fitness)
-        elites = [population[i] for i in idx[:pop_size//2]]
+observer = cocoex.Observer("bbob", "result_folder: S6_RESULTS")
+suite = cocoex.Suite("bbob", "", "dimensions:10", observer)
 
-        # DISTRIBUTION (𝓓)
-        mu = np.mean(elites, axis=0)
-        centered = [e - mu for e in elites]
-        Sigma = np.cov(np.array(centered).T) + 1e-6*np.eye(dim)
+print("RUNNING S6 COCO")
 
-        try:
-            A = np.linalg.cholesky(Sigma)
-        except:
-            A = np.eye(dim)
+for problem in suite:
+    print(problem.id)
+    print("Final:", s6_optimize(problem))
 
-        new_population = []
-
-        for _ in range(pop_size):
-            z = np.random.randn(dim)
-
-            # Ξ
+print("DONE")
