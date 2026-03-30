@@ -12,17 +12,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 🔥 CRITICAL FIX
-      - name: Initialize Lake
-        run: lake update
-
+      # ✅ FIRST: install Lean (gives lake)
       - name: Install Lean
         uses: leanprover/lean-action@v1
         with:
           auto-config: true
 
+      # ✅ NOW lake exists
+      - name: Initialize Lake
+        run: lake update
+
+      # ✅ build
       - name: Build Lean
         run: lake build
 
+      # ✅ benchmark
       - name: Run SNAP Benchmark
         run: python3 benchmark_snap.py
