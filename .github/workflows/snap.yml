@@ -1,0 +1,64 @@
+name: SNAP Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Install system deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git build-essential
+
+    - name: Clone COCO
+      run: |
+        git clone https://github.com/numbbo/coco.git
+
+    - name: Verify COCO path (CRITICAL)
+      run: |
+        ls coco/code-experiments/build/python
+
+    - name: Install COCO (CORRECT WAY)
+      run: |
+        cd coco/code-experiments/build/python
+        pip install .
+
+    - name: Verify install
+      run: |
+        python - <<EOF
+import cocoex
+print("OK")
+EOF
+
+    - name: Install deps
+      run: |
+        pip install numpy tqdm cma
+
+    - name: Run benchmark
+      run: |
+        python snap_cma_harness.py
+
+    - name: Save results
+      run: |
+        mkdir -p results
+        cp *.txt results/ || true
+        cp *.json results/ || true
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: results/
