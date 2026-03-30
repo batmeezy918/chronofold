@@ -20,14 +20,14 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install numpy coco-experiment
 
-    - name: Run benchmark
+    - name: Run benchmark (FIXED)
       run: |
-        python run_iqvf_coco.py
+        python run_iqvf_coco_full.py
 
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: coco-results
-        path: results/
+        name: IQVF_FULL_RESULTS
+        path: exdata/results

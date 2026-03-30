@@ -9,13 +9,12 @@ POP_SIZE = 16
 TOP_K = 4
 
 # =========================
-# IQVF OPTIMIZER (ENHANCED)
+# IQVF OPTIMIZER (STRONG)
 # =========================
 def iqvf_optimize(problem):
     dim = problem.dimension
     max_evals = MAX_EVALS_PER_DIM * dim
 
-    # init
     x = np.random.randn(dim)
     sigma = 0.5
     best_val = problem(x)
@@ -25,9 +24,6 @@ def iqvf_optimize(problem):
 
     while evals < max_evals:
 
-        # =========================
-        # M: population sampling
-        # =========================
         candidates = []
         scores = []
 
@@ -41,9 +37,6 @@ def iqvf_optimize(problem):
 
         evals += POP_SIZE
 
-        # =========================
-        # C: rank-based selection
-        # =========================
         idx = np.argsort(scores)
         top = [candidates[i] for i in idx[:TOP_K]]
         top_scores = [scores[i] for i in idx[:TOP_K]]
@@ -57,16 +50,10 @@ def iqvf_optimize(problem):
 
         best_local = min(top_scores)
 
-        # =========================
-        # S: stabilization
-        # =========================
         momentum = 0.2
         x = (1 - momentum) * x_new + momentum * prev_x
         x = np.clip(x, -5, 5)
 
-        # =========================
-        # adaptive sigma
-        # =========================
         if best_local < best_val:
             sigma *= 1.05
             best_val = best_local
@@ -90,8 +77,7 @@ def main():
     )
 
     for problem in suite:
-        observer.observe(problem)   # ✅ FIXED LINE
-
+        observer.observe(problem)   # ✅ correct API
         print("Running:", problem.id)
         iqvf_optimize(problem)
 
