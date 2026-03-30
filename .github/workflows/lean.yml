@@ -12,20 +12,35 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # ✅ FIRST: install Lean (gives lake)
-      - name: Install Lean
-        uses: leanprover/lean-action@v1
-        with:
-          auto-config: true
+      # -------------------------------
+      # INSTALL LEAN MANUALLY (NO lean-action)
+      # -------------------------------
+      - name: Install Lean toolchain
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          source $HOME/.elan/env
+          elan default stable
+          lean --version
+          lake --version
 
-      # ✅ NOW lake exists
+      # -------------------------------
+      # INIT LAKE (NOW SAFE)
+      # -------------------------------
       - name: Initialize Lake
-        run: lake update
+        run: |
+          source $HOME/.elan/env
+          lake update
 
-      # ✅ build
+      # -------------------------------
+      # BUILD
+      # -------------------------------
       - name: Build Lean
-        run: lake build
+        run: |
+          source $HOME/.elan/env
+          lake build
 
-      # ✅ benchmark
+      # -------------------------------
+      # BENCHMARK
+      # -------------------------------
       - name: Run SNAP Benchmark
         run: python3 benchmark_snap.py
