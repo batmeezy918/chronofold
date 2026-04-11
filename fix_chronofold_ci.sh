@@ -2,12 +2,12 @@
 set -euo pipefail
 
 ########################################
-# 1. FIX GITHUB ACTIONS WORKFLOW
+# FIX WORKFLOW
 ########################################
 
 mkdir -p .github/workflows
 
-cat <<'YAML' > .github/workflows/chronofold.yml
+cat > .github/workflows/chronofold.yml <<'YAML'
 name: ChronoFold Autonomous Engine
 
 on:
@@ -21,79 +21,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    ########################################
-    # FIXED LEAN INSTALL
-    ########################################
-    - name: Install Lean (fixed)
+    - name: Install Lean
       run: |
         curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-
         echo "$HOME/.elan/bin" >> $GITHUB_PATH
         export PATH="$HOME/.elan/bin:$PATH"
-
         lean --version
         lake --version
 
-    ########################################
-    # INSTALL DEPENDENCIES
-    ########################################
     - name: Install deps
       run: |
         sudo apt update
         sudo apt install -y jq
 
-    ########################################
-    # PREP PROJECT
-    ########################################
-    - name: Prepare ChronoFold
+    - name: Prepare
       run: |
-        if [ -d "Chronofold" ]; then
-          mkdir -p ChronoFold
-          cp -r Chronofold/* ChronoFold/ || true
-          rm -rf Chronofold
-        fi
-
         mkdir -p ChronoFold/Auto
         mkdir -p theorems_unproven
         mkdir -p theorems_proven
 
-    ########################################
-    # FETCH MATHLIB (CRITICAL)
-    ########################################
     - name: Lake update
-      run: |
-        lake update
+      run: lake update
 
-    ########################################
-    # RUN ENGINE
-    ########################################
-    - name: Run ChronoFold
+    - name: Run engine
       run: |
         chmod +x chronofold_ci_engine.sh
         ./chronofold_ci_engine.sh
 
-    ########################################
-    # COMMIT RESULTS
-    ########################################
-    - name: Commit results
+    - name: Commit
       run: |
-        git config --global user.name "chronofold-bot"
-        git config --global user.email "bot@chronofold.ai"
-
+        git config --global user.name "bot"
+        git config --global user.email "bot@local"
         git add .
-        git commit -m "AUTO: theorem updates" || echo "No changes"
-
+        git commit -m "auto update" || true
         git push
 YAML
 
 ########################################
-# 2. FIX ENGINE SCRIPT
+# FIX ENGINE
 ########################################
 
-cat <<'SCRIPT' > chronofold_ci_engine.sh
+cat > chronofold_ci_engine.sh <<'SCRIPT'
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -104,17 +74,49 @@ LOG="build.log"
 
 mkdir -p "$AUTO" "$UNPROVEN" "$PROVEN"
 
-########################################
-# INJECT THEOREMS
-########################################
-
 for f in "$UNPROVEN"/*.lean; do
   [ -e "$f" ] || continue
-
   name=$(basename "$f")
 
-  cat > "$AUTO/$name" <<EOF
+  cat > "$AUTO/$name" <<EOF2
 import Mathlib
 set_option maxHeartbeats 1000000
 
 $(cat "$f")
+EOF2
+done
+
+if lake build > "$LOG" 2>&1; then
+  for f in "$UNPROVEN"/*.lean; do
+    [ -e "$f" ] || continue
+    mv "$f" "$PROVEN/"
+  done
+  exit 0
+fi
+
+FAILS=$(grep -o 'Auto/[^:]*\.lean' "$LOG" | sort -u || true)
+
+for f in "$UNPROVEN"/*.lean; do
+  [ -e "$f" ] || continue
+  name=$(basename "$f")
+  if ! grep -q "$name" <<< "$FAILS"; then
+    mv "$f" "$PROVEN/"
+  fi
+done
+
+echo "FAILURES:"
+echo "$FAILS"
+tail -n 50 "$LOG"
+SCRIPT
+
+chmod +x chronofold_ci_engine.sh
+
+########################################
+# COMMIT FIX
+########################################
+
+git add .
+git commit -m "FIX: CI heredoc + stable pipeline" || true
+git push || true
+
+echo "DONE"
