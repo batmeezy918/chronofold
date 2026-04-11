@@ -1,5 +1,8 @@
 name: ChronoFold Autonomous Engine
 
+permissions:
+  contents: write
+
 on:
   push:
   workflow_dispatch:
