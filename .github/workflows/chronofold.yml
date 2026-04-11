@@ -1,0 +1,52 @@
+name: ChronoFold Autonomous Engine
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes
+
+jobs:
+  chronofold:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Lean
+      run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+        lake --version
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y jq
+
+    - name: Normalize structure
+      run: |
+        if [ -d "Chronofold" ]; then
+          mkdir -p ChronoFold
+          cp -r Chronofold/* ChronoFold/ || true
+          rm -rf Chronofold
+        fi
+
+        mkdir -p ChronoFold/Auto
+        mkdir -p theorems_unproven
+        mkdir -p theorems_proven
+
+    - name: Run ChronoFold engine
+      run: |
+        bash chronofold_ci_engine.sh
+
+    - name: Commit results
+      run: |
+        git config --global user.name "chronofold-bot"
+        git config --global user.email "bot@chronofold.ai"
+
+        git add .
+        git commit -m "Auto: theorem updates" || echo "No changes"
+
+        git push
