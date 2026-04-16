@@ -24,10 +24,9 @@ jobs:
       run: |
         git clone https://github.com/numbbo/coco.git
 
-    - name: Build COCO (FIXED)
+    - name: Build COCO
       run: |
         cd coco/code-experiments
-        rm -rf build
         mkdir build
         cd build
         cmake ..
