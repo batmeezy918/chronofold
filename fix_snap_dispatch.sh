@@ -1,3 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -e
+
+cd ~/chronofold || exit
+
+########################################
+# OVERWRITE snap.yml WITH DISPATCH ENABLED
+########################################
+cat <<'YAML' > .github/workflows/snap.yml
 name: Lean + SNAP Pipeline
 
 on:
@@ -35,3 +45,16 @@ jobs:
         fi
 
         echo "Ω = 1"
+YAML
+
+########################################
+# PUSH
+########################################
+TOKEN=$(cat ~/.git_token | tr -d '\n' | tr -d '\r')
+
+git add .
+git commit -m "Fix snap.yml: add workflow_dispatch" || echo "No changes"
+
+git push https://batmeezy918:$TOKEN@github.com/batmeezy918/chronofold.git
+
+echo "SNAP WORKFLOW FIXED"
