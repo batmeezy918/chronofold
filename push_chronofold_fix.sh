@@ -1,3 +1,19 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -e
+
+echo "==================================="
+echo "FIXING CHRONOFOLD WORKFLOW"
+echo "==================================="
+
+cd ~/chronofold || exit
+
+########################################
+# WRITE CORRECT WORKFLOW
+########################################
+mkdir -p .github/workflows
+
+cat <<'YAML' > .github/workflows/chronofold.yml
 name: Chronofold Verification
 
 on:
@@ -63,3 +79,22 @@ jobs:
       with:
         name: chronofold-results
         path: results/
+YAML
+
+########################################
+# LOAD TOKEN
+########################################
+TOKEN=$(cat ~/.git_token | tr -d '\n' | tr -d '\r')
+
+########################################
+# COMMIT + PUSH
+########################################
+git add .
+git commit -m "Fix: add workflow_dispatch + Ω enforcement" || echo "No changes"
+
+git push https://batmeezy918:$TOKEN@github.com/batmeezy918/chronofold.git
+
+echo "==================================="
+echo "PUSH COMPLETE"
+echo "==================================="
+
