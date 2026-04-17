@@ -1,3 +1,19 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -e
+
+echo "==================================="
+echo "CHRONOFOLD FULL FIX (Ω ENFORCED)"
+echo "==================================="
+
+cd ~/chronofold || exit
+
+mkdir -p .github/workflows
+
+########################################
+# WRITE FIXED WORKFLOW
+########################################
+cat <<'YAML' > .github/workflows/chronofold.yml
 name: ChronoFold Verification
 
 on:
@@ -52,3 +68,23 @@ jobs:
         fi
 
         echo "Ω = 1"
+YAML
+
+########################################
+# LOAD TOKEN
+########################################
+TOKEN=$(cat ~/.git_token | tr -d '\n' | tr -d '\r')
+
+########################################
+# COMMIT + PUSH
+########################################
+git add .
+
+git commit -m "FULL FIX: strict build + Ω enforcement + lean setup" || echo "No changes"
+
+git push https://batmeezy918:$TOKEN@github.com/batmeezy918/chronofold.git
+
+echo "==================================="
+echo "FIX PUSHED SUCCESSFULLY"
+echo "==================================="
+
