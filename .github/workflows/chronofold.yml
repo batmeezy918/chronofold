@@ -1,49 +1,125 @@
+cat <<'EOF' > .github/workflows/chronofold.yml
 name: ChronoFold Autonomous Engine
 
 on:
   push:
   workflow_dispatch:
-  schedule:
-    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
 
 jobs:
   chronofold:
     runs-on: ubuntu-latest
 
     steps:
+    ########################################
+    # CHECKOUT
+    ########################################
     - uses: actions/checkout@v4
 
+    ########################################
+    # INSTALL LEAN (CORRECT PATH)
+    ########################################
     - name: Install Lean
       run: |
         curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
         echo "$HOME/.elan/bin" >> $GITHUB_PATH
         export PATH="$HOME/.elan/bin:$PATH"
+
         lean --version
         lake --version
 
-    - name: Install deps
-      run: |
-        sudo apt update
-        sudo apt install -y jq
-
-    - name: Prepare
+    ########################################
+    # PREP STRUCTURE
+    ########################################
+    - name: Prepare directories
       run: |
         mkdir -p ChronoFold/Auto
         mkdir -p theorems_unproven
         mkdir -p theorems_proven
 
-    - name: Lake update
-      run: lake update
-
-    - name: Run engine
+    ########################################
+    # FETCH MATHLIB
+    ########################################
+    - name: Fetch dependencies
       run: |
+        export PATH="$HOME/.elan/bin:$PATH"
+        lake update
+
+    ########################################
+    # RUN ENGINE WITH LOG CAPTURE
+    ########################################
+    - name: Run ChronoFold Engine
+      run: |
+        export PATH="$HOME/.elan/bin:$PATH"
+
         chmod +x chronofold_ci_engine.sh
-        ./chronofold_ci_engine.sh
 
-    - name: Commit
+        echo "=== RUNNING ENGINE ==="
+        ./chronofold_ci_engine.sh > build.log 2>&1 || true
+
+        echo "=== BUILD LOG ==="
+        tail -n 50 build.log || true
+
+    ########################################
+    # Ω VERIFICATION (HARD GATE)
+    ########################################
+    - name: Compute Ω (Verification Gate)
       run: |
-        git config --global user.name "bot"
-        git config --global user.email "bot@local"
+        echo "=============================="
+        echo "Ω VERIFICATION START"
+        echo "=============================="
+
+        ########################################
+        # CHECK BUILD LOG EXISTS
+        ########################################
+        if [ ! -f build.log ]; then
+          echo "Ω = 0 (missing build.log)"
+          exit 1
+        fi
+
+        ########################################
+        # CHECK FOR LEAN ERRORS
+        ########################################
+        if grep -i "error" build.log; then
+          echo "Ω = 0 (Lean errors detected)"
+          exit 1
+        fi
+
+        ########################################
+        # CHECK FILE STRUCTURE
+        ########################################
+        PROVEN_COUNT=$(ls theorems_proven 2>/dev/null | wc -l || echo 0)
+        UNPROVEN_COUNT=$(ls theorems_unproven 2>/dev/null | wc -l || echo 0)
+
+        echo "Proven count: $PROVEN_COUNT"
+        echo "Unproven count: $UNPROVEN_COUNT"
+
+        ########################################
+        # OPTIONAL: REQUIRE AT LEAST ONE OUTPUT
+        ########################################
+        if [ "$PROVEN_COUNT" -eq 0 ] && [ "$UNPROVEN_COUNT" -eq 0 ]; then
+          echo "Ω = 0 (no theorem output detected)"
+          exit 1
+        fi
+
+        ########################################
+        # SUCCESS
+        ########################################
+        echo "Ω = 1 (verification passed)"
+
+    ########################################
+    # COMMIT RESULTS (ONLY IF Ω PASSED)
+    ########################################
+    - name: Commit results
+      run: |
+        git config user.name "chronofold-bot"
+        git config user.email "bot@chronofold.ai"
+
         git add .
-        git commit -m "auto update" || true
+
+        git commit -m "Auto theorem update (Ω=1)" || echo "No changes"
+
         git push
+EOF
