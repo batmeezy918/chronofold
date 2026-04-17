@@ -1,3 +1,15 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -e
+
+cd ~/chronofold || exit
+
+mkdir -p .github/workflows
+
+########################################
+# FULL WORKFLOW FIX (WITH BOOTSTRAP)
+########################################
+cat <<'YAML' > .github/workflows/chronofold.yml
 name: ChronoFold Verification
 
 on:
@@ -53,3 +65,16 @@ jobs:
         fi
 
         echo "Ω = 1"
+YAML
+
+########################################
+# PUSH
+########################################
+TOKEN=$(cat ~/.git_token | tr -d '\n' | tr -d '\r')
+
+git add .
+git commit -m "Fix: add lake bootstrap (real build fix)" || echo "No changes"
+
+git push https://batmeezy918:$TOKEN@github.com/batmeezy918/chronofold.git
+
+echo "FIX APPLIED"
