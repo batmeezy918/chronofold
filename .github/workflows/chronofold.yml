@@ -4,50 +4,71 @@ on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - ".gitignore"
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chronofold-verification-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install Lean
-      run: |
-        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+      - name: Install Lean toolchain
+        run: |
+          set -euxo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-    - name: Setup Lean
-      run: |
-        export PATH="$HOME/.elan/bin:$PATH"
-        lake update
+      - name: Install system dependencies
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          sudo apt-get install -y jq
 
-    ########################################
-    # MOVE THEOREMS INTO BUILD SPACE
-    ########################################
-    - name: Inject Theorems
-      run: |
-        mkdir -p ChronoFold/Auto
-        cp theorems_unproven/*.lean ChronoFold/Auto/ 2>/dev/null || true
+      - name: Prepare directories
+        run: |
+          set -euxo pipefail
+          mkdir -p ChronoFold/Auto theorems_unproven theorems_proven
 
-    ########################################
-    # BUILD
-    ########################################
-    - name: Build
-      run: |
-        export PATH="$HOME/.elan/bin:$PATH"
-        lake build
+      - name: Sync dependencies
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
 
-    ########################################
-    # PROMOTE SUCCESSFUL THEOREMS
-    ########################################
-    - name: Promote
-      run: |
-        mkdir -p theorems_proven
-        mv theorems_unproven/*.lean theorems_proven/ 2>/dev/null || true
+      - name: Run verification engine
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          bash ./chronofold_ci_engine.sh
 
-    ########################################
-    # Ω
-    ########################################
-    - name: Compute Ω
-      run: |
-        echo "Ω = 1"
+      - name: Commit promoted theorems
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euxo pipefail
+          if git diff --quiet --exit-code; then
+            echo "No repository changes to commit"
+            exit 0
+          fi
+
+          git config --global user.name "chronofold-bot"
+          git config --global user.email "bot@chronofold.ai"
+          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
+          git commit -m "Auto: theorem promotion"
+          git push
+
+      - name: Compute Ω
+        run: |
+          echo "Ω = 1"
