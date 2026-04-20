@@ -1,0 +1,42 @@
+name: Build ChronoFold UI APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ui/**'
+      - '.github/workflows/build-apk.yml'
+    branches: [ "main" ]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify UI folder exists
+        run: |
+          test -f ui/package.json || { echo "ui/package.json not found"; exit 1; }
+
+      - name: Build web assets
+        run: |
+          cd ui
+          npm ci
+          npm run build
+
+      - name: Build APK from web app
+        uses: cemcoe/web-to-apk-action@v1
+        with:
+          app_name: "ChronoFold"
+          app_id: "com.batmeezy.chronofold"
+          build_command: "cd ui && npm ci && npm run build"
+          web_dir: "ui/dist"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chronofold-apk
+          path: |
+            android/app/build/outputs/apk/**/*.apk
+            app/build/outputs/apk/**/*.apk
+          if-no-files-found: warn
