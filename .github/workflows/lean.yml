@@ -1,8 +1,18 @@
 name: Lean + SNAP Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
+    paths:
+      - '.github/workflows/lean.yml'
+      - 'lakefile.lean'
+      - 'Main.lean'
+      - 'Verify.lean'
+      - 'benchmark_snap.py'
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -10,37 +20,38 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # -------------------------------
-      # INSTALL LEAN MANUALLY (NO lean-action)
-      # -------------------------------
       - name: Install Lean toolchain
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-          source $HOME/.elan/env
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
           elan default stable
           lean --version
           lake --version
 
-      # -------------------------------
-      # INIT LAKE (NOW SAFE)
-      # -------------------------------
       - name: Initialize Lake
         run: |
-          source $HOME/.elan/env
+          export PATH="$HOME/.elan/bin:$PATH"
           lake update
 
-      # -------------------------------
-      # BUILD
-      # -------------------------------
       - name: Build Lean
         run: |
-          source $HOME/.elan/env
-          lake build
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build 2>&1 | tee build.log
 
-      # -------------------------------
-      # BENCHMARK
-      # -------------------------------
       - name: Run SNAP Benchmark
-        run: python3 benchmark_snap.py
+        run: |
+          python3 benchmark_snap.py
+
+      - name: Upload lean artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-snap-artifacts
+          path: |
+            build.log
+            snap_result.json
+            benchmark_snap.py
+          if-no-files-found: error
