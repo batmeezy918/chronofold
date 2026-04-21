@@ -1,6 +1,6 @@
-✔ [2/6] Built Verify (220ms)
-✔ [3/6] Built Verify:c.o (80ms)
-✔ [4/6] Built Main (229ms)
-✔ [5/6] Built Main:c.o (89ms)
-✔ [6/6] Built Main:exe (167ms)
+✔ [2/6] Built Verify (183ms)
+✔ [3/6] Built Verify:c.o (63ms)
+✔ [4/6] Built Main (184ms)
+✔ [5/6] Built Main:c.o (68ms)
+✔ [6/6] Built Main:exe (146ms)
 Build completed successfully (6 jobs).
