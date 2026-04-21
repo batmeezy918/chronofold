@@ -54,6 +54,18 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           bash ./chronofold_ci_engine.sh
 
+      - name: Upload verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chronofold-verification-state
+          path: |
+            build.log
+            ChronoFold/Auto/
+            theorems_unproven/
+            theorems_proven/
+          if-no-files-found: warn
+
       - name: Commit promoted theorems
         if: github.event_name != 'pull_request'
         run: |
