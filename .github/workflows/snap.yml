@@ -4,34 +4,43 @@ on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
+    paths:
+      - '.github/workflows/snap.yml'
+      - 'lakefile.lean'
+      - 'Main.lean'
+      - 'Verify.lean'
+
+permissions:
+  contents: read
 
 jobs:
   snap:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install Lean
-      run: |
-        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-        echo "$HOME/.elan/bin" >> $GITHUB_PATH
-        export PATH="$HOME/.elan/bin:$PATH"
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.elan/bin:$PATH"
 
-    - name: Run SNAP
-      run: |
-        export PATH="$HOME/.elan/bin:$PATH"
+      - name: Run SNAP
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build > build.log 2>&1 || true
+          tail -n 50 build.log || true
+          if grep -i "error" build.log; then
+            echo "Ω = 0"
+            exit 1
+          fi
+          echo "Ω = 1"
 
-        lake build > build.log 2>&1 || true
-
-        tail -n 50 build.log || true
-
-        ########################################
-        # Ω ENFORCEMENT
-        ########################################
-        if grep -i "error" build.log; then
-          echo "Ω = 0"
-          exit 1
-        fi
-
-        echo "Ω = 1"
+      - name: Upload SNAP build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snap-build-log
+          path: build.log
+          if-no-files-found: error
