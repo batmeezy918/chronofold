@@ -1,0 +1,6 @@
+{
+  "theorem_id": "THM_000001__nat_add_zero_right",
+  "status": "rejected",
+  "stage": "compile",
+  "log_path": "logs/THM_000001__nat_add_zero_right.log"
+}

@@ -3,10 +3,10 @@ import Verify
 
 /--
 THEOREM_ID: THM_000001
-TITLE: example_theorem
+TITLE: nat_add_zero_right
 AUTHOR: user
 STATUS: candidate
 -/
 
-theorem example_theorem : 1 + 1 = 2 := by
-  decide
+theorem nat_add_zero_right (n : Nat) : n + 0 = n := by
+  simp
