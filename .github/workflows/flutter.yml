@@ -2,41 +2,53 @@ name: Build Flutter APK
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/flutter.yml'
+      - 'chronofold_app/**'
+    branches: [ "main" ]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install Flutter
-      run: |
-        git clone https://github.com/flutter/flutter.git -b stable
-        echo "$PWD/flutter/bin" >> $GITHUB_PATH
-        flutter doctor
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-    - name: Create App
-      run: |
-        if [ ! -d "chronofold_app" ]; then
-          flutter create chronofold_app
-        fi
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
 
-    - name: Add HTTP
-      run: |
-        cd chronofold_app
-        flutter pub add http
+      - name: Create app scaffold if missing
+        run: |
+          if [ ! -d "chronofold_app" ]; then
+            flutter create chronofold_app
+          fi
 
-    - name: Build APK
-      run: |
-        cd chronofold_app
-        flutter build apk --release
+      - name: Install dependencies
+        run: |
+          cd chronofold_app
+          flutter pub add http
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: chronofold-apk
-        path: chronofold_app/build/app/outputs/flutter-apk/app-release.apk
+      - name: Build APK
+        run: |
+          cd chronofold_app
+          flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chronofold-flutter-apk
+          path: chronofold_app/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
