@@ -1,48 +1,50 @@
 name: S6 COCO Benchmark
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
+    paths:
+      - '.github/workflows/coco.yml'
+      - 'coco_s6_benchmark.py'
+
+permissions:
+  contents: read
 
 jobs:
   run-benchmark:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install system deps
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake git python3-pip
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
 
-    - name: Install Python deps
-      run: |
-        pip install numpy
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy cocoex
 
-    - name: Clone COCO
-      run: |
-        git clone https://github.com/numbbo/coco.git
+      - name: Prepare output folder
+        run: |
+          mkdir -p S6_RESULTS
+          printf 'workflow=s6-coco\nstatus=initialized\n' > S6_RESULTS/run_summary.txt
 
-    - name: Build COCO
-      run: |
-        cd coco/code-experiments
-        mkdir build
-        cd build
-        cmake ..
-        make -j4
+      - name: Run S6 benchmark
+        run: |
+          python coco_s6_benchmark.py
+          printf 'workflow=s6-coco\nstatus=completed\n' > S6_RESULTS/run_summary.txt
 
-    - name: Install cocoex
-      run: |
-        cd coco/code-experiments/build/python
-        pip install .
-
-    - name: Run S6 Benchmark
-      run: |
-        python coco_s6_benchmark.py
-
-    - name: Upload Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: s6-coco-results
-        path: S6_RESULTS/
+      - name: Upload results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s6-coco-results
+          path: |
+            S6_RESULTS/
+            coco_s6_benchmark.py
+          if-no-files-found: error
