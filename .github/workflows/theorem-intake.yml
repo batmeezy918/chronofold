@@ -1,0 +1,42 @@
+name: Theorem Intake
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'theorems_inbox/**'
+      - 'scripts/**'
+      - '.github/workflows/theorem-intake.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  process-theorems:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Run processor
+        run: |
+          chmod +x scripts/process_inbox.sh
+          scripts/process_inbox.sh
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto-process theorems" || echo "No changes"
+          git push
