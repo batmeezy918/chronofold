@@ -1,0 +1,37 @@
+Read AGENTS.md first and obey it fully.
+
+Goal:
+Build and harden a deterministic theorem-intake pipeline for this repo.
+
+Create and verify all of the following:
+- scripts/validate_theorem.py
+- scripts/process_inbox.sh
+- scripts/self_test_pipeline.sh
+- .github/workflows/build.yml
+- .github/workflows/theorem-intake.yml
+- .github/workflows/pages.yml
+- templates/theorem_candidate.lean
+- docs/index.html
+- docs/theorem_ui_contract.md
+- theorems_inbox/README.md
+
+Requirements:
+1. scripts/process_inbox.sh must export PATH="$HOME/.elan/bin:$PATH".
+2. Create one guaranteed smoke theorem:
+   theorems_inbox/THM_000001__smoke_test.lean
+3. The smoke theorem must compile in the current repo state.
+4. Add deterministic validation rules:
+   - filename THM_######__name.lean
+   - one theorem per file
+   - theorem name must match filename
+   - reject sorry/admit/axiom/unsafe
+5. Add a self-test script that runs:
+   - theorem validation
+   - inbox processing
+   - find theorems_proven theorems_rejected theorem_receipts logs -maxdepth 1 -type f | sort
+   - lake build
+   - lake exe Main
+6. If something fails, inspect logs and fix the repo until it passes.
+7. Replace docs/index.html with a static GitHub Pages-compatible theorem UI.
+8. Commit all changes in one clean commit.
+9. Leave the worktree clean.
