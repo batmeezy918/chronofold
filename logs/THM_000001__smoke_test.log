@@ -1,0 +1,8 @@
+info: downloading https://releases.lean-lang.org/lean4/v4.30.0-rc2/lean-4.30.0-rc2-linux.tar.zst
+info: installing /home/runner/.elan/toolchains/leanprover--lean4---v4.30.0-rc2
+theorems_checked/THM_000001__smoke_test.lean:1:0: error: unknown module prefix 'Verify'
+
+No directory 'Verify' or file 'Verify.olean' in the search path entries:
+/home/runner/work/chronofold/chronofold/.lake/build/lib/lean
+/home/runner/.elan/toolchains/leanprover--lean4---v4.30.0-rc2/lib/lean
+/home/runner/.elan/toolchains/leanprover--lean4---v4.30.0-rc2/lib/lean
