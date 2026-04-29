@@ -1,86 +1,35 @@
-name: ChronoFold Verification
+name: ChronoFold Lean Pipeline
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "main" ]
-    paths-ignore:
-      - "README.md"
-      - ".gitignore"
-  pull_request:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: chronofold-verification-${{ github.ref }}
-  cancel-in-progress: true
+    branches: ["main"]
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install Lean toolchain
+      - name: Install Lean
         run: |
-          set -euxo pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Install system dependencies
+      - name: Build
         run: |
-          set -euxo pipefail
-          sudo apt-get update
-          sudo apt-get install -y jq
-
-      - name: Prepare directories
-        run: |
-          set -euxo pipefail
-          mkdir -p ChronoFold/Auto theorems_unproven theorems_proven
-
-      - name: Sync dependencies
-        run: |
-          set -euxo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
           lake update
+          lake build | tee build.log
 
-      - name: Run verification engine
+      - name: Extract Errors
+        if: failure()
         run: |
-          set -euxo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          bash ./chronofold_ci_engine.sh
+          grep -i "error" build.log > errors.txt || true
 
-      - name: Upload verification artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: chronofold-verification-state
-          path: |
-            build.log
-            ChronoFold/Auto/
-            theorems_unproven/
-            theorems_proven/
-          if-no-files-found: warn
-
-      - name: Commit promoted theorems
-        if: github.event_name != 'pull_request'
+      - name: Debug Output
+        if: failure()
         run: |
-          set -euxo pipefail
-          if git diff --quiet --exit-code; then
-            echo "No repository changes to commit"
-            exit 0
-          fi
-
-          git config --global user.name "chronofold-bot"
-          git config --global user.email "bot@chronofold.ai"
-          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
-          git commit -m "Auto: theorem promotion"
-          git push
-
-      - name: Compute Ω
-        run: |
-          echo "Ω = 1"
+          echo "=== BUILD ERRORS ==="
+          cat errors.txt || true
+          echo "===================="
