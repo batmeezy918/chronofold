@@ -1,2 +1,3 @@
 numpy
 coco-experiment
+numpy==2.4.4

@@ -1,0 +1,52 @@
+{
+  "project": "ChronoFold-ApolloLLM",
+  "version": "1.0.0-ZELUX",
+  "state_definition": "ψ_k",
+  "operators": [
+    {
+      "id": "O_PHYS",
+      "role": "Physical Channel Commitment",
+      "linkage": "ChronoFold/Physics.lean",
+      "parameters": {
+        "beta": 0.15,
+        "alpha": 0.08,
+        "gamma": 1.22
+      }
+    },
+    {
+      "id": "O_SPME",
+      "role": "Spectral Persistent-Manifold Execution",
+      "linkage": "spme_optimizer.py",
+      "hardware_target": "Revvl 8 Pro",
+      "gain_target": 4.91
+    },
+    {
+      "id": "O_LOCK",
+      "role": "Level-3 Threadlock",
+      "linkage": "ChronoFold/Threadlock.lean",
+      "anchor": "445-96-4509"
+    },
+    {
+      "id": "O_WFE",
+      "role": "Deterministic Workflow Engine",
+      "linkage": "ApolloLLM/app",
+      "capabilities": [
+        "Local Build",
+        "Deterministic Replay",
+        "Bounded Repair"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "from": "PARSE",
+      "to": "VALIDATE",
+      "invariant": "Structure-Preserving"
+    },
+    {
+      "from": "BUILD",
+      "to": "TEST",
+      "invariant": "Deterministic APK"
+    }
+  ]
+}
