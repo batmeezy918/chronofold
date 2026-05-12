@@ -3,47 +3,49 @@ import os
 class Emitter:
     """Deterministic Kotlin/Compose Code Emitter"""
 
+    def _read_template(self, name, **kwargs):
+        tpl_path = os.path.join("templates", f"{name}.kt.tpl")
+        if os.path.exists(tpl_path):
+            with open(tpl_path, "r") as f:
+                content = f.read()
+            for k, v in kwargs.items():
+                content = content.replace(f"{{{{{k}}}}}", str(v))
+            return content
+        return None
+
     def emit_compose_screen(self, node):
+        tpl = self._read_template("compose_screen", node_id=node['id'])
+        if tpl: return tpl
         return f"""
 package com.apollo.generated.ui
-
 import androidx.compose.runtime.Composable
 import androidx.compose.material.Text
-import com.apollo.generated.viewmodel.{node['id']}ViewModel
-
 @Composable
-fun {node['id']}Screen(viewModel: {node['id']}ViewModel) {{
-    Text("UI for {node['id']}")
-}}
+fun {node['id']}Screen() {{ Text("UI for {node['id']}") }}
 """
 
     def emit_view_model(self, node):
+        tpl = self._read_template("viewmodel", node_id=node['id'])
+        if tpl: return tpl
         return f"""
 package com.apollo.generated.viewmodel
-
 import androidx.lifecycle.ViewModel
-
-class {node['id']}ViewModel : ViewModel() {{
-    // Logic for {node['id']}
-}}
+class {node['id']}ViewModel : ViewModel() {{ }}
 """
 
     def emit_repository(self, node):
+        tpl = self._read_template("repository", node_id=node['id'])
+        if tpl: return tpl
         return f"""
 package com.apollo.generated.repository
-
-class {node['id']}Repository {{
-    // Data operations for {node['id']}
-}}
+class {node['id']}Repository {{ }}
 """
 
     def generate_project(self, graph, output_dir):
         os.makedirs(output_dir, exist_ok=True)
         base_pkg = os.path.join(output_dir, "app/src/main/java/com/apollo/generated")
-
         for sub in ["ui", "viewmodel", "repository"]:
             os.makedirs(os.path.join(base_pkg, sub), exist_ok=True)
-
         for node in graph["nodes"]:
             t = node.get("type")
             if t == "ui":
@@ -55,38 +57,3 @@ class {node['id']}Repository {{
             elif t == "data":
                 with open(os.path.join(base_pkg, "repository", f"{node['id']}Repository.kt"), "w") as f:
                     f.write(self.emit_repository(node))
-
-        # Build configuration (Kotlin DSL)
-        with open(os.path.join(output_dir, "build.gradle.kts"), "w") as f:
-            f.write("""
-buildscript {
-    repositories { google(); mavenCentral() }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.2.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-    }
-}
-allprojects { repositories { google(); mavenCentral() } }
-""")
-
-        with open(os.path.join(output_dir, "settings.gradle.kts"), "w") as f:
-            f.write("rootProject.name = \"GeneratedApp\"\ninclude(\":app\")\n")
-
-        os.makedirs(os.path.join(output_dir, "app"), exist_ok=True)
-        with open(os.path.join(output_dir, "app/build.gradle.kts"), "w") as f:
-            f.write("""
-plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-}
-android {
-    namespace = "com.apollo.generated"
-    compileSdk = 34
-    buildFeatures { compose = true }
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.8" }
-}
-dependencies {
-    implementation("androidx.compose.ui:ui:1.6.1")
-    implementation("androidx.compose.material:material:1.6.1")
-}
-""")
