@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Button;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 
 public class MainActivity extends Activity {
 
@@ -17,10 +19,12 @@ public class MainActivity extends Activity {
     public native void rollback();
 
     private TextView statusView;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        dbHelper = new DatabaseHelper(this);
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -32,7 +36,8 @@ public class MainActivity extends Activity {
         Button btnStep = new Button(this);
         btnStep.setText("Execute Step (O_PHYS)");
         btnStep.setOnClickListener(v -> {
-            runWorkflowTransition("current", "O_PHYS");
+            String newState = runWorkflowTransition("current", "O_PHYS");
+            persistTransition("O_PHYS", newState);
             updateUI();
         });
         layout.addView(btnStep);
@@ -47,6 +52,14 @@ public class MainActivity extends Activity {
 
         setContentView(layout);
         updateUI();
+    }
+
+    private void persistTransition(String op, String state) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("operator", op);
+        values.put("state", state);
+        db.insert("workflow_state", null, values);
     }
 
     private void updateUI() {

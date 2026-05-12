@@ -1,19 +1,16 @@
 {
   "dependency_manifest": {
-    "lean": "4.29.1",
-    "python": "3.12",
+    "lean": "4.x",
+    "python": "3.x",
     "android_sdk": "34",
-    "cmake": "3.22.1",
-    "numpy": "2.4.4",
-    "mathlib4": "latest"
+    "sqlite": "3.x",
+    "numpy": "latest"
   },
   "execution_roles": {
-    "ChronoFold/Physics.lean": "Physical Field Formalization",
-    "ChronoFold/Threadlock.lean": "Invariant Verification",
-    "spme_optimizer.py": "High-Throughput Optimization",
-    "ApolloLLM/app": "Local Workflow Execution Engine"
+    "ChronoFold/Physics.lean": "Operator Formalization",
+    "ChronoFold/Threadlock.lean": "Deterministic Stage Proofs",
+    "ApolloLLM/app": "Local Persistence & Replay Engine"
   },
-  "workflow_linkage": "workflow_graph.json",
-  "rollback_compatibility": "v1.0.0-ZELUX",
-  "deterministic_rebuild_capability": true
+  "deterministic_rebuild": true,
+  "rollback_safe": true
 }
