@@ -1,3 +1,5 @@
+import numpy as np
+
 class Delta:
     """Deterministic DAG Execution Engine"""
     def compute_topological_order(self, graph):
@@ -10,7 +12,6 @@ class Delta:
             adj[u].append(v)
             in_degree[v] += 1
 
-        # Lexicographic tie-breaking for determinism
         queue = sorted([n_id for n_id, deg in in_degree.items() if deg == 0])
         order = []
 
@@ -22,13 +23,24 @@ class Delta:
                 in_degree[v] -= 1
                 if in_degree[v] == 0:
                     queue.append(v)
-                    queue.sort() # Maintain lexicographic order
+                    queue.sort()
 
         if len(order) != len(nodes):
             raise ValueError("Cycle detected in graph topology")
 
         return order
 
-    def propagate_state(self, graph, epsilon=0.01):
-        # Implementation of bounded state propagation ||Psi_k+1 - Psi_k|| <= epsilon
-        pass
+    def propagate_state(self, psi_k, psi_next, epsilon=0.01):
+        """Propagation bound: ||Ψ(k+1) - Ψ(k)|| <= ε"""
+        # Sum of Euclidean distances between node vectors
+        dist = 0.0
+        nodes_k = {n["id"]: n for n in psi_k["nodes"]}
+        nodes_next = {n["id"]: n for n in psi_next["nodes"]}
+
+        for n_id, node in nodes_next.items():
+            if n_id in nodes_k:
+                v1 = np.array(nodes_k[n_id].get("vector", [0]*16))
+                v2 = np.array(node.get("vector", [0]*16))
+                dist += np.linalg.norm(v1 - v2)
+
+        return dist <= epsilon

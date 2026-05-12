@@ -11,61 +11,63 @@ from core.emitter import Emitter
 from core.hashing import compute_state_hash
 
 def build(input_path):
-    # LOAD
     with open(input_path) as f:
-        if input_path.endswith((".yaml", ".yml")):
-            graph = yaml.safe_load(f)
-        else:
-            graph = json.load(f)
+        graph = yaml.safe_load(f) if input_path.endswith((".yaml", ".yml")) else json.load(f)
 
-    # Ω - NORMALIZE
     omega = Omega()
     psi = omega.normalize(graph)
 
-    # Δ - DAG EXECUTION
     delta = Delta()
     psi["execution_order"] = delta.compute_topological_order(psi)
 
-    # Ξ - ADMISSIBILITY
     xi = Xi()
     valid, msg = xi.validate(psi)
     if not valid:
-        print(f"Ξ Validation Failed: {msg}")
+        print(f"Validation Failed: {msg}")
         return
 
-    # Λ - OPTIMIZE
     lambda_opt = LambdaOpt()
     optimized_psi = lambda_opt.optimize(psi)
 
-    # E - EMIT
     emitter = Emitter()
     output_dir = "android_generated_project"
     emitter.generate_project(optimized_psi, output_dir)
 
-    # H - HASHING
-    final_hash = compute_state_hash(optimized_psi)
-    print(f"SUCCESS: Chronofold_X Build Complete")
-    print(f"Canonical Hash: {final_hash}")
+    print(f"Project generated at {output_dir}")
+    print(f"Canonical Hash: {compute_state_hash(optimized_psi)}")
 
-    # Invoke Gradle (simulated/dry-run)
-    # subprocess.run(["./gradlew", "assembleDebug", "--offline", "--no-daemon"], cwd=output_dir)
+    # Section 14: Gradle Build
+    print("Invoking Gradle Build...")
+    try:
+        # Check if gradle exists in path
+        subprocess.run(["gradle", "--version"], capture_output=True, check=True)
+        # We don't have a full project with gradlew yet, so we'd use 'gradle'
+        # subprocess.run(["gradle", "assembleDebug", "--offline", "--no-daemon"], cwd=output_dir)
+        print("Gradle found. (Actual build requires full Android SDK environment)")
+    except:
+        print("Gradle not found. Skipping build.")
 
-def inspect(input_path):
-    with open(input_path) as f:
-        graph = yaml.safe_load(f) if input_path.endswith((".yaml", ".yml")) else json.load(f)
-    omega = Omega()
-    psi = omega.normalize(graph)
-    print(json.dumps(psi, indent=2))
+def verify_lean():
+    """Lean4 Bridge Integration (Section 12)"""
+    print("Verifying structural proofs with Lean4...")
+    try:
+        res = subprocess.run(["lake", "build", "ChronoFold"], capture_output=True, text=True)
+        if res.returncode == 0:
+            print("Lean4 verification: SUCCESS")
+        else:
+            print(f"Lean4 verification: FAILED\n{res.stderr}")
+    except Exception as e:
+        print(f"Lean4 Bridge Error: {e}")
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 1:
         cmd = sys.argv[1]
-        path = sys.argv[2]
-        if cmd == "build":
-            build(path)
-        elif cmd == "inspect":
-            inspect(path)
-        else:
-            print("Unknown command")
-    else:
-        print("Usage: python cli.py [build|inspect] <path>")
+        if cmd == "build" and len(sys.argv) > 2:
+            build(sys.argv[2])
+        elif cmd == "verify":
+            verify_lean()
+        elif cmd == "inspect" and len(sys.argv) > 2:
+            # Re-implementing inspect
+            with open(sys.argv[2]) as f:
+                graph = yaml.safe_load(f) if sys.argv[2].endswith((".yaml", ".yml")) else json.load(f)
+            print(json.dumps(Omega().normalize(graph), indent=2))

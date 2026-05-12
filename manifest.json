@@ -1,15 +1,17 @@
 {
   "dependency_manifest": {
-    "lean": "4.x",
-    "python": "3.x",
+    "lean": "4.29.1",
+    "python": "3.12.13",
     "android_sdk": "34",
     "sqlite": "3.x",
-    "numpy": "latest"
+    "numpy": "2.4.4",
+    "pyyaml": "6.0.3"
   },
   "execution_roles": {
     "ChronoFold/Physics.lean": "Operator Formalization",
     "ChronoFold/Threadlock.lean": "Deterministic Stage Proofs",
-    "ApolloLLM/app": "Local Persistence & Replay Engine"
+    "ApolloLLM/app": "Local Persistence & Replay Engine",
+    "chronofold_x/core": "Deterministic IR Pipeline"
   },
   "deterministic_rebuild": true,
   "rollback_safe": true

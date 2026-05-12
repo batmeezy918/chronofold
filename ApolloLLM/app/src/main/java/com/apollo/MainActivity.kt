@@ -4,7 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Button
+import android.widget.EditText
+import android.app.AlertDialog
 
 class MainActivity : Activity() {
 
@@ -27,29 +30,62 @@ class MainActivity : Activity() {
             orientation = LinearLayout.VERTICAL
         }
 
+        val header = TextView(this).apply {
+            text = "Chronofold_X: Sovereign DAG IDE"
+            textSize = 20f
+            setPadding(20, 20, 20, 20)
+        }
+        layout.addView(header)
+
+        val btnLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
+
+        Button(this).apply {
+            text = "Add Node"
+            setOnClickListener { showAddNodeDialog() }
+        }.also { btnLayout.addView(it) }
+
+        Button(this).apply {
+            text = "Import YAML"
+            setOnClickListener { /* TODO */ }
+        }.also { btnLayout.addView(it) }
+
+        Button(this).apply {
+            text = "Build APK"
+            setOnClickListener { /* TODO */ }
+        }.also { btnLayout.addView(it) }
+
+        layout.addView(btnLayout)
+
         statusView = TextView(this).apply {
             text = "Ready."
+            setPadding(20, 20, 20, 20)
         }
-        layout.addView(statusView)
 
-        Button(this).apply {
-            text = "Execute Step (O_PHYS)"
-            setOnClickListener {
-                runWorkflowTransition("current", "O_PHYS")
-                updateUI()
-            }
-        }.also { layout.addView(it) }
-
-        Button(this).apply {
-            text = "Rollback"
-            setOnClickListener {
-                rollback()
-                updateUI()
-            }
-        }.also { layout.addView(it) }
+        val scroll = ScrollView(this).apply {
+            addView(statusView)
+        }
+        layout.addView(scroll, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            0, 1f
+        ))
 
         setContentView(layout)
         updateUI()
+    }
+
+    private fun showAddNodeDialog() {
+        val input = EditText(this)
+        AlertDialog.Builder(this)
+            .setTitle("Insert Node")
+            .setView(input)
+            .setPositiveButton("OK") { _, _ ->
+                runWorkflowTransition("current", "ADD_NODE_${input.text}")
+                updateUI()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun updateUI() {

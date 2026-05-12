@@ -1,2 +1,2 @@
-numpy
-pyyaml
+numpy==2.4.4
+pyyaml==6.0.3

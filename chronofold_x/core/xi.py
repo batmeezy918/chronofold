@@ -20,4 +20,7 @@ class Xi:
         except ValueError as e:
             return False, str(e)
 
+        # 4. Propagation bounds
+        # Placeholder for ||Psi(k+1) - Psi(k)|| <= epsilon validation
+
         return True, "Valid"
