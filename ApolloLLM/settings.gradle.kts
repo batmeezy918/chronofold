@@ -1,2 +1,2 @@
 rootProject.name = "ApolloLLM"
-include ':app'
+include(":app")

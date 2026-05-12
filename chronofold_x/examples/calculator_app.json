@@ -1,0 +1,9 @@
+{
+  "nodes": [
+    {"id": "Main", "type": "ui", "ui_role": "screen"},
+    {"id": "CalcLogic", "type": "logic", "dependencies": ["Main"]}
+  ],
+  "edges": [
+    {"from": "Main", "to": "CalcLogic"}
+  ]
+}
