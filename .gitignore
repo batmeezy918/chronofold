@@ -1,0 +1,24 @@
+# Lean/Lake
+.lake/
+lake-manifest.json
+*.olean
+*.ilean
+*.c
+*.o
+*.hash
+*.trace
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Android/Gradle
+.gradle/
+build/
+local.properties
+*.keystore
+*.jks
+
+# Other
+*.log
