@@ -1,0 +1,14 @@
+{
+  "nodes": [
+    {"id": "CalcUI", "type": "ui", "role": "Main Calculator Interface"},
+    {"id": "AddLogic", "type": "logic", "role": "Addition Operator"},
+    {"id": "SubLogic", "type": "logic", "role": "Subtraction Operator"},
+    {"id": "HistoryData", "type": "data", "role": "Calculation History"}
+  ],
+  "edges": [
+    {"from": "CalcUI", "to": "AddLogic"},
+    {"from": "CalcUI", "to": "SubLogic"},
+    {"from": "AddLogic", "to": "HistoryData"},
+    {"from": "SubLogic", "to": "HistoryData"}
+  ]
+}

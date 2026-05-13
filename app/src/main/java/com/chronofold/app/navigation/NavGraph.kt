@@ -8,9 +8,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,8 +45,8 @@ fun NavGraph() {
                         icon = {
                             when(screen) {
                                 Screen.Home -> Icon(Icons.Filled.Home, contentDescription = null)
-                                Screen.Theorem -> Icon(Icons.Filled.CheckCircle, contentDescription = null)
-                                Screen.Graph -> Icon(Icons.Filled.Menu, contentDescription = null)
+                                Screen.Theorem -> Icon(Icons.Filled.Info, contentDescription = null)
+                                Screen.Graph -> Icon(Icons.Filled.List, contentDescription = null)
                                 Screen.Build -> Icon(Icons.Filled.Build, contentDescription = null)
                             }
                         },
