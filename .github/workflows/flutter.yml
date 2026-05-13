@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: Build Signed Flutter APK
 
 on:
   workflow_dispatch:
@@ -11,12 +11,18 @@ on:
 permissions:
   contents: read
 
+env:
+  APK_PATH: chronofold_app/build/app/outputs/flutter-apk/app-release.apk
+  SIGNED_APK_NAME: chronofold-signed-release.apk
+
 jobs:
-  build-apk:
+  build-signed-apk:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -31,24 +37,123 @@ jobs:
           cache: true
 
       - name: Create app scaffold if missing
+        shell: bash
         run: |
+          set -euo pipefail
           if [ ! -d "chronofold_app" ]; then
             flutter create chronofold_app
           fi
 
       - name: Install dependencies
+        shell: bash
         run: |
+          set -euo pipefail
           cd chronofold_app
+          flutter pub get
           flutter pub add http
 
-      - name: Build APK
+      - name: Prepare Android release signing
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          set -euo pipefail
+
+          : "${ANDROID_KEYSTORE_PASSWORD:=chronofold-ci-storepass}"
+          : "${ANDROID_KEY_ALIAS:=chronofold}"
+          : "${ANDROID_KEY_PASSWORD:=chronofold-ci-keypass}"
+
+          KEYSTORE_PATH="$RUNNER_TEMP/chronofold-release.jks"
+
+          if [ -n "${ANDROID_KEYSTORE_BASE64:-}" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
+          else
+            keytool -genkeypair \
+              -v \
+              -keystore "$KEYSTORE_PATH" \
+              -storepass "$ANDROID_KEYSTORE_PASSWORD" \
+              -keypass "$ANDROID_KEY_PASSWORD" \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -alias "$ANDROID_KEY_ALIAS" \
+              -dname "CN=ChronoFold CI, OU=ChronoFold, O=ChronoFold, L=Tulsa, ST=Oklahoma, C=US"
+          fi
+
+          cat > chronofold_app/android/key.properties <<EOF
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=$KEYSTORE_PATH
+          EOF
+
+      - name: Enable release signing in Gradle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          app_dir = Path('chronofold_app/android/app')
+          kts = app_dir / 'build.gradle.kts'
+          groovy = app_dir / 'build.gradle'
+
+          if kts.exists():
+              path = kts
+              text = path.read_text()
+              header = 'import java.util.Properties\nimport java.io.FileInputStream\n\nval keystoreProperties = Properties()\nval keystorePropertiesFile = rootProject.file("key.properties")\nif (keystorePropertiesFile.exists()) {\n    keystoreProperties.load(FileInputStream(keystorePropertiesFile))\n}\n\n'
+              if 'val keystoreProperties = Properties()' not in text:
+                  text = header + text
+              signing = '''\n    signingConfigs {\n        create("release") {\n            keyAlias = keystoreProperties["keyAlias"] as String\n            keyPassword = keystoreProperties["keyPassword"] as String\n            storeFile = file(keystoreProperties["storeFile"] as String)\n            storePassword = keystoreProperties["storePassword"] as String\n        }\n    }\n'''
+              if 'create("release")' not in text:
+                  text = text.replace('android {', 'android {' + signing, 1)
+              text = text.replace('signingConfig = signingConfigs.getByName("debug")', 'signingConfig = signingConfigs.getByName("release")')
+              if 'signingConfig = signingConfigs.getByName("release")' not in text:
+                  text = re.sub(r'(release\s*\{)', r'\1\n            signingConfig = signingConfigs.getByName("release")', text, count=1)
+              path.write_text(text)
+          elif groovy.exists():
+              path = groovy
+              text = path.read_text()
+              header = '''def keystoreProperties = new Properties()\ndef keystorePropertiesFile = rootProject.file('key.properties')\nif (keystorePropertiesFile.exists()) {\n    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))\n}\n\n'''
+              if 'def keystoreProperties = new Properties()' not in text:
+                  text = header + text
+              signing = '''\n    signingConfigs {\n        release {\n            keyAlias keystoreProperties['keyAlias']\n            keyPassword keystoreProperties['keyPassword']\n            storeFile file(keystoreProperties['storeFile'])\n            storePassword keystoreProperties['storePassword']\n        }\n    }\n'''
+              if 'signingConfigs {' not in text:
+                  text = text.replace('android {', 'android {' + signing, 1)
+              text = text.replace('signingConfig signingConfigs.debug', 'signingConfig signingConfigs.release')
+              text = text.replace('signingConfig = signingConfigs.debug', 'signingConfig = signingConfigs.release')
+              if 'signingConfig signingConfigs.release' not in text and 'signingConfig = signingConfigs.release' not in text:
+                  text = re.sub(r'(release\s*\{)', r'\1\n            signingConfig signingConfigs.release', text, count=1)
+              path.write_text(text)
+          else:
+              raise SystemExit('No Android Gradle app build file found')
+          PY
+
+      - name: Build signed release APK
+        shell: bash
+        run: |
+          set -euo pipefail
           cd chronofold_app
           flutter build apk --release
 
-      - name: Upload APK artifact
+      - name: Validate APK output and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$APK_PATH"
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)"
+          "$APKSIGNER" verify --verbose "$APK_PATH"
+          cp "$APK_PATH" "$SIGNED_APK_NAME"
+          ls -lh "$SIGNED_APK_NAME"
+
+      - name: Upload signed APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chronofold-flutter-apk
-          path: chronofold_app/build/app/outputs/flutter-apk/app-release.apk
+          name: chronofold-signed-apk
+          path: chronofold-signed-release.apk
           if-no-files-found: error
+          retention-days: 30
