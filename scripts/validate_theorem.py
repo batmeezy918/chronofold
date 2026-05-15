@@ -10,7 +10,7 @@ if not re.match(r"THM_\d{6}__([a-z0-9_]+)\.lean$", name):
     print("INVALID FILENAME")
     sys.exit(1)
 
-theorem_name = re.findall(r"theorem\s+([a-zA-Z0-9_]+)", text)
+theorem_name = re.findall(r"^\s*theorem\s+([a-zA-Z0-9_]+)", text, flags=re.MULTILINE)
 if len(theorem_name) != 1:
     print("MUST HAVE EXACTLY ONE THEOREM")
     sys.exit(1)

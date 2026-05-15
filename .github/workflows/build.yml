@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout repository
@@ -33,11 +33,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-
 
-      - name: Install Lean via elan
+      - name: Install Lean via elan (with retries)
         shell: bash
         run: |
           set -euo pipefail
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          for i in 1 2 3; do
+            if curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh; then
+              break
+            fi
+            echo "elan download failed on attempt $i" >&2
+            sleep $((i * 2))
+          done
+          for i in 1 2 3; do
+            if sh /tmp/elan-init.sh -y; then
+              break
+            fi
+            echo "elan install failed on attempt $i" >&2
+            sleep $((i * 2))
+          done
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           elan --version
@@ -51,28 +64,17 @@ jobs:
           test -f lean-toolchain
           test -f lakefile.lean
           test -f Main.lean
+          test -f scripts/process_inbox.sh
+          test -f scripts/validate_theorem.py
+          test -f scripts/self_test_pipeline.sh
 
-      - name: Resolve dependencies
+      - name: Run pipeline self-test
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
-
-      - name: Build project
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake build 2>&1 | tee build.log
-
-      - name: Run executable smoke test
-        shell: bash
-        run: |
-          set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          lake exe Main 2>&1 | tee smoke.log
-          grep -F "ChronoFold system active" smoke.log
+          chmod +x scripts/verify_codex_prereqs.sh scripts/process_inbox.sh scripts/self_test_pipeline.sh
+          scripts/self_test_pipeline.sh 2>&1 | tee self-test.log
 
       - name: Upload logs
         if: always()
@@ -80,6 +82,5 @@ jobs:
         with:
           name: chronofold-build-logs
           path: |
-            build.log
-            smoke.log
+            self-test.log
           if-no-files-found: warn
