@@ -44,27 +44,21 @@ jobs:
       - name: Build Lean
         id: build
         run: |
-          lake build > build.log 2>&1 || true
-
-      # --- Check Success ---
-      - name: Detect Success
-        id: status
-        run: |
-          if grep -q "error:" build.log; then
-            echo "status=fail" >> $GITHUB_OUTPUT
+          if lake build > build.log 2>&1; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
           else
-            echo "status=success" >> $GITHUB_OUTPUT
+            echo "status=fail" >> "$GITHUB_OUTPUT"
           fi
 
       # --- Extract Errors ---
       - name: Extract Errors
-        if: steps.status.outputs.status == 'fail'
+        if: steps.build.outputs.status == 'fail'
         run: |
           grep -i "error" build.log | head -n 200 > errors.txt || true
 
       # --- Gemini Fix Step ---
       - name: Gemini Repair
-        if: steps.status.outputs.status == 'fail'
+        if: steps.build.outputs.status == 'fail'
         run: |
           PROMPT="You are a Lean 4 theorem generator.
 
@@ -85,9 +79,15 @@ Return full file for ChronoFold/Auto.lean
           # sanitize
           sed -n '/import/,$p' out.txt > ChronoFold/Auto.lean
 
+      # --- Verify Repair ---
+      - name: Verify Repair
+        if: steps.build.outputs.status == 'fail'
+        run: |
+          lake build > repair.log 2>&1
+
       # --- Commit Fix (SELF-TRIGGER LOOP) ---
       - name: Commit Fix
-        if: steps.status.outputs.status == 'fail'
+        if: steps.build.outputs.status == 'fail'
         run: |
           git config user.name "agent"
           git config user.email "agent@local"
@@ -98,7 +98,7 @@ Return full file for ChronoFold/Auto.lean
 
       # --- Final Success Artifact ---
       - name: Upload Artifacts
-        if: steps.status.outputs.status == 'success'
+        if: steps.build.outputs.status == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: lean-build
@@ -108,5 +108,5 @@ Return full file for ChronoFold/Auto.lean
 
       # --- Stop Condition ---
       - name: Done
-        if: steps.status.outputs.status == 'success'
+        if: steps.build.outputs.status == 'success'
         run: echo "✅ PIPELINE GREEN"
