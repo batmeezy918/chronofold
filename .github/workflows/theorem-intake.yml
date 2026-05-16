@@ -11,32 +11,78 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: theorem-intake-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   process-theorems:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Lean
+      - name: Install Lean via elan (with retries)
+        shell: bash
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          set -euo pipefail
+          for i in 1 2 3; do
+            if curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh; then
+              break
+            fi
+            echo "elan download failed on attempt $i" >&2
+            sleep $((i * 2))
+          done
+          for i in 1 2 3; do
+            if sh /tmp/elan-init.sh -y; then
+              break
+            fi
+            echo "elan install failed on attempt $i" >&2
+            sleep $((i * 2))
+          done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
-      - name: Run processor
+      - name: Verify prereqs
+        shell: bash
         run: |
-          chmod +x scripts/process_inbox.sh
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          chmod +x scripts/verify_codex_prereqs.sh scripts/process_inbox.sh
+          scripts/verify_codex_prereqs.sh
+
+      - name: Prepare lake dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake update
+
+      - name: Run theorem processor
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
           scripts/process_inbox.sh
 
       - name: Commit results
+        shell: bash
         run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add .
-          git commit -m "Auto-process theorems" || echo "No changes"
+          git add theorems_checked theorems_rejected theorems_proven theorem_receipts logs theorems_inbox
+          git commit -m "Auto-process theorems"
           git push
