@@ -1,0 +1,112 @@
+name: ChronoFold Autonomous Lean Agent
+
+on:
+  push:
+    branches: [auto]
+  workflow_dispatch:
+
+jobs:
+  lean-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Checkout ---
+      - uses: actions/checkout@v4
+
+      # --- Install Lean ---
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      # --- Init Lake ---
+      - name: Init toolchain
+        run: lake update
+
+      - name: Cache mathlib
+        run: lake exe cache get
+
+      # --- Install Node + Gemini CLI ---
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Note: The command in the prompt used '@google/generative-ai-cli'.
+      - name: Install Gemini CLI
+        run: npm install -g @google/generative-ai-cli
+
+      # --- Set API Key ---
+      - name: Export Gemini Key
+        run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+
+      # --- Attempt Build ---
+      - name: Build Lean
+        id: build
+        run: |
+          lake build > build.log 2>&1 || true
+
+      # --- Check Success ---
+      - name: Detect Success
+        id: status
+        run: |
+          if grep -q "error:" build.log; then
+            echo "status=fail" >> $GITHUB_OUTPUT
+          else
+            echo "status=success" >> $GITHUB_OUTPUT
+          fi
+
+      # --- Extract Errors ---
+      - name: Extract Errors
+        if: steps.status.outputs.status == 'fail'
+        run: |
+          grep -i "error" build.log | head -n 200 > errors.txt || true
+
+      # --- Gemini Fix Step ---
+      - name: Gemini Repair
+        if: steps.status.outputs.status == 'fail'
+        run: |
+          PROMPT="You are a Lean 4 theorem generator.
+
+STRICT:
+- Output ONLY Lean 4 code
+- No markdown
+- Must compile with lake build
+- Fix ALL errors
+
+Errors:
+$(cat errors.txt)
+
+Return full file for ChronoFold/Auto.lean
+"
+
+          gemini --model gemini-pro <<< "$PROMPT" > out.txt
+
+          # sanitize
+          sed -n '/import/,$p' out.txt > ChronoFold/Auto.lean
+
+      # --- Commit Fix (SELF-TRIGGER LOOP) ---
+      - name: Commit Fix
+        if: steps.status.outputs.status == 'fail'
+        run: |
+          git config user.name "agent"
+          git config user.email "agent@local"
+
+          git add ChronoFold/Auto.lean
+          git commit -m "auto-fix iteration" || exit 0
+          git push
+
+      # --- Final Success Artifact ---
+      - name: Upload Artifacts
+        if: steps.status.outputs.status == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-build
+          path: |
+            .lake/build
+            ChronoFold/Auto.lean
+
+      # --- Stop Condition ---
+      - name: Done
+        if: steps.status.outputs.status == 'success'
+        run: echo "✅ PIPELINE GREEN"

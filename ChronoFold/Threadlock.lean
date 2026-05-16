@@ -30,9 +30,11 @@ theorem stage_ordering (s : State) (h : s.stage < 6) :
   unfold operator_transition
   simp [h]
 
-/-- Proof that Ω_∞ is a closed Banach operator algebra.
-    We formalize the requirement by defining the space of bounded operators. -/
-axiom banach_operator_algebra_closed (Ω_inf : Type) [NormedAddCommGroup Ω_inf] [NormedSpace ℝ Ω_inf] [CompleteSpace Ω_inf] :
-  CompleteSpace (Ω_inf →L[ℝ] Ω_inf)
+/-- Verification that Ω_∞ is a closed Banach operator algebra.
+    We define the space and state the completeness property as a theorem
+    that follows from Mathlib's ContinuousLinearMap.completeSpace. -/
+theorem banach_operator_algebra_closed (Ω_inf : Type*) [NormedAddCommGroup Ω_inf] [NormedSpace ℝ Ω_inf] [CompleteSpace Ω_inf] :
+  CompleteSpace (Ω_inf →L[ℝ] Ω_inf) :=
+  ContinuousLinearMap.completeSpace
 
 end Chronofold
