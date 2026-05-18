@@ -40,19 +40,19 @@ jobs:
       - name: Prepare directories
         run: |
           set -euxo pipefail
-          mkdir -p ChronoFold/Auto theorems_unproven theorems_proven
+          mkdir -p src/lean/ChronoFold/Auto theorems_unproven theorems_proven
 
       - name: Sync dependencies
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
+          lake -d src/lean update --lakefile src/lean/lakefile.lean
 
       - name: Run verification engine
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          bash ./chronofold_ci_engine.sh
+          bash ./scripts/build/chronofold_ci_engine.sh
 
       - name: Upload verification artifacts
         if: always()
@@ -61,7 +61,7 @@ jobs:
           name: chronofold-verification-state
           path: |
             build.log
-            ChronoFold/Auto/
+            src/lean/ChronoFold/Auto/
             theorems_unproven/
             theorems_proven/
           if-no-files-found: warn
@@ -77,7 +77,7 @@ jobs:
 
           git config --global user.name "chronofold-bot"
           git config --global user.email "bot@chronofold.ai"
-          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
+          git add src/lean/ChronoFold/Auto theorems_unproven theorems_proven build.log || true
           git commit -m "Auto: theorem promotion"
           git push
 

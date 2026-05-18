@@ -6,9 +6,9 @@ on:
     branches: [ "main" ]
     paths:
       - '.github/workflows/snap.yml'
-      - 'lakefile.lean'
-      - 'Main.lean'
-      - 'Verify.lean'
+      - 'src/lean/lakefile.lean'
+      - 'src/lean/Main.lean'
+      - 'src/lean/Verify.lean'
 
 permissions:
   contents: read
@@ -29,7 +29,7 @@ jobs:
       - name: Run SNAP
         run: |
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build > build.log 2>&1 || true
+          lake -d src/lean build --lakefile src/lean/lakefile.lean > build.log 2>&1 || true
           tail -n 50 build.log || true
           if grep -i "error" build.log; then
             echo "Ω = 0"

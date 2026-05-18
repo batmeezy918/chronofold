@@ -23,7 +23,7 @@ jobs:
           auto-config: true
 
       - name: Build Lean
-        run: lake build
+        run: lake -d src/lean build --lakefile src/lean/lakefile.lean
 
       - name: Run SNAP Benchmark
-        run: python3 benchmark_snap.py
+        run: python3 src/benchmarks/benchmark_snap.py

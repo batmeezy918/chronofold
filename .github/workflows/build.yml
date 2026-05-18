@@ -29,7 +29,7 @@ jobs:
             .lake/packages
             .lake/build
             ~/.elan
-          key: ${{ runner.os }}-lean-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          key: ${{ runner.os }}-lean-${{ hashFiles('config/lean-toolchain', 'src/lean/lakefile.lean', 'config/lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-
 
@@ -48,30 +48,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f lean-toolchain
-          test -f lakefile.lean
-          test -f Main.lean
+          test -f config/lean-toolchain
+          test -f src/lean/lakefile.lean
+          test -f src/lean/Main.lean
 
       - name: Resolve dependencies
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
+          lake -d src/lean update --lakefile src/lean/lakefile.lean
 
       - name: Build project
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake build 2>&1 | tee build.log
+          lake -d src/lean build --lakefile src/lean/lakefile.lean 2>&1 | tee build.log
 
       - name: Run executable smoke test
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake exe Main 2>&1 | tee smoke.log
+          lake -d src/lean exe Main --lakefile src/lean/lakefile.lean 2>&1 | tee smoke.log
           grep -F "ChronoFold system active" smoke.log
 
       - name: Upload logs
