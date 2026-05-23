@@ -1,0 +1,8 @@
+{
+  "nodes": ["SNAP", "T1", "T2"],
+  "edges": [
+    ["T1", "SNAP"],
+    ["T2", "SNAP"]
+  ],
+  "mode": "deterministic"
+}

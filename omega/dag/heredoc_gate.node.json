@@ -1,0 +1,21 @@
+{
+  "node_id": "omega.heredoc_gate.v1",
+  "operator": "R ∘ P_Ω ∘ H_emit",
+  "module": "ChronoFold.Omega.HeredocRepro",
+  "theorems": [
+    "Omega.heredoc_emission_deterministic",
+    "Omega.heredoc_replay_closure",
+    "Omega.heredoc_gate_valid"
+  ],
+  "artifact_external": "omega/theorems/HeredocRepro.lean",
+  "artifact_lean_module": "ChronoFold/Omega/HeredocRepro.lean",
+  "output_hash": "f6d0bed6a1cd51f54f53e10135df511fd04fc02b3123261702a4f5a635da5864",
+  "dependencies": [],
+  "status": "interface_locked_external_witness_required",
+  "invariants": {
+    "Omega_Opsi": "required",
+    "heat_trace": "stable_required",
+    "curvature": "bounded_required",
+    "Replay_DLH": "required"
+  }
+}

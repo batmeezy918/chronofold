@@ -22,9 +22,10 @@ cd chronofold
 # SNAP (UNCHANGED CORE)
 # -------------------------------
 echo "[2] WRITE SNAP"
-cat > Chronofold/SNAP.lean << 'EOF'
-namespace Chronofold
 
+mkdir -p Chronofold
+
+cat > Chronofold/SNAP.lean << 'EOF'
 def H := Nat → Int
 
 def Ω (x : H) : Int := x 0

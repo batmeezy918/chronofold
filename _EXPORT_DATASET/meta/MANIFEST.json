@@ -1,0 +1,11 @@
+{
+  "project": "ChronoFold",
+  "timestamp": "20260510_112158",
+  "components": {
+    "results": "JSON system outputs",
+    "logs": "execution traces",
+    "theorems": "Lean / formal proofs artifacts",
+    "benchmarks": "simulation + evaluation scripts"
+  },
+  "notes": "Auto-generated research dataset export"
+}
