@@ -1,0 +1,74 @@
+# Benchmark Inventory
+
+## Benchmark Scripts
+- archive/old_versions/fix_coco_build.sh
+- archive/old_versions/fix_snap_dispatch.sh
+- archive/old_versions/fix_snap_workflow.sh
+- archive/old_versions/push_snap.sh
+- archive/old_versions/run_iqvf_coco_full.py
+- archive/old_versions/snap_core_fixed.sh
+- archive/old_versions/snap_final.py
+- archive/old_versions/snap_final_fixed.sh
+- archive/old_versions/snap_final_verified.sh
+- archive/old_versions/snap_fixed.py
+- archive/old_versions/snap_plus_benchmark.sh
+- archive/old_versions/snap_pp_benchmark.sh
+- archive/old_versions/snap_ppp_benchmark.sh
+- archive/old_versions/snap_pure_evolution.sh
+- archive/old_versions/snap_real_optimizer.sh
+- archive/old_versions/snap_release.py
+- archive/old_versions/snap_release_final.sh
+- archive/old_versions/snap_true.py
+- archive/old_versions/snap_true_final.sh
+- archive/old_versions/snap_vs_cma_fast.sh
+- archive/old_versions/snap_vs_cma_real.sh
+- archive/old_versions/snap_vs_cma_zero.sh
+- benchmarks/coco_baseline/coco_s6_benchmark.py
+- benchmarks/coco_baseline/setup_coco_pipeline.sh
+- benchmarks/optimizer_evolution/s6/run_s6_coco_equivalent.py
+- benchmarks/optimizer_evolution/s7/run_s7_coco_equivalent.py
+- benchmarks/optimizer_evolution/s8/run_s8_covariance.py
+- scripts/benchmark/coco_final_pipeline.sh
+- scripts/benchmark/s7_plus_full_pipeline.sh
+- scripts/benchmark/snap_coco_real.sh
+- scripts/benchmark/snap_vs_cma_benchmark.sh
+- scripts/setup/install_coco.sh
+- src/benchmarks/benchmark.py
+- src/benchmarks/benchmark_snap.py
+- src/benchmarks/s7_stats.py
+- src/benchmarks/snap_cma_harness.py
+- src/benchmarks/snap_vs_cma.py
+- src/optimizers/snap_core.py
+- src/optimizers/snap_plus.py
+- src/optimizers/snap_pp.py
+- src/optimizers/snap_pure_evolution.py
+- src/optimizers/snap_real_optimizer.py
+- src/optimizers/spme_optimizer.py
+
+## Benchmark Harnesses
+-
+- ApolloLLM/app/src/main/jni
+- archive/old_versions
+- benchmarks/coco_baseline
+- benchmarks/optimizer_evolution
+- benchmarks/optimizer_evolution/s6
+- benchmarks/optimizer_evolution/s7
+- benchmarks/optimizer_evolution/s8
+- benchmarks/results_archive
+- scripts/benchmark
+- scripts/setup
+- src/benchmarks
+- src/lean/Chronofold
+- src/optimizers
+
+## Benchmark Outputs
+- benchmarks/optimizer_evolution/s6/s6_coco_results_20260515.json
+- benchmarks/optimizer_evolution/s7/s7_coco_results_20260515.json
+- benchmarks/optimizer_evolution/s7/s7_stats.json
+- benchmarks/optimizer_evolution/s8/s8_coco_results_20260515.json
+- benchmarks/results_archive/README.md
+- benchmarks/results_archive/S7_PLUS_RESULTS.json
+- benchmarks/results_archive/real_results.json
+- benchmarks/results_archive/results.json
+- benchmarks/results_archive/snap_plus_results.json
+- benchmarks/results_archive/snap_pp_results.json
