@@ -46,13 +46,21 @@ jobs:
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
+          cd src/lean
           lake update
 
       - name: Run verification engine
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          bash ./chronofold_ci_engine.sh
+          if [ -f chronofold_ci_engine.sh ]; then
+            bash ./chronofold_ci_engine.sh
+          elif [ -f archive/old_versions/chronofold_ci_engine.sh ]; then
+            bash ./archive/old_versions/chronofold_ci_engine.sh
+          else
+            echo "chronofold_ci_engine.sh not found"
+            exit 1
+          fi
 
       - name: Upload verification artifacts
         if: always()
@@ -60,7 +68,7 @@ jobs:
         with:
           name: chronofold-verification-state
           path: |
-            build.log
+            src/lean/build.log
             ChronoFold/Auto/
             theorems_unproven/
             theorems_proven/
@@ -77,7 +85,7 @@ jobs:
 
           git config --global user.name "chronofold-bot"
           git config --global user.email "bot@chronofold.ai"
-          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
+          git add ChronoFold/Auto theorems_unproven theorems_proven src/lean/build.log || true
           git commit -m "Auto: theorem promotion"
           git push
 

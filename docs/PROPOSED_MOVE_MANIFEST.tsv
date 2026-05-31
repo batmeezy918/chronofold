@@ -1,0 +1,223 @@
+old_path	proposed_new_path	category	confidence	reason	risk	notes
+disabled/Auto.lean	lean/ChronoFold/Core/Auto.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+disabled/Theorems.lean	lean/ChronoFold/Core/Theorems.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+disabled/Operators.lean	lean/ChronoFold/Core/Operators.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+disabled/Base.lean	lean/ChronoFold/Core/Base.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+templates/theorem_candidate.lean	lean/ChronoFold/Core/theorem_candidate.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+benchmarks/results_archive/real_results.json	results/benchmarks/real_results.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/real_results.json	benchmarks/microbench/real_results.json	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/results_archive/results.json	results/benchmarks/results.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/results.json	benchmarks/microbench/results.json	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/results_archive/S7_PLUS_RESULTS.json	results/benchmarks/S7_PLUS_RESULTS.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/S7_PLUS_RESULTS.json	benchmarks/microbench/S7_PLUS_RESULTS.json	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/results_archive/snap_plus_results.json	results/benchmarks/snap_plus_results.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/snap_plus_results.json	benchmarks/microbench/snap_plus_results.json	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/results_archive/snap_pp_results.json	results/benchmarks/snap_pp_results.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/snap_pp_results.json	benchmarks/microbench/snap_pp_results.json	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/results_archive/README.md	results/benchmarks/README.md	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/results_archive/README.md	benchmarks/microbench/README.md	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+benchmarks/coco_baseline/coco_s6_benchmark.py	scripts/benchmarks/coco_s6_benchmark.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+benchmarks/coco_baseline/coco_s6_benchmark.py	benchmarks/coco/coco_s6_benchmark.py	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/coco_baseline/setup_coco_pipeline.sh	scripts/benchmarks/setup_coco_pipeline.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+benchmarks/coco_baseline/setup_coco_pipeline.sh	benchmarks/coco/setup_coco_pipeline.sh	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/s8_coco_results_20260515.json	results/benchmarks/s8_coco_results_20260515.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/s8_coco_results_20260515.json	benchmarks/coco/s8_coco_results_20260515.json	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/s8_coco_results_20260515.json	benchmarks/optimizer/s8_coco_results_20260515.json	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/run_s8_covariance.py	scripts/benchmarks/run_s8_covariance.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/run_s8_covariance.py	benchmarks/optimizer/run_s8_covariance.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s8/metadata.md	benchmarks/optimizer/metadata.md	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/run_s6_coco_equivalent.py	scripts/benchmarks/run_s6_coco_equivalent.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/run_s6_coco_equivalent.py	benchmarks/coco/run_s6_coco_equivalent.py	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/run_s6_coco_equivalent.py	benchmarks/optimizer/run_s6_coco_equivalent.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/s6_coco_results_20260515.json	results/benchmarks/s6_coco_results_20260515.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/s6_coco_results_20260515.json	benchmarks/coco/s6_coco_results_20260515.json	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/s6_coco_results_20260515.json	benchmarks/optimizer/s6_coco_results_20260515.json	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s6/metadata.md	benchmarks/optimizer/metadata.md	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/COMPARISON.md	benchmarks/optimizer/COMPARISON.md	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/s7_coco_results_20260515.json	results/benchmarks/s7_coco_results_20260515.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/s7_coco_results_20260515.json	benchmarks/coco/s7_coco_results_20260515.json	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/s7_coco_results_20260515.json	benchmarks/optimizer/s7_coco_results_20260515.json	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/s7_stats.json	results/benchmarks/s7_stats.json	results/benchmarks/	high	Rule 4: Benchmark output	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/s7_stats.json	benchmarks/optimizer/s7_stats.json	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/metadata.md	benchmarks/optimizer/metadata.md	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/run_s7_coco_equivalent.py	scripts/benchmarks/run_s7_coco_equivalent.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/run_s7_coco_equivalent.py	benchmarks/coco/run_s7_coco_equivalent.py	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+benchmarks/optimizer_evolution/s7/run_s7_coco_equivalent.py	benchmarks/optimizer/run_s7_coco_equivalent.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+config/manifest.json	scripts/dag/manifest.json	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+config/requirements.txt	config/requirements.txt	UNKNOWN	low	No rules matched	low	Evidence: pending
+config/lean-toolchain	config/lean-toolchain	UNKNOWN	low	No rules matched	low	Evidence: pending
+src/benchmarks/benchmark_snap.py	scripts/benchmarks/benchmark_snap.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/benchmarks/benchmark_snap.py	benchmarks/microbench/benchmark_snap.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/benchmarks/benchmark.py	scripts/benchmarks/benchmark.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/benchmarks/benchmark.py	benchmarks/microbench/benchmark.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/benchmarks/snap_cma_harness.py	scripts/benchmarks/snap_cma_harness.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/benchmarks/snap_cma_harness.py	benchmarks/microbench/snap_cma_harness.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/benchmarks/snap_vs_cma.py	scripts/benchmarks/snap_vs_cma.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/benchmarks/snap_vs_cma.py	benchmarks/microbench/snap_vs_cma.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/benchmarks/s7_stats.py	scripts/benchmarks/s7_stats.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/benchmarks/s7_stats.py	benchmarks/microbench/s7_stats.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/lean/Chronofold.lean	lean/ChronoFold/Core/Chronofold.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/Chronofold/Pipeline.lean	lean/ChronoFold/Core/Pipeline.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/Chronofold/SNAP.lean	lean/ChronoFold/Core/SNAP.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/Chronofold/SNAP.lean	benchmarks/microbench/SNAP.lean	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+src/lean/ChronoFold.lean	lean/ChronoFold/Core/ChronoFold.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/lakefile.lean	lean/ChronoFold/Core/lakefile.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/Verify.lean	lean/ChronoFold/Core/Verify.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/ChronoFold/Threadlock.lean	lean/ChronoFold/Core/Threadlock.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/ChronoFold/LeanBridge.lean	lean/ChronoFold/Core/LeanBridge.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/ChronoFold/Physics.lean	lean/ChronoFold/Core/Physics.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/ChronoFold/Auto/T1.lean	lean/ChronoFold/Core/T1.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/lean/Main.lean	lean/ChronoFold/Core/Main.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: pending
+src/optimizers/snap_pp.py	scripts/benchmarks/snap_pp.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/snap_pp.py	benchmarks/optimizer/snap_pp.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/snap_pp.py	src/operators/snap_pp.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+src/optimizers/snap_core.py	scripts/benchmarks/snap_core.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/snap_core.py	benchmarks/optimizer/snap_core.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/snap_core.py	src/operators/snap_core.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+src/optimizers/snap_plus.py	scripts/benchmarks/snap_plus.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/snap_plus.py	benchmarks/optimizer/snap_plus.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/snap_plus.py	src/operators/snap_plus.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+src/optimizers/snap_real_optimizer.py	scripts/benchmarks/snap_real_optimizer.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/snap_real_optimizer.py	benchmarks/optimizer/snap_real_optimizer.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/snap_real_optimizer.py	src/operators/snap_real_optimizer.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+src/optimizers/snap_pure_evolution.py	scripts/benchmarks/snap_pure_evolution.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/snap_pure_evolution.py	benchmarks/optimizer/snap_pure_evolution.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/snap_pure_evolution.py	src/operators/snap_pure_evolution.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+src/optimizers/spme_optimizer.py	scripts/benchmarks/spme_optimizer.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+src/optimizers/spme_optimizer.py	benchmarks/optimizer/spme_optimizer.py	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+src/optimizers/spme_optimizer.py	src/operators/spme_optimizer.py	src/operators/	high	Target: src/operators/	low	Evidence: measured
+BENCHMARK_INDEX.md	benchmarks/microbench/BENCHMARK_INDEX.md	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+theorems_inbox/README.md	theorems/inbox/README.md	theorems/inbox/	high	Rule 5: Theorem inbox	low	Evidence: pending
+papers/thm_1774769187.md	results/reports/thm_1774769187.md	results/reports/	high	Rule 8: Reports/Papers	low	Evidence: narrative_only
+archive/old_versions/snap_release_final.sh	scripts/benchmarks/snap_release_final.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_release_final.sh	benchmarks/microbench/snap_release_final.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/generate_theorem.py	scripts/theorem/generate_theorem.py	scripts/theorem/	high	Rule 3: Script generating Lean proofs	low	Evidence: measured
+archive/old_versions/snap_pp_benchmark.sh	scripts/benchmarks/snap_pp_benchmark.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_pp_benchmark.sh	benchmarks/microbench/snap_pp_benchmark.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_final.py	scripts/benchmarks/snap_final.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_final.py	benchmarks/microbench/snap_final.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/chronofold_final_fix.sh	archive/old_versions/chronofold_final_fix.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_plus_benchmark.sh	scripts/benchmarks/snap_plus_benchmark.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_plus_benchmark.sh	benchmarks/microbench/snap_plus_benchmark.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/run_iqvf_coco_full.py	scripts/benchmarks/run_iqvf_coco_full.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/run_iqvf_coco_full.py	benchmarks/coco/run_iqvf_coco_full.py	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+archive/old_versions/push_chronofold_baseline.sh	archive/old_versions/push_chronofold_baseline.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_true_final.sh	scripts/benchmarks/snap_true_final.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_true_final.sh	benchmarks/microbench/snap_true_final.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_ppp_benchmark.sh	scripts/benchmarks/snap_ppp_benchmark.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_ppp_benchmark.sh	benchmarks/microbench/snap_ppp_benchmark.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/get_artifact.sh	archive/old_versions/get_artifact.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/chronofold_full_system.sh	archive/old_versions/chronofold_full_system.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_fixed.py	scripts/benchmarks/snap_fixed.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_fixed.py	benchmarks/microbench/snap_fixed.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/fix_binding_real.sh	archive/old_versions/fix_binding_real.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/push_project.sh	archive/old_versions/push_project.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/chronofold_ci_engine.sh	archive/old_versions/chronofold_ci_engine.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/chronofold_finalize_cycle.sh	archive/old_versions/chronofold_finalize_cycle.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_chronofold_ci.sh	archive/old_versions/fix_chronofold_ci.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_vs_cma_fast.sh	scripts/benchmarks/snap_vs_cma_fast.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_vs_cma_fast.sh	benchmarks/microbench/snap_vs_cma_fast.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/chronofold_auto_fix.sh	archive/old_versions/chronofold_auto_fix.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_full_pipeline.sh	archive/old_versions/fix_full_pipeline.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/chronofold_loop.sh	archive/old_versions/chronofold_loop.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_and_push_project.sh	archive/old_versions/fix_and_push_project.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_coco_build.sh	scripts/benchmarks/fix_coco_build.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/fix_coco_build.sh	benchmarks/coco/fix_coco_build.sh	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+archive/old_versions/push_snap.sh	scripts/benchmarks/push_snap.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/push_snap.sh	benchmarks/microbench/push_snap.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/push_full_required.sh	archive/old_versions/push_full_required.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_final_fixed.sh	scripts/benchmarks/snap_final_fixed.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_final_fixed.sh	benchmarks/microbench/snap_final_fixed.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_release.py	scripts/benchmarks/snap_release.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_release.py	benchmarks/microbench/snap_release.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/codex_prompt.txt	archive/old_versions/codex_prompt.txt	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/ApolloLLM.tar.gz	archive/old_versions/ApolloLLM.tar.gz	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/chronofold_push.sh	archive/old_versions/chronofold_push.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_pure_evolution.sh	scripts/benchmarks/snap_pure_evolution.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_pure_evolution.sh	benchmarks/microbench/snap_pure_evolution.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_core_fixed.sh	scripts/benchmarks/snap_core_fixed.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_core_fixed.sh	benchmarks/microbench/snap_core_fixed.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_true.py	scripts/benchmarks/snap_true.py	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_true.py	benchmarks/microbench/snap_true.py	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_real_optimizer.sh	scripts/benchmarks/snap_real_optimizer.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_real_optimizer.sh	benchmarks/optimizer/snap_real_optimizer.sh	benchmarks/optimizer/	high	Rule 4: Optimizer harness	low	Evidence: benchmarked
+archive/old_versions/snap_vs_cma_zero.sh	scripts/benchmarks/snap_vs_cma_zero.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_vs_cma_zero.sh	benchmarks/microbench/snap_vs_cma_zero.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_vs_cma_zero.sh	scripts/dag/snap_vs_cma_zero.sh	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+archive/old_versions/chronofold.zip	archive/old_versions/chronofold.zip	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_snap_workflow.sh	scripts/benchmarks/fix_snap_workflow.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/fix_snap_workflow.sh	benchmarks/microbench/fix_snap_workflow.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/fix_final_system.sh	archive/old_versions/fix_final_system.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/snap_vs_cma_real.sh	scripts/benchmarks/snap_vs_cma_real.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_vs_cma_real.sh	benchmarks/microbench/snap_vs_cma_real.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/snap_final_verified.sh	scripts/benchmarks/snap_final_verified.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/snap_final_verified.sh	benchmarks/microbench/snap_final_verified.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/fix_chronofold_full.sh	archive/old_versions/fix_chronofold_full.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/fix_snap_dispatch.sh	scripts/benchmarks/fix_snap_dispatch.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+archive/old_versions/fix_snap_dispatch.sh	benchmarks/microbench/fix_snap_dispatch.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+archive/old_versions/cleanup.sh	archive/old_versions/cleanup.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/workflow_graph.json	benchmarks/graph/workflow_graph.json	benchmarks/graph/	high	Rule 4: Graph harness	low	Evidence: benchmarked
+archive/old_versions/FORCE_REAL_BUILD.sh	archive/old_versions/FORCE_REAL_BUILD.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/old_versions/run_s7_plus.py	archive/old_versions/run_s7_plus.py	UNKNOWN	low	No rules matched	low	Evidence: pending
+archive/DEPRECATION_LOG.md	archive/DEPRECATION_LOG.md	UNKNOWN	low	No rules matched	low	Evidence: pending
+theorems_rejected/THM_000001__smoke_test.lean	theorems/rejected/THM_000001__smoke_test.lean	theorems/rejected/	high	Rule 5: Rejected artifacts	low	Evidence: rejected
+theorems_rejected/THM_000001__smoke_test.lean	lean/ChronoFold/Core/THM_000001__smoke_test.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: rejected
+theorems_rejected/THM_000001__nat_add_zero_right.lean	theorems/rejected/THM_000001__nat_add_zero_right.lean	theorems/rejected/	high	Rule 5: Rejected artifacts	low	Evidence: rejected
+theorems_rejected/THM_000001__nat_add_zero_right.lean	lean/ChronoFold/Core/THM_000001__nat_add_zero_right.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: rejected
+theorem_receipts/THM_000001__nat_add_zero_right.json	theorems/receipts/THM_000001__nat_add_zero_right.json	theorems/receipts/	high	Rule 5: Theorem receipts	low	Evidence: receipt
+theorem_receipts/THM_000001__smoke_test.json	theorems/receipts/THM_000001__smoke_test.json	theorems/receipts/	high	Rule 5: Theorem receipts	low	Evidence: receipt
+scripts/validate_theorem.py	scripts/validate_theorem.py	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/process_inbox.sh	scripts/process_inbox.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/deploy/push_chronofold_fix.sh	scripts/deploy/push_chronofold_fix.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/deploy/chronofold_pipeline_with_bench.sh	scripts/deploy/chronofold_pipeline_with_bench.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/deploy/fix_git_auth.sh	scripts/deploy/fix_git_auth.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/benchmark/s7_plus_full_pipeline.sh	scripts/benchmarks/s7_plus_full_pipeline.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+scripts/benchmark/s7_plus_full_pipeline.sh	benchmarks/microbench/s7_plus_full_pipeline.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+scripts/benchmark/coco_final_pipeline.sh	scripts/benchmarks/coco_final_pipeline.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+scripts/benchmark/coco_final_pipeline.sh	benchmarks/coco/coco_final_pipeline.sh	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+scripts/benchmark/snap_coco_real.sh	scripts/benchmarks/snap_coco_real.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+scripts/benchmark/snap_coco_real.sh	benchmarks/coco/snap_coco_real.sh	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+scripts/benchmark/snap_vs_cma_benchmark.sh	scripts/benchmarks/snap_vs_cma_benchmark.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+scripts/benchmark/snap_vs_cma_benchmark.sh	benchmarks/microbench/snap_vs_cma_benchmark.sh	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+scripts/verify_codex_prereqs.sh	scripts/verify_codex_prereqs.sh	UNKNOWN	low	No rules matched	low	Evidence: pending
+scripts/setup/install_coco.sh	scripts/benchmarks/install_coco.sh	scripts/benchmarks/	high	Rule 4: Benchmark executable	low	Evidence: benchmarked
+scripts/setup/install_coco.sh	benchmarks/coco/install_coco.sh	benchmarks/coco/	high	Rule 4: COCO harness	low	Evidence: benchmarked
+scripts/setup/install_coco.sh	scripts/bootstrap/install_coco.sh	scripts/bootstrap/	high	Rule 1: Bootstrap	low	Evidence: measured
+scripts/setup/bootstrap_chronofold_theorem_system.sh	scripts/bootstrap/bootstrap_chronofold_theorem_system.sh	scripts/bootstrap/	high	Rule 1: Bootstrap	low	Evidence: measured
+scripts/setup/install_chronofold_full.sh	scripts/bootstrap/install_chronofold_full.sh	scripts/bootstrap/	high	Rule 1: Bootstrap	low	Evidence: measured
+scripts/setup/install_codex_scaffold.sh	scripts/bootstrap/install_codex_scaffold.sh	scripts/bootstrap/	high	Rule 1: Bootstrap	low	Evidence: measured
+chronofold_x/templates/viewmodel.kt.tpl	src/chronofold/viewmodel.kt.tpl	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/templates/compose_screen.kt.tpl	src/chronofold/compose_screen.kt.tpl	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/templates/repository.kt.tpl	src/chronofold/repository.kt.tpl	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/examples/calculator_app.json	src/chronofold/calculator_app.json	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/omega.py	src/chronofold/omega.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/schema.py	src/chronofold/schema.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/hashing.py	src/chronofold/hashing.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/delta.py	scripts/dag/delta.py	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+chronofold_x/core/delta.py	src/chronofold/delta.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/emitter.py	src/chronofold/emitter.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/lambda_opt.py	src/chronofold/lambda_opt.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/core/xi.py	scripts/dag/xi.py	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+chronofold_x/core/xi.py	src/chronofold/xi.py	src/chronofold/	high	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/requirements.txt	src/chronofold/requirements.txt	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/runtime/replay_engine.py	src/runtime/replay_engine.py	src/runtime/	high	Target: src/runtime/	low	Evidence: measured
+chronofold_x/runtime/executor.py	src/runtime/executor.py	src/runtime/	high	Target: src/runtime/	low	Evidence: measured
+chronofold_x/cli.py	src/chronofold/cli.py	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+chronofold_x/README.md	scripts/dag/README.md	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+chronofold_x/tests/test_omega.py	src/chronofold/test_omega.py	src/chronofold/	medium	Target: src/chronofold/	low	Evidence: measured
+theorems_proven/T1.lean	theorems/proven/T1.lean	theorems/proven/	high	Rule 5: Proven artifacts	low	Evidence: verified_by_lean
+theorems_proven/T1.lean	lean/ChronoFold/Core/T1.lean	lean/ChronoFold/Core/	medium	Rule 3: Default Lean Core	low	Evidence: verified_by_lean
+AGENTS.md	AGENTS.md	UNKNOWN	low	No rules matched	low	Evidence: pending
+ORGANIZE_BENCHMARKS.md	benchmarks/microbench/ORGANIZE_BENCHMARKS.md	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+all_files.txt	all_files.txt	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/build.gradle.kts	ApolloLLM/build.gradle.kts	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/app/build.gradle.kts	ApolloLLM/app/build.gradle.kts	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/app/src/main/jni/apollo.cpp	ApolloLLM/app/src/main/jni/apollo.cpp	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/app/src/main/jni/CMakeLists.txt	benchmarks/microbench/CMakeLists.txt	benchmarks/microbench/	medium	Rule 4: Default Benchmark harness	low	Evidence: benchmarked
+ApolloLLM/app/src/main/AndroidManifest.xml	ApolloLLM/app/src/main/AndroidManifest.xml	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/app/src/main/java/com/apollo/RoomDatabase.kt	ApolloLLM/app/src/main/java/com/apollo/RoomDatabase.kt	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/app/src/main/java/com/apollo/MainActivity.kt	scripts/dag/MainActivity.kt	scripts/dag/	medium	Rule 2: DAG	low	Evidence: measured
+ApolloLLM/app/src/main/java/com/apollo/DatabaseHelper.java	ApolloLLM/app/src/main/java/com/apollo/DatabaseHelper.java	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/settings.gradle.kts	ApolloLLM/settings.gradle.kts	UNKNOWN	low	No rules matched	low	Evidence: pending
+ApolloLLM/gradle/wrapper/gradle-wrapper.properties	ApolloLLM/gradle/wrapper/gradle-wrapper.properties	UNKNOWN	low	No rules matched	low	Evidence: pending
+README.md	README.md	UNKNOWN	low	No rules matched	low	Evidence: pending

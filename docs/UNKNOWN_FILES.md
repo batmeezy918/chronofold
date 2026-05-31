@@ -1,0 +1,47 @@
+# Unknown Files
+
+The following files did not match any classification rules and will remain in place.
+
+- AGENTS.md
+- ApolloLLM/app/build.gradle.kts
+- ApolloLLM/app/src/main/AndroidManifest.xml
+- ApolloLLM/app/src/main/java/com/apollo/DatabaseHelper.java
+- ApolloLLM/app/src/main/java/com/apollo/RoomDatabase.kt
+- ApolloLLM/app/src/main/jni/apollo.cpp
+- ApolloLLM/build.gradle.kts
+- ApolloLLM/gradle/wrapper/gradle-wrapper.properties
+- ApolloLLM/settings.gradle.kts
+- README.md
+- all_files.txt
+- archive/DEPRECATION_LOG.md
+- archive/old_versions/ApolloLLM.tar.gz
+- archive/old_versions/FORCE_REAL_BUILD.sh
+- archive/old_versions/chronofold.zip
+- archive/old_versions/chronofold_auto_fix.sh
+- archive/old_versions/chronofold_ci_engine.sh
+- archive/old_versions/chronofold_final_fix.sh
+- archive/old_versions/chronofold_finalize_cycle.sh
+- archive/old_versions/chronofold_full_system.sh
+- archive/old_versions/chronofold_loop.sh
+- archive/old_versions/chronofold_push.sh
+- archive/old_versions/cleanup.sh
+- archive/old_versions/codex_prompt.txt
+- archive/old_versions/fix_and_push_project.sh
+- archive/old_versions/fix_binding_real.sh
+- archive/old_versions/fix_chronofold_ci.sh
+- archive/old_versions/fix_chronofold_full.sh
+- archive/old_versions/fix_final_system.sh
+- archive/old_versions/fix_full_pipeline.sh
+- archive/old_versions/get_artifact.sh
+- archive/old_versions/push_chronofold_baseline.sh
+- archive/old_versions/push_full_required.sh
+- archive/old_versions/push_project.sh
+- archive/old_versions/run_s7_plus.py
+- config/lean-toolchain
+- config/requirements.txt
+- scripts/deploy/chronofold_pipeline_with_bench.sh
+- scripts/deploy/fix_git_auth.sh
+- scripts/deploy/push_chronofold_fix.sh
+- scripts/process_inbox.sh
+- scripts/validate_theorem.py
+- scripts/verify_codex_prereqs.sh
