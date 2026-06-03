@@ -1,0 +1,22 @@
+FAILURE: COCO cloned, but Python package cocoex.interface did not build.
+
+Known observed failure:
+- import finds cocoex/__init__.py
+- __init__.py imports cocoex.interface
+- interface.py / compiled _interface extension is missing or failed
+
+Most likely causes:
+1. Python 3.13 incompatible with this COCO build script on this environment.
+2. SWIG missing or SWIG did not run.
+3. Compiler cannot build Python C extension.
+4. Python headers unavailable or wrong include path.
+5. setup.py/pyproject dynamic version import tries to import cocoex before interface exists.
+
+Important logs:
+- /root/chronofold/cocoex_autofix_20260529T071740Z/do_py_run_python.log
+- /root/chronofold/cocoex_autofix_20260529T071740Z/setup_build_ext.log
+- /root/chronofold/cocoex_autofix_20260529T071740Z/pip_install_no_isolation.log
+- /root/chronofold/cocoex_autofix_20260529T071740Z/manual_swig.log
+- /root/chronofold/cocoex_autofix_20260529T071740Z/manual_compile.log
+- /root/chronofold/cocoex_autofix_20260529T071740Z/file_inventory.txt
+- /root/chronofold/cocoex_autofix_20260529T071740Z/toolcheck.txt

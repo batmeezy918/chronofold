@@ -1,0 +1,15 @@
+./cfpc_runs/cfpc_v5_20260603T122825Z/base.lean:1:0: error: unknown module prefix 'Cf'
+
+No directory 'Cf' or file 'Cf.olean' in the search path entries:
+/root/chronofold/.lake/packages/Cli/.lake/build/lib/lean
+/root/chronofold/.lake/packages/batteries/.lake/build/lib/lean
+/root/chronofold/.lake/packages/Qq/.lake/build/lib/lean
+/root/chronofold/.lake/packages/aesop/.lake/build/lib/lean
+/root/chronofold/.lake/packages/proofwidgets/.lake/build/lib/lean
+/root/chronofold/.lake/packages/importGraph/.lake/build/lib/lean
+/root/chronofold/.lake/packages/LeanSearchClient/.lake/build/lib/lean
+/root/chronofold/.lake/packages/plausible/.lake/build/lib/lean
+/root/chronofold/.lake/packages/mathlib/.lake/build/lib/lean
+/root/chronofold/.lake/build/lib/lean
+/root/.elan/toolchains/leanprover--lean4---v4.29.0/lib/lean
+/root/.elan/toolchains/leanprover--lean4---v4.29.0/lib/lean

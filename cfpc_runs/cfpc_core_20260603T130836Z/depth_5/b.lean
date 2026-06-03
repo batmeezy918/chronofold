@@ -1,0 +1,6 @@
+import Mathlib
+
+-- CFPC-CORE GENERATED FILE
+
+theorem cfpc_goal : True := by
+  simp

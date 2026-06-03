@@ -1,0 +1,11 @@
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/__init__.py
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/__pycache__/__init__.cpython-313.pyc
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/__pycache__/exceptions.cpython-313.pyc
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/__pycache__/solvers.cpython-313.pyc
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/__pycache__/utilities.cpython-313.pyc
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/exceptions.py
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/function.pyx
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/interface.c
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/interface.pyx
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/solvers.py
+/root/chronofold/external/coco/code-experiments/build/python/src/cocoex/utilities.py

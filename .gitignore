@@ -22,3 +22,5 @@ local.properties
 
 # Other
 *.log
+/.lake
+/.lake

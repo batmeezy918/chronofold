@@ -1,0 +1,10 @@
+PATH=/root/.local/bin:/root/.elan/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/data/data/com.termux/files/usr/bin:/system/bin:/system/xbin
+USER=uid=0(root) gid=0(root) groups=0(root),1077(aid_external_storage),1079(aid_ext_obb_rw),3003(aid_inet),9997(aid_everybody),20272(aid_u0_a272_cache),50272(aid_all_a272)
+python=Python 3.13.5
+pip=pip 26.1.1 from /root/chronofold/benchmarks/coco_paradox_runs/20260529T070445Z/.venv/lib/python3.13/site-packages/pip (python 3.13)
+cc=/usr/bin/clang
+cxx=/usr/bin/clang++
+make=/usr/bin/make
+cmake=/usr/bin/cmake
+swig=/usr/bin/swig
+python-config=/usr/bin/python3-config
