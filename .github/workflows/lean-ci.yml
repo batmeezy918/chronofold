@@ -1,0 +1,39 @@
+name: Lean CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Verify Lean
+        run: |
+          lean --version
+          lake --version
+
+      - name: Build project
+        run: |
+          lake build
+
+      - name: Run main (if exists)
+        run: |
+          if [ -f Main.lean ]; then
+            lake env lean Main.lean
+          fi
+
+      - name: Run CategoryQuotient (if exists)
+        run: |
+          if [ -f CategoryQuotient.lean ]; then
+            lake env lean CategoryQuotient.lean
+          fi
