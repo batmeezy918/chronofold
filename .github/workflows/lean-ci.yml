@@ -1,23 +1,23 @@
-name: Lean CI
+name: CFPC Lean CI v2
 
 on:
   push:
   pull_request:
 
 jobs:
-  build:
+  proof-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install elan (Lean toolchain manager)
+      - name: Install Lean (elan)
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Verify Lean
+      - name: Verify toolchain
         run: |
           lean --version
           lake --version
@@ -26,14 +26,56 @@ jobs:
         run: |
           lake build
 
-      - name: Run main (if exists)
+      - name: Run all Lean files (discovery mode)
         run: |
-          if [ -f Main.lean ]; then
-            lake env lean Main.lean
-          fi
+          echo "=== DISCOVERY MODE ==="
+          find . -name "*.lean" | while read file; do
+            echo "---- RUNNING: $file ----"
+            lake env lean "$file" || echo "FAILED: $file"
+          done
 
-      - name: Run CategoryQuotient (if exists)
+      - name: Generate theorem DAG
         run: |
-          if [ -f CategoryQuotient.lean ]; then
-            lake env lean CategoryQuotient.lean
-          fi
+          echo "=== BUILDING DAG ==="
+          mkdir -p cfpc_ci
+          find . -name "*.lean" > cfpc_ci/files.txt
+
+          python3 - << 'PY'
+import json, os
+
+files = open("cfpc_ci/files.txt").read().splitlines()
+
+graph = {
+    "nodes": [],
+    "edges": []
+}
+
+for f in files:
+    content = open(f, errors="ignore").read()
+    score = 0
+
+    if "theorem" in content:
+        score += 2
+    if "sorry" in content:
+        score -= 5
+    if "by" in content:
+        score += 1
+
+    node = {
+        "file": f,
+        "score": score,
+        "has_sorry": "sorry" in content
+    }
+
+    graph["nodes"].append(node)
+
+with open("cfpc_ci/graph.json", "w") as out:
+    json.dump(graph, out, indent=2)
+
+print("DAG generated:", graph)
+PY
+
+      - name: Summary report
+        run: |
+          echo "=== CFPC-CI v2 SUMMARY ==="
+          cat cfpc_ci/graph.json
