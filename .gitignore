@@ -1,5 +1,31 @@
-omega_env/
+# =========================
+# LEAN / LAKE SYSTEM
+# =========================
+.lake/
+**/*.olean
+**/*.ilean
+**/*.trace
+**/build/
+
+# =========================
+# PYTHON / RUNTIME
+# =========================
 __pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# EXPERIMENTS
+# =========================
+experiments/runs/
+experiments/results/
+experiments/validation/
+experiments/cfpc_runs/
+
+# =========================
+# ARTIFACT NOISE
+# =========================
 *.log
 *.npy
 tmp/
+omega_env/
