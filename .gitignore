@@ -14,3 +14,4 @@ tmp/
 omega_env/
 __pycache__/
 .lake/
+omega_env/
