@@ -2,23 +2,34 @@
 
 cd ~/chronofold || exit 1
 
-echo "🟢 Production autosync started (stable mode)"
+echo "🧠 Semantic autosync watcher started"
 
-# track last commit time to avoid spam
 LAST_COMMIT=0
+
+# noise filtering (critical for your repo)
+IGNORE="(\\.git|\\.lake|omega_env|runs|cfpc_runs|control|__pycache__)"
 
 while true; do
 
   # stage changes
   git add -A
 
-  # check if there is anything meaningful
+  # remove noise from staging (safety pass)
+  git reset .gitignore 2>/dev/null
+
+  # check real diff
   if ! git diff --cached --quiet; then
 
     NOW=$(date +%s)
 
-    # throttle commits (min 30 seconds apart)
+    # throttle (30s)
     if [ $((NOW - LAST_COMMIT)) -gt 30 ]; then
+
+      # detect changed files (light semantic signal)
+      CHANGED=$(git diff --cached --name-only | head -n 5)
+
+      echo "📦 Changes detected:"
+      echo "$CHANGED"
 
       git commit -m "auto-sync: $(date +%Y-%m-%d_%H-%M-%S)"
 
@@ -26,10 +37,10 @@ while true; do
 
       LAST_COMMIT=$NOW
 
-      echo "✅ synced at $(date)"
+      echo "✅ synced"
 
     else
-      echo "⏳ throttling commit (waiting window)"
+      echo "⏳ throttled"
     fi
 
   fi
