@@ -1,0 +1,5 @@
+SNAP benchmark completed
+optimizer=fallback
+best_f=0.0
+iterations=0
+coco_available=False

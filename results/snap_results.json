@@ -1,0 +1,9 @@
+{
+  "snap": {
+    "optimizer": "fallback",
+    "best_f": 0.0,
+    "iterations": 0
+  },
+  "coco_available": false,
+  "numpy_version": "2.2.4"
+}
