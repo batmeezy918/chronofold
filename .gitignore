@@ -1,17 +1,5 @@
-# experiments
-experiments/runs/
-experiments/results/
-experiments/validation/
-experiments/cfpc_runs/
-benchmarks/
-
-# artifacts
-*.npy
-*.log
-tmp/
-
-# system noise
 omega_env/
 __pycache__/
-.lake/
-omega_env/
+*.log
+*.npy
+tmp/

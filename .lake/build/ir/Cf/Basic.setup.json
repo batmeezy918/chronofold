@@ -1,0 +1,10 @@
+{"plugins": [],
+ "package": "cf",
+ "options":
+ {"relaxedAutoImplicit": false,
+  "pp.unicode.fun": true,
+  "maxSynthPendingDepth": 3},
+ "name": "Cf.Basic",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}
