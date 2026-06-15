@@ -1,0 +1,10 @@
+{
+  "autosync_allowed": true,
+  "max_commits_per_hour": 6,
+  "block_paths": [
+    "omega_env/",
+    "*.log",
+    "experiments/runs/"
+  ],
+  "kernel_required_for_push": true
+}
