@@ -1,45 +1,57 @@
 #!/usr/bin/env bash
 
-echo "🧠 AR-OS AUTONOMOUS ENGINE STARTED"
+echo "🧠 AR-OS AUTONOMOUS ENGINE (CLEAN V1)"
 
-INTERVAL=300   # 5 min cycle
+INTERVAL=300
 MAX_CYCLES=999
-
 CYCLE=0
 
-while [ $CYCLE -lt $MAX_CYCLES ]; do
+LAST_COMMIT_TIME=0
+COMMIT_COOLDOWN=60
+
+while [ "$CYCLE" -lt "$MAX_CYCLES" ]; do
 
     echo "-----------------------------"
     echo "🔁 Cycle: $CYCLE"
 
-    # STEP 1: run kernel (safe default target)
-    bash run_kernel.sh cfpc
+    # RUN KERNEL (safe)
+    bash run_kernel.sh cfpc || echo "kernel failed"
 
-    # STEP 2: capture state
     DATE=$(date +%Y%m%d_%H%M%S)
+
     echo "{\"cycle\":$CYCLE,\"time\":\"$DATE\"}" > os/state/last_cycle.json
 
-    # STEP 3: check git changes
-    git add -A
+    # SAFE STAGING ONLY
+    git add core experiments kernel os tools 2>/dev/null
 
     if ! git diff --cached --quiet; then
 
-        echo "📦 Changes detected → committing"
+        NOW=$(date +%s)
+        DIFF=$((NOW - LAST_COMMIT_TIME))
 
-        git commit -m "auto-cycle: $DATE cycle=$CYCLE" || true
+        if [ "$DIFF" -ge "$COMMIT_COOLDOWN" ]; then
 
-        # push (safe gated)
-        git push origin main || echo "⚠️ push failed (network or lock)"
+            echo "📦 committing cycle $CYCLE"
+
+            git commit -m "auto-cycle: $DATE cycle=$CYCLE" || true
+            git push origin main || echo "push failed"
+
+            LAST_COMMIT_TIME=$NOW
+
+        else
+
+            # SAFE PRINT (NO PARENTHESIS EXPANSION ISSUES)
+            echo "⏳ commit throttled: wait $COMMIT_COOLDOWN sec window"
+
+        fi
 
     else
-        echo "✔ No changes this cycle"
+        echo "✔ no changes"
     fi
 
-    # STEP 4: sleep
-    sleep $INTERVAL
-
+    sleep "$INTERVAL"
     CYCLE=$((CYCLE+1))
 
 done
 
-echo "🧠 AR-OS ENGINE STOPPED"
+echo "🧠 ENGINE STOPPED"
