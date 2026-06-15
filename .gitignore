@@ -24,3 +24,7 @@ local.properties
 *.log
 /.lake
 /.lake
+results/
+*.tar.gz
+*.zip
+benchmarks/
