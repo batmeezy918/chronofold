@@ -2,7 +2,10 @@
 
 cd ~/chronofold
 
-while true; do
+echo "🟢 Stable autosync started"
+
+while inotifywait -r -e modify,create,delete .; do
+
   git add -A
 
   if ! git diff --cached --quiet; then
@@ -10,5 +13,4 @@ while true; do
     git push
   fi
 
-  sleep 60
 done
