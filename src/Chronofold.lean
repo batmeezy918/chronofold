@@ -6,3 +6,4 @@ import Chronofold.Benchmarks
 import Chronofold.MeasurementCertificate
 import Chronofold.AgdQuotient
 import Chronofold.BenchmarkCertificate
+import Chronofold.PerformanceCertificate
