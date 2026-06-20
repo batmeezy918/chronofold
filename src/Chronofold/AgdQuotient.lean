@@ -23,4 +23,13 @@ theorem operator_preserves_equivalence
   simp [h_linear]
   exact h_equiv
 
+/- Additional consistency theorem: invariant preservation after benchmark transformation -/
+theorem invariant_preservation_after_transform
+  (op : AgdOperator) (inv : AgdInvariant) (s : AgdState)
+  (h_inv : inv.property s)
+  (h_preserved : ∀ x, inv.property x → inv.property (op.apply x))
+  : inv.property (op.apply s) := by
+  apply h_preserved
+  exact h_inv
+
 end AGD

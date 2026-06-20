@@ -19,3 +19,7 @@ srcDir = "src"
 [[lean_lib]]
 name = "Chronofold"
 srcDir = "src"
+
+[[lean_exe]]
+name = "Main"
+srcDir = "src"
