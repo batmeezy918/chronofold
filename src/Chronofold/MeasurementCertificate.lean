@@ -65,4 +65,17 @@ theorem measurement_invariant_preserved :
   intro t h
   exact h
 
+/- Structural extension for AGDTransition -/
+structure AGDTransition where
+  before : MeasurementState
+  after : MeasurementState
+
+def agd_invariant_preserved (t : AGDTransition) : Prop :=
+  t.before.jitter = t.after.jitter
+
+theorem invariant_transport :
+  ∀ t, agd_invariant_preserved t → t.before.jitter = t.after.jitter := by
+  intro t h
+  exact h
+
 end AGD

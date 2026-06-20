@@ -32,4 +32,11 @@ theorem invariant_preservation_after_transform
   apply h_preserved
   exact h_inv
 
+theorem equivalent_system_preserves_measurement
+  {Device : Type} (A B : Device) (J : Device → ℝ) (ε : ℝ)
+  (h : EquivalentDevice A B J ε) :
+  jitter_close J ε A B := by
+  unfold EquivalentDevice at h
+  exact h
+
 end AGD
