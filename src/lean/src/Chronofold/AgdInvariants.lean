@@ -1,4 +1,4 @@
-import Chronofold.AGD.Operators
+import Chronofold.AgdOperators
 
 namespace Chronofold
 

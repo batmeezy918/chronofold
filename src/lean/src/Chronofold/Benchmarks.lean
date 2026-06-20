@@ -1,4 +1,4 @@
-import Chronofold.AGD.Core
+import Chronofold.AgdCore
 
 namespace Chronofold
 

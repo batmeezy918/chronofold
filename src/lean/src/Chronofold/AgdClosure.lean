@@ -1,4 +1,4 @@
-import Chronofold.AGD.Invariants
+import Chronofold.AgdInvariants
 
 namespace Chronofold
 
