@@ -1,7 +1,9 @@
-name: Lean + SNAP Pipeline
+name: Lean 4 + AGD Pipeline
 
 on:
   push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -12,18 +14,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Install Lean
-        uses: leanprover/lean-action@v1
-        with:
-          auto-config: true
+      - name: Get Mathlib cache
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake exe cache get
 
-      - name: Build Lean
-        run: lake build
-
-      - name: Run SNAP Benchmark
-        run: python3 benchmark_snap.py
+      - name: Build Chronofold
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          lake build

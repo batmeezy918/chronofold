@@ -1,6 +1,6 @@
-name = "cf"
+name = "chronofold"
 version = "0.1.0"
-defaultTargets = ["Cf"]
+defaultTargets = ["Chronofold"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -13,5 +13,9 @@ scope = "leanprover-community"
 rev = "v4.29.0"
 
 [[lean_lib]]
-name = "Cf"
-root = "src"
+name = "Chronofold"
+srcDir = "src"
+
+[[lean_exe]]
+name = "Main"
+root = "Main"
