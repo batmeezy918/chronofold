@@ -21,3 +21,8 @@ import Chronofold.AgdUnifiedCertificate
 import Chronofold.BenchmarkReproducibility
 import Chronofold.AgdProjection
 import Chronofold.AgdDynamics
+import Chronofold.AgdSpectral
+import Chronofold.AgdLyapunov
+import Chronofold.AgdRecursiveProjection
+import Chronofold.AgdFixedPointTransport
+import Chronofold.AgdSpectralClosure
