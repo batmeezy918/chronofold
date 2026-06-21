@@ -8,3 +8,4 @@ import Chronofold.AgdQuotient
 import Chronofold.BenchmarkCertificate
 import Chronofold.PerformanceCertificate
 import Chronofold.CertifiedOperator
+import Chronofold.AGDOptimizationCertificate

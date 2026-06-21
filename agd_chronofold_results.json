@@ -1,0 +1,32 @@
+[
+  {
+    "objective": "Rosenbrock",
+    "dimension": 2,
+    "brute_states": 1000000,
+    "agd_states": 250000,
+    "speedup": 4.0019,
+    "reduction": 0.75,
+    "score_gap": 0.0,
+    "solution_match": true
+  },
+  {
+    "objective": "Rastrigin",
+    "dimension": 2,
+    "brute_states": 1000000,
+    "agd_states": 250000,
+    "speedup": 4.0009,
+    "reduction": 0.75,
+    "score_gap": 0.0,
+    "solution_match": true
+  },
+  {
+    "objective": "Ackley",
+    "dimension": 2,
+    "brute_states": 1000000,
+    "agd_states": 250000,
+    "speedup": 3.9995,
+    "reduction": 0.75,
+    "score_gap": 0.0,
+    "solution_match": true
+  }
+]

@@ -40,9 +40,4 @@ theorem certificate_soundness :
   unfold valid_certificate at h
   exact h.2.2
 
-theorem AGD_Performance_Closure :
-  ∀ c, valid_certificate c → ∃ _proof : c.speedup > 0, True := by
-  intro c h
-  use speedup_positive c h
-
 end AGD
