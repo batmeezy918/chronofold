@@ -26,3 +26,4 @@ import Chronofold.AgdLyapunov
 import Chronofold.AgdRecursiveProjection
 import Chronofold.AgdFixedPointTransport
 import Chronofold.AgdSpectralClosure
+import Chronofold.AgdInformationGeometry
