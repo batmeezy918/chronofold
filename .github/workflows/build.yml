@@ -29,7 +29,7 @@ jobs:
             .lake/packages
             .lake/build
             ~/.elan
-          key: ${{ runner.os }}-lean-${{ hashFiles('config/lean-toolchain', 'src/lean/lakefile.lean', 'src/lean/lake-manifest.json') }}
+          key: ${{ runner.os }}-lean-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-
 
@@ -48,16 +48,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f config/lean-toolchain
-          test -f src/lean/lakefile.lean
-          test -f src/lean/Main.lean
+          test -f lean-toolchain
+          test -f lakefile.toml
+          test -f Main.lean
 
       - name: Resolve dependencies
         shell: bash
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          cd src/lean
           lake update
 
       - name: Build project
@@ -65,7 +64,6 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          cd src/lean
           lake build 2>&1 | tee build.log
 
       - name: Run executable smoke test
@@ -73,9 +71,8 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          cd src/lean
           lake exe Main 2>&1 | tee smoke.log
-          grep -F "ChronoFold system active" smoke.log
+          grep -F "Chronofold AGD Pipeline Active" smoke.log
 
       - name: Upload logs
         if: always()
@@ -83,6 +80,6 @@ jobs:
         with:
           name: chronofold-build-logs
           path: |
-            src/lean/build.log
-            src/lean/smoke.log
+            build.log
+            smoke.log
           if-no-files-found: warn
