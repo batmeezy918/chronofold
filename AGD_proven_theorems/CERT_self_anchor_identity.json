@@ -1,0 +1,6 @@
+{
+  "theorem_id": "self_anchor_identity",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_self_anchor_identity.lean"
+}

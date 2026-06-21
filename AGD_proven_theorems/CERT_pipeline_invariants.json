@@ -1,0 +1,6 @@
+{
+  "theorem_id": "pipeline_invariants",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_pipeline_invariants.lean"
+}

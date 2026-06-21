@@ -1,0 +1,6 @@
+{
+  "theorem_id": "transition_hash_stable",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_transition_hash_stable.lean"
+}

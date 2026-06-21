@@ -1,0 +1,6 @@
+{
+  "theorem_id": "comp_assoc",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_comp_assoc.lean"
+}

@@ -1,0 +1,6 @@
+{
+  "theorem_id": "iff_equiv",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_iff_equiv.lean"
+}

@@ -1,0 +1,6 @@
+{
+  "theorem_id": "workflow_stability",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_workflow_stability.lean"
+}

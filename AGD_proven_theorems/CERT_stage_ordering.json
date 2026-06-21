@@ -1,0 +1,6 @@
+{
+  "theorem_id": "stage_ordering",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_stage_ordering.lean"
+}

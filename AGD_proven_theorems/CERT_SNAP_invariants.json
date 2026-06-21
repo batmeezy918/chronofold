@@ -1,0 +1,6 @@
+{
+  "theorem_id": "SNAP_invariants",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_SNAP_invariants.lean"
+}

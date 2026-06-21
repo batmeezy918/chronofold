@@ -1,0 +1,6 @@
+{
+  "theorem_id": "AGD_Universal_Closure",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_AGD_Universal_Closure.lean"
+}

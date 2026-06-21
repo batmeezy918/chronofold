@@ -1,0 +1,6 @@
+{
+  "theorem_id": "omega_preserves_invariant",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_omega_preserves_invariant.lean"
+}

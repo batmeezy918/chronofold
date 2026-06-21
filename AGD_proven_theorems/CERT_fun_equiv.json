@@ -1,0 +1,6 @@
+{
+  "theorem_id": "fun_equiv",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_fun_equiv.lean"
+}

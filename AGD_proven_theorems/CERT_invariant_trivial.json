@@ -1,0 +1,6 @@
+{
+  "theorem_id": "invariant_trivial",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_invariant_trivial.lean"
+}

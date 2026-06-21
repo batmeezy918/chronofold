@@ -1,0 +1,6 @@
+{
+  "theorem_id": "compose_assoc",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_compose_assoc.lean"
+}

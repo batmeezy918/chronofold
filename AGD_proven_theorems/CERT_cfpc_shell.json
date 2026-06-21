@@ -1,0 +1,6 @@
+{
+  "theorem_id": "cfpc_shell",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_cfpc_shell.lean"
+}
