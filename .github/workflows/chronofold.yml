@@ -46,7 +46,6 @@ jobs:
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          cd src/lean
           lake update
 
       - name: Run verification engine
@@ -68,7 +67,7 @@ jobs:
         with:
           name: chronofold-verification-state
           path: |
-            src/lean/build.log
+            build.log
             ChronoFold/Auto/
             theorems_unproven/
             theorems_proven/
@@ -85,7 +84,7 @@ jobs:
 
           git config --global user.name "chronofold-bot"
           git config --global user.email "bot@chronofold.ai"
-          git add ChronoFold/Auto theorems_unproven theorems_proven src/lean/build.log || true
+          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
           git commit -m "Auto: theorem promotion"
           git push
 
