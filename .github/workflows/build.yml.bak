@@ -29,7 +29,7 @@ jobs:
             .lake/packages
             .lake/build
             ~/.elan
-          key: ${{ runner.os }}-lean-${{ hashFiles('config/lean-toolchain', 'src/lean/lakefile.toml', 'src/lean/lake-manifest.json') }}
+          key: ${{ runner.os }}-lean-${{ hashFiles('config/lean-toolchain', 'src/lean/lakefile.lean', 'src/lean/lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-
 
@@ -49,8 +49,8 @@ jobs:
         run: |
           set -euo pipefail
           test -f config/lean-toolchain
-          test -f src/lean/lakefile.toml
-          test -f src/lean/src/Main.lean
+          test -f src/lean/lakefile.lean
+          test -f src/lean/Main.lean
 
       - name: Resolve dependencies
         shell: bash
