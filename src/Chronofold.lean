@@ -20,3 +20,4 @@ import Chronofold.AgdOperatorAlgebra
 import Chronofold.AgdUnifiedCertificate
 import Chronofold.BenchmarkReproducibility
 import Chronofold.AgdProjection
+import Chronofold.AgdDynamics
