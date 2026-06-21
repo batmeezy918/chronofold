@@ -9,3 +9,8 @@ import Chronofold.BenchmarkCertificate
 import Chronofold.PerformanceCertificate
 import Chronofold.CertifiedOperator
 import Chronofold.AGDOptimizationCertificate
+import Chronofold.AgdOperatorComposition
+import Chronofold.SearchCompressionCertificate
+import Chronofold.AgdRecursiveClosure
+import Chronofold.AgdDeterministicReconstruction
+import Chronofold.AgdFullClosure
