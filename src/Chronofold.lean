@@ -14,3 +14,8 @@ import Chronofold.SearchCompressionCertificate
 import Chronofold.AgdRecursiveClosure
 import Chronofold.AgdDeterministicReconstruction
 import Chronofold.AgdFullClosure
+import Chronofold.AgdOptimality
+import Chronofold.AgdConvergence
+import Chronofold.AgdOperatorAlgebra
+import Chronofold.AgdUnifiedCertificate
+import Chronofold.BenchmarkReproducibility
