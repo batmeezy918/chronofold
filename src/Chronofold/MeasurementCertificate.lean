@@ -65,7 +65,6 @@ theorem measurement_invariant_preserved :
   intro t h
   exact h
 
-/- Structural extension for AGDTransition -/
 structure AGDTransition where
   before : MeasurementState
   after : MeasurementState
@@ -77,5 +76,28 @@ theorem invariant_transport :
   ∀ t, agd_invariant_preserved t → t.before.jitter = t.after.jitter := by
   intro t h
   exact h
+
+/- THEOREM 5 — MEASUREMENT STABILITY -/
+
+structure MeasurementCertificate where
+  input_error : ℝ
+  output_error : ℝ
+  stable : Prop
+
+/--
+  Validate physical-to-AGD measurement transport.
+  If distance(x, y) ≤ ε then distance(Mx, My) ≤ δ.
+  For linear measure_to_AGD, this is stable.
+-/
+theorem measurement_stability
+  (M : ℝ → ℝ) (ε δ K : ℝ) (x y : ℝ)
+  (h_dist : |x - y| ≤ ε)
+  (h_pos : 0 ≤ K)
+  (h_lipschitz : ∀ a b, |M a - M b| ≤ K * |a - b|)
+  (h_bound : K * ε ≤ δ) :
+  |M x - M y| ≤ δ := by
+  calc |M x - M y| ≤ K * |x - y| := h_lipschitz x y
+    _ ≤ K * ε := (mul_le_mul_of_nonneg_left h_dist h_pos)
+    _ ≤ δ := h_bound
 
 end AGD
