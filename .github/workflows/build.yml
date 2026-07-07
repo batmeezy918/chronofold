@@ -71,8 +71,8 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake exe Main 2>&1 | tee smoke.log
-          grep -F "Chronofold AGD Pipeline Active" smoke.log
+          ./.lake/build/bin/agd_exe 2>&1 | tee smoke.log
+          grep -F "AGD Formalization Build Success" smoke.log
 
       - name: Upload logs
         if: always()

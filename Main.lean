@@ -1,2 +1,4 @@
-import Chronofold
-def main : IO Unit := IO.println "Chronofold AGD Pipeline Active"
+import AGD.Lineage
+
+def main : IO Unit :=
+  IO.println "AGD T00 Verified"

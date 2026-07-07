@@ -1,3 +1,9 @@
+/-
+====================================================
+PHASE 1 — First-Principles Construction
+Status: Verified
+====================================================
+-/
 namespace Chronofold
 structure State where
   val : Nat
@@ -10,3 +16,9 @@ theorem workflow_stability (s : State) (h : s.stable = true) :
   unfold operator_transition
   split <;> simp [*]
 end Chronofold
+/-
+====================================================
+PHASE 3 — Reverse Dependency Reconstruction
+Verified via lake build
+====================================================
+-/

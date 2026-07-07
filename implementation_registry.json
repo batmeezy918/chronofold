@@ -1,0 +1,16 @@
+{
+  "mappings": [
+    {
+      "definition": "Constitution",
+      "julia_module": "Chronofold.jl",
+      "runtime_object": "Constitution",
+      "validation_suite": "test/constitution_tests.jl"
+    },
+    {
+      "definition": "Operator",
+      "julia_module": "Chronofold.jl",
+      "runtime_object": "Operator",
+      "validation_suite": "test/operator_tests.jl"
+    }
+  ]
+}

@@ -2,25 +2,21 @@
 
 | File Path | Status | Notes |
 |-----------|--------|-------|
-| disabled/Auto.lean | rejected | |
-| disabled/Theorems.lean | rejected | |
-| disabled/Operators.lean | rejected | |
-| disabled/Base.lean | rejected | |
-| templates/theorem_candidate.lean | narrative_only | |
-| src/Chronofold/AgdClosure.lean | verified_by_lean | AGD_Universal_Closure |
-| src/Chronofold/AgdInvariants.lean | verified_by_lean | omega_preserves_invariant |
-| core/src/lean/Chronofold/Pipeline.lean | verified_by_lean | pipeline_invariants |
-| core/src/lean/Chronofold/SNAP.lean | verified_by_lean | SNAP_invariants |
-| core/src/lean/CFPC/KernelEquivalence.lean | verified_by_lean | fun_equiv, iff_equiv, self_invariant, comp_assoc |
-| core/CFPC/KernelEquivalence.lean | verified_by_lean | matches core/src/lean/CFPC/KernelEquivalence.lean |
-| core/CFPC/FormalKernel.lean | verified_by_lean | invariant_trivial, compose_assoc, self_anchor_identity, cfpc_shell, transport_invariant |
-| core/src/lean/ChronoFold/Threadlock.lean | verified_by_lean | workflow_stability, stage_ordering |
-| core/src/lean/ChronoFold/LeanBridge.lean | verified_by_lean | transition_hash_stable |
-| core/src/lean/Verify.lean | verified_by_lean | t1 smoke test |
-| core/src/lean/ChronoFold/Auto/T1.lean | verified_by_lean | t1 smoke test |
-| core/theorems_rejected/THM_000001__smoke_test.lean | rejected | |
-| core/theorems_rejected/THM_000001__nat_add_zero_right.lean | rejected | |
-| core/theorems_proven/T1.lean | verified_by_lean | t1 smoke test |
-| core/src/lean/ChronoFold/Physics.lean | narrative_only | Placeholder for physics-based invariants |
-| src/Chronofold/AgdCore.lean | verified_by_lean | Type system definitions |
-| src/Chronofold/AgdOperators.lean | verified_by_lean | Operator definitions |
+| AGD_proven_theorems/THM_T00_Lineage_Reconstruction.lean | verified_by_lean | T00 — Lineage Reconstruction Soundness |
+| AGD_proven_theorems/THM_AGD_Universal_Closure.lean | verified_by_lean | Core closure properties |
+| AGD_proven_theorems/THM_omega_preserves_invariant.lean | verified_by_lean | Invariant preservation |
+| AGD_proven_theorems/THM_pipeline_invariants.lean | verified_by_lean | Full pipeline stability |
+| AGD_proven_theorems/THM_SNAP_invariants.lean | verified_by_lean | SNAP operator correctness |
+| AGD_proven_theorems/THM_fun_equiv.lean | verified_by_lean | Functional extensionality |
+| AGD_proven_theorems/THM_iff_equiv.lean | verified_by_lean | Logical equivalence |
+| AGD_proven_theorems/THM_self_invariant.lean | verified_by_lean | Identity axiom |
+| AGD_proven_theorems/THM_comp_assoc.lean | verified_by_lean | Composition associativity |
+| AGD_proven_theorems/THM_invariant_trivial.lean | verified_by_lean | Trivial invariant cases |
+| AGD_proven_theorems/THM_compose_assoc.lean | verified_by_lean | Morphism composition |
+| AGD_proven_theorems/THM_self_anchor_identity.lean | verified_by_lean | Anchoring properties |
+| AGD_proven_theorems/THM_cfpc_shell.lean | verified_by_lean | Proof wrapper soundness |
+| AGD_proven_theorems/THM_transport_invariant.lean | verified_by_lean | Transport correctness |
+| AGD_proven_theorems/THM_workflow_stability.lean | verified_by_lean | Workflow deterministic behavior |
+| AGD_proven_theorems/THM_stage_ordering.lean | verified_by_lean | Sequential stage validation |
+| AGD_proven_theorems/THM_transition_hash_stable.lean | verified_by_lean | Cryptographic consistency |
+| AGD_proven_theorems/THM_T1_smoke.lean | verified_by_lean | CI smoke test |

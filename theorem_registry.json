@@ -1,0 +1,13 @@
+{
+  "theorems": [
+    {
+      "id": "T00",
+      "title": "Lineage Reconstruction Soundness",
+      "file": "AGD/Lineage.lean",
+      "dependencies": ["List", "Logic"],
+      "status": "verified",
+      "julia_mapping": "ChronofoldLineage.jl",
+      "receipt_id": "REC-00-LINEAGE"
+    }
+  ]
+}

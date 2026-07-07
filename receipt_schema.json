@@ -1,0 +1,13 @@
+{
+  "schema": "AGD Constitutional Receipt v1.0",
+  "fields": [
+    {"name": "receipt_id", "type": "String"},
+    {"name": "theorem_id", "type": "String", "optional": true},
+    {"name": "operator_id", "type": "String", "optional": true},
+    {"name": "timestamp", "type": "DateTime"},
+    {"name": "pre_state_hash", "type": "Hash"},
+    {"name": "post_state_hash", "type": "Hash"},
+    {"name": "evidence", "type": "JSON"},
+    {"name": "constitutional_signature", "type": "Signature"}
+  ]
+}

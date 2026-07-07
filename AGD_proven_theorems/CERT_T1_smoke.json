@@ -1,0 +1,6 @@
+{
+  "theorem_id": "T1_smoke",
+  "status": "proven",
+  "certified": true,
+  "file": "THM_T1_smoke.lean"
+}

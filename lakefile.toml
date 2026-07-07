@@ -1,11 +1,10 @@
-name = "chronofold"
+name = "agd"
 version = "0.1.0"
-defaultTargets = ["Chronofold"]
+defaultTargets = ["AGD"]
 
 [leanOptions]
 pp.unicode.fun = true
 relaxedAutoImplicit = false
-maxSynthPendingDepth = 3
 
 [[require]]
 name = "mathlib"
@@ -13,9 +12,10 @@ scope = "leanprover-community"
 rev = "v4.29.0"
 
 [[lean_lib]]
-name = "Chronofold"
-srcDir = "src"
+name = "AGD"
+srcDir = "."
+globs = ["AGD.*"]
 
 [[lean_exe]]
-name = "Main"
+name = "agd_exe"
 root = "Main"

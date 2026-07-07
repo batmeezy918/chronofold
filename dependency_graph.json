@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id": "Definitions", "type": "File"},
+    {"id": "Structures", "type": "File"},
+    {"id": "Axioms", "type": "File"},
+    {"id": "Notation", "type": "File"},
+    {"id": "Registry", "type": "File"}
+  ],
+  "edges": [
+    {"source": "Definitions", "target": "Structures"},
+    {"source": "Structures", "target": "Axioms"},
+    {"source": "Axioms", "target": "Notation"},
+    {"source": "Notation", "target": "Registry"}
+  ]
+}

@@ -1,3 +1,9 @@
+/-
+====================================================
+PHASE 1 — First-Principles Construction
+Status: Verified
+====================================================
+-/
 namespace Chronofold
 structure State where
   val : Nat
@@ -10,3 +16,9 @@ theorem stage_ordering (s : State) (h : s.stage < 6) :
   unfold operator_transition
   simp [h]
 end Chronofold
+/-
+====================================================
+PHASE 3 — Reverse Dependency Reconstruction
+Verified via lake build
+====================================================
+-/

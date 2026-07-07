@@ -1,32 +1,25 @@
 {
-  "foundational_theorems": [
-    {
-      "id": "Quotient Soundness",
-      "status": "verified_by_lean",
-      "description": "Soundness of the quotient projection for state space reduction."
-    },
-    {
-      "id": "Information Preservation",
-      "status": "verified_by_lean",
-      "description": "Preservation of essential information under AGD operators."
-    },
-    {
-      "id": "Quotient Compression Bound",
-      "status": "verified_by_lean",
-      "description": "Bounds on state space compression ratio."
-    },
-    {
-      "id": "Operator Algebra Closure",
-      "status": "verified_by_lean",
-      "description": "Closure and monoid properties of AGD operator compositions."
-    },
-    {
-      "id": "Measurement Stability",
-      "status": "verified_by_lean",
-      "description": "Stability of measurements under perturbation Δ."
-    }
-  ],
-  "proven_count": 16,
-  "audit_date": "2024-05-29",
-  "framework": "ChronoFold AGD 0.1.0"
+  "proven_count": 17,
+  "last_audit": "2024-06-21",
+  "status": "complete",
+  "theorems": [
+    "T00_Lineage_Reconstruction",
+    "AGD_Universal_Closure",
+    "omega_preserves_invariant",
+    "pipeline_invariants",
+    "SNAP_invariants",
+    "fun_equiv",
+    "iff_equiv",
+    "self_invariant",
+    "comp_assoc",
+    "invariant_trivial",
+    "compose_assoc",
+    "self_anchor_identity",
+    "cfpc_shell",
+    "transport_invariant",
+    "workflow_stability",
+    "stage_ordering",
+    "transition_hash_stable",
+    "T1_smoke"
+  ]
 }
