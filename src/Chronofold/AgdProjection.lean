@@ -57,7 +57,7 @@ theorem quotient_operator_well_defined (O : AGDMap) (P : Projection) :
   use O_bar
   intro x
   dsimp [O_bar]
-  let p (z : AGDState) := ∃ x', P.map x' = P.map x ∧ P.map (O.apply x') = z
+  let p (z : AGDState) := ∃ x' : AGDState, P.map x' = P.map x ∧ P.map (O.apply x') = z
   have h_ex : ∃ z, p z := ⟨P.map (O.apply x), x, rfl, rfl⟩
   have h_eps := Classical.epsilon_spec h_ex
   rcases h_eps with ⟨x', hx', hz⟩
@@ -117,7 +117,7 @@ theorem AGD_Geometric_Closure
   (h_inv : projection_preserves_invariant P I)
   (_M_state : MeasurementState)
   (_h_valid : _M_state.error ≤ 0.1) :
-  ∃ (_certified_system : Prop), (operator_respects_projection O P ∧ projection_preserves_invariant P I) := by
-  exists (operator_respects_projection O P ∧ projection_preserves_invariant P I)
+  operator_respects_projection O P ∧ projection_preserves_invariant P I := by
+  exact ⟨h_resp, h_inv⟩
 
 end AGD

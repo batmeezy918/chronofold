@@ -27,3 +27,8 @@ import Chronofold.AgdRecursiveProjection
 import Chronofold.AgdFixedPointTransport
 import Chronofold.AgdSpectralClosure
 import Chronofold.AgdInformationGeometry
+import Chronofold.AgdAdaptiveOperator
+import Chronofold.AgdRollback
+import Chronofold.AgdLearning
+import Chronofold.AgdMemoryLineage
+import Chronofold.AgdAutonomousClosure

@@ -17,7 +17,7 @@ theorem AGD_Spectral_Geometric_Closure
   (_h_spectral : ∃ k, is_contraction O k)
   (h_lyap : LyapunovFunction V O.apply)
   (_h_fixed : ∃ ψ_star, O.apply ψ_star = ψ_star) :
-  ∃ (certified_system : Prop), certified_system := by
-  use (is_admissible P ∧ LyapunovFunction V O.apply)
+  is_admissible P ∧ LyapunovFunction V O.apply := by
+  exact ⟨h_proj, h_lyap⟩
 
 end AGD
