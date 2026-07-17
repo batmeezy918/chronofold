@@ -1,11 +1,5 @@
-import Mathlib
+import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
 
-theorem auto_theorem_1 : True := by
-  trivial
-
-theorem auto_theorem_2 : 2 + 2 = 4 := by
-  norm_num
-
--- Replace with your real goal:
--- theorem my_goal : ... := by
---   ...
+-- Simple compiling check
