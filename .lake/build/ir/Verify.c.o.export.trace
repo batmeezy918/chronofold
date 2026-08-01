@@ -1,0 +1,17 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "4a20509efe23f670.o",
+ "log":
+ [{"message":
+   ".> /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/bin/clang -c -o /app/.lake/build/ir/Verify.c.o.export /app/.lake/build/ir/Verify.c -I /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/include -fstack-clash-protection -ffp-contract=off -fdata-sections -ffunction-sections -fPIC -fvisibility=hidden -Wno-unused-command-line-argument --sysroot /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2 -nostdinc -isystem /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/include/clang -O3 -DNDEBUG -DLEAN_EXPORTING",
+   "level": "trace"}],
+ "inputs":
+ [["Verify:c",
+   [["/app/.lake/build/ir/Verify.c", "649f3aa2eac370a6"],
+    ["Lean 4.32.2, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+     "7508232886a2752a"]]],
+  ["Lean 4.32.2, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+   "7508232886a2752a"],
+  ["traceArgs: #[-O3, -DNDEBUG, -DLEAN_EXPORTING]", "c1efb66122fb2b9a"],
+  ["x86_64-unknown-linux-gnu", "53a0e8937c307c28"]],
+ "depHash": "e5df7e0666e1cf93"}
