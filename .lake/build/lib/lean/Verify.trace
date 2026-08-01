@@ -1,0 +1,31 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["f6d256fa75e9a6d3.olean"],
+  "m": false,
+  "i": "381d77357fa4cf43.ilean",
+  "c": "649f3aa2eac370a6.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/app/.lake/build/lib/lean /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/bin/lean /app/Verify.lean -o /app/.lake/build/lib/lean/Verify.olean -i /app/.lake/build/lib/lean/Verify.ilean -c /app/.lake/build/ir/Verify.c --setup /app/.lake/build/ir/Verify.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["Verify:deps",
+   [["deps",
+     [["chronofold/Verify:extraDep",
+       [["@chronofold:extraDep", "00000000000006bb"]]],
+      ["imports", "00000000000006bb"]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.32.2, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+   "7508232886a2752a"],
+  ["/app/Verify.lean", "a995ea88e2ae22df"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: Verify", "7da1166f28d975b3"],
+  ["Package.id?: (some chronofold)", "4402da33d7ff6b3d"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "ae8035e3e306c523"}

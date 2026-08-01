@@ -1,0 +1,17 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "e94f360b8d8004ac",
+ "log":
+ [{"message":
+   ".> /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/bin/clang -o /app/.lake/build/bin/Main @/app/.lake/build/bin/Main.rsp",
+   "level": "trace"}],
+ "inputs":
+ [["linkObjs",
+   [["/app/.lake/build/ir/Main.c.o.export", "df91c3304b378063"],
+    ["/app/.lake/build/ir/Verify.c.o.export", "4a20509efe23f670"]]],
+  ["linkLibs", "00000000000006bb"],
+  ["Lean 4.32.2, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+   "7508232886a2752a"],
+  ["traceArgs: #[]", "00000000000006bb"],
+  ["x86_64-unknown-linux-gnu", "53a0e8937c307c28"]],
+ "depHash": "74535f24feb781fb"}
