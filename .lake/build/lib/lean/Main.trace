@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["b8537b4f6dad5433.olean"],
+  "m": false,
+  "i": "906891423fb21945.ilean",
+  "c": "be137fd4cc15f271.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/app/.lake/build/lib/lean /home/jules/.elan/toolchains/leanprover--lean4---v4.32.2/bin/lean /app/Main.lean -o /app/.lake/build/lib/lean/Main.olean -i /app/.lake/build/lib/lean/Main.ilean -c /app/.lake/build/ir/Main.c --setup /app/.lake/build/ir/Main.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["Main:deps",
+   [["deps",
+     [["chronofold/Main:extraDep",
+       [["@chronofold:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["Verify transitive imports (legacy)", "00000000000006bb"],
+        ["Verify:importAllArts", "21e2caefd40ce687"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.32.2, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+   "7508232886a2752a"],
+  ["/app/Main.lean", "21c817fe91f10929"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: Main", "f2a1fd945cf30c62"],
+  ["Package.id?: (some chronofold)", "4402da33d7ff6b3d"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "de000a56408983b5"}

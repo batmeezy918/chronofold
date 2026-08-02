@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "chronofold",
+ "options": {},
+ "name": "Main",
+ "isModule": false,
+ "importArts": {"Verify": ["/app/.lake/build/lib/lean/Verify.olean"]},
+ "dynlibs": []}
