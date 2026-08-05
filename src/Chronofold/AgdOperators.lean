@@ -1,13 +1,7 @@
 import Chronofold.AgdCore
-import Mathlib.Data.Quot
 
 /-!
 # AGD Operators — equivalence, quotient, descent
-
-Non-identity logic:
-* `AGDEquiv` is equality of `(Ω, C)`
-* `QStar` is the quotient by that relation
-* `TBar` is the descended action of an admissible operator
 -/
 
 namespace Chronofold.AGD

@@ -2,8 +2,6 @@ import Chronofold.AgdInvariants
 
 /-!
 # AGD Closure — compositional stability of admission
-
-If T and S are admissible, so is S ∘ T.
 -/
 
 namespace Chronofold.AGD

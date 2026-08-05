@@ -2,9 +2,6 @@ import Chronofold.AgdOperators
 
 /-!
 # AGD Invariants — interchangeability and admission
-
-These theorems are contentful: they relate concrete observables
-to the quotient and to descent of operators.
 -/
 
 namespace Chronofold.AGD
@@ -20,10 +17,11 @@ theorem interchangeable_iff (α : Type u) (Ω : Omega α) (C : Covariant α)
     interchangeable α Ω C s₁ s₂ ↔ AGDEquiv α Ω C s₁ s₂ := by
   unfold interchangeable
   constructor
-  · exact Quotient.exact
-  · exact Quotient.sound
+  · intro h
+    exact Quotient.exact h
+  · intro h
+    exact Quotient.sound h
 
-/-- Primary operational theorem: admission ↔ concrete descended map exists. -/
 theorem admission_iff_TBar (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) :
     Admissible α Ω C T ↔
