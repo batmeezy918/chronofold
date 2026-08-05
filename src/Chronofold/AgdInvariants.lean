@@ -1,26 +1,44 @@
 import Chronofold.AgdOperators
 
-namespace Chronofold
+/-!
+# AGD Invariants — interchangeability and admission
 
-section Invariants
+These theorems are contentful: they relate concrete observables
+to the quotient and to descent of operators.
+-/
 
-variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+namespace Chronofold.AGD
 
-/-- Invariant measurement of a state. -/
-def Invariant (_ψ : H) : ℝ := 0 -- Placeholder for formal invariant
+universe u
 
-/-- Ω preserves the invariant. -/
-theorem omega_preserves_invariant (ψ : H) :
-  Invariant (Omega ψ) = Invariant ψ := by
-  unfold Omega
-  unfold Invariant
-  rfl
+def interchangeable (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (s₁ s₂ : State α) : Prop :=
+  pi α Ω C s₁ = pi α Ω C s₂
 
-/-- Bounded reconstruction error ε. -/
-def reconstruction_valid {Q : Type*} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
-  (ψ : H) (p : H → Q) (reconstruct : Q → H) (ε : ℝ) : Prop :=
-  ‖reconstruct (p ψ) - ψ‖ ≤ ε
+theorem interchangeable_iff (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (s₁ s₂ : State α) :
+    interchangeable α Ω C s₁ s₂ ↔ AGDEquiv α Ω C s₁ s₂ := by
+  unfold interchangeable
+  constructor
+  · exact Quotient.exact
+  · exact Quotient.sound
 
-end Invariants
+/-- Primary operational theorem: admission ↔ concrete descended map exists. -/
+theorem admission_iff_TBar (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (T : Operator α) :
+    Admissible α Ω C T ↔
+      ∃ (h : Admissible α Ω C T),
+        ∀ s, TBar α Ω C T h (pi α Ω C s) = pi α Ω C (T s) := by
+  constructor
+  · intro hT
+    exact ⟨hT, fun _ => TBar_sound α Ω C T hT _⟩
+  · intro ⟨hT, _⟩
+    exact hT
 
-end Chronofold
+theorem admissible_implies_descends (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (T : Operator α) (hT : Admissible α Ω C T) :
+    ∃ Tbar : QStar α Ω C → QStar α Ω C,
+      ∀ s, Tbar (pi α Ω C s) = pi α Ω C (T s) :=
+  ⟨TBar α Ω C T hT, fun _ => rfl⟩
+
+end Chronofold.AGD

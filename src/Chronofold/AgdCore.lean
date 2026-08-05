@@ -1,25 +1,35 @@
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Data.Real.Basic
 
 /-!
-# AGD Core Type System
+# AGD Core — Minimal state and observables
 
-Formalization of the state space H for ChronoFold AGD.
-The state space is modeled as a normed space over ℝ.
+Concrete carrier for the commercial Q* kernel:
+states are finite-dimensional records identified by a Nat id,
+with two decidable observables Ω and C (the constitutional pair).
 -/
 
-namespace Chronofold
+namespace Chronofold.AGD
 
--- Removing 'variable' to see if it's causing the issue in this version of Lean 4
--- using explicit parameters instead.
+universe u
 
-/-- An operator on the state space H. -/
-def Operator (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] := H → H
+/-- Operational state. Payload is abstract. -/
+structure State (α : Type u) where
+  id : Nat
+  payload : α
+  deriving DecidableEq, Repr
 
-/-- The distance between two states in H. -/
-noncomputable def agd_dist {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H] (ψ₁ ψ₂ : H) : ℝ := ‖ψ₁ - ψ₂‖
+/-- Invariant observable (must be decidable for runtime). -/
+abbrev Omega (α : Type u) := State α → Nat
 
-/-- A transformation lineage can be represented as a list of states. -/
-def Lineage (H : Type*) := List H
+/-- Covariant / constitutional law. -/
+abbrev Covariant (α : Type u) := State α → Nat
 
-end Chronofold
+/-- State transformer. -/
+abbrev Operator (α : Type u) := State α → State α
+
+/-- Admissible: preserves both observables. -/
+def Admissible (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (T : Operator α) : Prop :=
+  ∀ s, Ω (T s) = Ω s ∧ C (T s) = C s
+
+end Chronofold.AGD

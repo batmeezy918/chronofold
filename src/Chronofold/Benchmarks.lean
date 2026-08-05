@@ -1,25 +1,15 @@
-import Chronofold.AgdCore
+import Chronofold.AgdClosure
 
-namespace Chronofold
+/-!
+# Benchmarks placeholder
 
-/-- Benchmark state for empirical measurements. -/
-structure BenchmarkState where
-  latency : ℝ
-  throughput : ℝ
-  jitter : ℝ
-  energy : ℝ
+Runtime benchmarks live in Python (`chronofold_x`, `core/src/optimizers`).
+This module exists so the import graph in `Chronofold.lean` stays valid.
+-/
 
-/-- Equivalence relation based on bounded metric difference. -/
-def benchmark_equiv (a b : BenchmarkState) (ε : ℝ) : Prop :=
-  ‖a.latency - b.latency‖ ≤ ε ∧
-  ‖a.throughput - b.throughput‖ ≤ ε ∧
-  ‖a.jitter - b.jitter‖ ≤ ε ∧
-  ‖a.energy - b.energy‖ ≤ ε
+namespace Chronofold.AGD
 
-/-- Measurement certificate from JSON/empirical source. -/
-structure MeasurementCertificate where
-  hardware_id : String
-  state : BenchmarkState
-  signature : String
+/-- Marker that the AGD kernel is loaded. -/
+def kernelLoaded : Bool := true
 
-end Chronofold
+end Chronofold.AGD
