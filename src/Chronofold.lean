@@ -3,3 +3,7 @@ import Chronofold.AgdOperators
 import Chronofold.AgdInvariants
 import Chronofold.AgdClosure
 import Chronofold.AgdUniversal
+import Chronofold.AgdRank
+import Chronofold.AgdMultiOmega
+import Chronofold.AgdClassGraph
+import Chronofold.AgdIterate
