@@ -7,3 +7,4 @@ import Chronofold.AgdRank
 import Chronofold.AgdMultiOmega
 import Chronofold.AgdClassGraph
 import Chronofold.AgdIterate
+import Chronofold.AgdInvariantSafety
