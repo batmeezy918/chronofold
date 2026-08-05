@@ -18,8 +18,7 @@ theorem admissible_compose (α : Type u) (Ω : Omega α) (C : Covariant α)
   have hT' := hT s
   have hS' := hS (T s)
   constructor
-  · -- Ω (S (T s)) = Ω (T s) = Ω s
-    calc Ω (S (T s))
+  · calc Ω (S (T s))
         = Ω (T s) := hS'.1
       _ = Ω s := hT'.1
   · calc C (S (T s))

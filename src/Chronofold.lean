@@ -2,4 +2,5 @@ import Chronofold.AgdCore
 import Chronofold.AgdOperators
 import Chronofold.AgdInvariants
 import Chronofold.AgdClosure
+import Chronofold.AgdUniversal
 import Chronofold.Benchmarks
