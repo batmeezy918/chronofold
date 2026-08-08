@@ -177,4 +177,70 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+/-- 1. ConstitutionalObject: holds system artifact identifiers and payload -/
+structure ConstitutionalObject (α : Type u) where
+  id      : Nat
+  name    : String
+  payload : α
+  deriving DecidableEq, Repr
+
+/-- 2. Witness: verifies admissibility of a given operator -/
+structure Witness (α : Type u) (Ω : Omega α) (C : Covariant α) (T : Operator α) where
+  proof_of_admissibility : Admissible α Ω C T
+
+/-- 3. Fiber: subset of states mapping to a specific quotient state q -/
+def Fiber (α : Type u) (Ω : Omega α) (C : Covariant α) (q : QStar α Ω C) : Type u :=
+  { s : State α // pi α Ω C s = q }
+
+/-- 4. Registry: holds and registers all constitutional objects -/
+structure Registry (α : Type u) where
+  objects : List (ConstitutionalObject α)
+  deriving Repr
+
+/-- 5. Replay: sequentially applies operators to a state -/
+def Replay (α : Type u) : State α → List (Operator α) → State α
+  | s, []      => s
+  | s, T :: Ts => Replay α (T s) Ts
+
+/-- 6. Compiler: translates a specification type to an implementation state -/
+structure Compiler (α β : Type u) where
+  compile : α → β
+
+/-- 7. Serialization: handles encoding and decoding of constitutional structures -/
+structure Serialization (α : Type u) where
+  serialize   : α → String
+  deserialize : String → Option α
+
+/-- 8. Hash: deterministic fingerprint of states -/
+structure Hash (α : Type u) where
+  hashFn : State α → Nat
+
+/-- 9. Builder: constructs state configurations from a descriptor -/
+structure Builder (α β : Type u) where
+  build : α → State β
+
+/-- 10. Invariants: system predicates on states -/
+structure Invariants (α : Type u) where
+  pred : State α → Prop
+  decidable_pred : ∀ s, Decidable (pred s)
+
+/-- Theorem: sequential application of admissible operators (Replay) preserves system invariants -/
+theorem replay_preserves_invariants
+    (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (s : State α) (Ts : List (Operator α))
+    (hTs : ∀ T ∈ Ts, Admissible α Ω C T) :
+    Ω (Replay α s Ts) = Ω s ∧ C (Replay α s Ts) = C s := by
+  induction Ts generalizing s with
+  | nil =>
+    unfold Replay
+    exact ⟨rfl, rfl⟩
+  | cons T Ts ih =>
+    unfold Replay
+    have hT := hTs T (List.Mem.head Ts)
+    have h_rest : ∀ T' ∈ Ts, Admissible α Ω C T' := fun T' hT' => hTs T' (List.Mem.tail T hT')
+    have ih_inst := ih (T s) h_rest
+    have hT_adm := hT s
+    rw [ih_inst.1, ih_inst.2]
+    exact hT_adm
+
 end AGD
