@@ -35,7 +35,7 @@ jobs:
       - name: Install pinned dependencies
         working-directory: benchmarks/coco_deterministic
         run: |
-          python -m pip install --upgrade pip==25.2
+          python -m pip install --upgrade "pip==25.2"
           python -m pip install -r requirements.lock
 
       - name: Verify dependency versions
@@ -48,6 +48,8 @@ jobs:
           print('cocoex=', getattr(cocoex, '__version__', 'unknown'))
           print('numpy=', numpy.__version__)
           print('suites=', cocoex.known_suite_names)
+          assert cocoex.__version__ == '2.8.2', cocoex.__version__
+          assert numpy.__version__ == '2.2.6', numpy.__version__
           PY
 
       - name: Prepare evidence dirs
@@ -57,15 +59,18 @@ jobs:
       - name: Run deterministic harness (pass 1)
         working-directory: benchmarks/coco_deterministic
         run: |
-          rm -rf S6_RESULTS
-          python s6_coco_harness.py | tee ../../S6_RESULTS_run1.txt
+          rm -rf S6_RESULTS exdata
+          # Filter COCO INFO lines (observer side-effect on stdout) so only harness output is compared
+          python s6_coco_harness.py 2>&1 | grep -v '^COCO INFO:' | tee ../../S6_RESULTS_run1.txt
+          test -d S6_RESULTS
           cp -a S6_RESULTS/. ../../S6_RESULTS_1/
 
       - name: Run deterministic harness (pass 2)
         working-directory: benchmarks/coco_deterministic
         run: |
-          rm -rf S6_RESULTS
-          python s6_coco_harness.py | tee ../../S6_RESULTS_run2.txt
+          rm -rf S6_RESULTS exdata
+          python s6_coco_harness.py 2>&1 | grep -v '^COCO INFO:' | tee ../../S6_RESULTS_run2.txt
+          test -d S6_RESULTS
           cp -a S6_RESULTS/. ../../S6_RESULTS_2/
 
       - name: Verify byte-identical results
@@ -73,6 +78,7 @@ jobs:
           set -euo pipefail
           test -s S6_RESULTS_run1.txt
           test -s S6_RESULTS_run2.txt
+          # Controlled harness output must be byte-identical
           cmp -s S6_RESULTS_run1.txt S6_RESULTS_run2.txt
           cmp -s S6_RESULTS_1/deterministic_results.json S6_RESULTS_2/deterministic_results.json
           cmp -s S6_RESULTS_1/trace.txt S6_RESULTS_2/trace.txt
@@ -80,14 +86,17 @@ jobs:
           echo 'DETERMINISM_CHECK=PASS'
           echo '--- RESULTS HASH ---'
           python - <<'PY'
-          import json, pathlib
+          import json, pathlib, hashlib
           m = json.loads(pathlib.Path('S6_RESULTS_1/determinism_manifest.json').read_text())
           print('results_sha256=', m['results_sha256'])
           print('trace_sha256=', m['trace_sha256'])
+          print('manifest_sha256=', hashlib.sha256(pathlib.Path('S6_RESULTS_1/determinism_manifest.json').read_bytes()).hexdigest())
           print('problem_count=', m.get('problem_count'))
           print('cocoex_version=', m.get('cocoex_version'))
           print('numpy_version=', m.get('numpy_version'))
           print('seed=', m.get('seed'))
+          print('budget=', m.get('budget'))
+          print('dimension=', m.get('dimension'))
           PY
 
       - name: Capture provenance
@@ -98,11 +107,16 @@ jobs:
           python -m pip freeze > S6_EVIDENCE/provenance/pip_freeze.txt
           sha256sum benchmarks/coco_deterministic/s6_coco_harness.py > S6_EVIDENCE/provenance/harness.sha256
           sha256sum benchmarks/coco_deterministic/requirements.lock > S6_EVIDENCE/provenance/requirements.sha256
+          date -u +%Y-%m-%dT%H:%M:%SZ > S6_EVIDENCE/provenance/run_utc.txt
           if [ -f S6_RESULTS_1/determinism_manifest.json ]; then
             cp S6_RESULTS_1/determinism_manifest.json S6_EVIDENCE/determinism_manifest.json
+            sha256sum S6_RESULTS_1/determinism_manifest.json > S6_EVIDENCE/provenance/manifest.sha256
           fi
           if [ -f S6_RESULTS_1/deterministic_results.json ]; then
             cp S6_RESULTS_1/deterministic_results.json S6_EVIDENCE/deterministic_results.json
+          fi
+          if [ -f S6_RESULTS_1/trace.txt ]; then
+            cp S6_RESULTS_1/trace.txt S6_EVIDENCE/trace.txt
           fi
 
       - name: Package evidence
@@ -116,5 +130,8 @@ jobs:
             S6_RESULTS_run1.txt
             S6_RESULTS_run2.txt
             S6_EVIDENCE/
-            benchmarks/coco_deterministic/
+            benchmarks/coco_deterministic/s6_coco_harness.py
+            benchmarks/coco_deterministic/requirements.lock
+            benchmarks/coco_deterministic/README.md
+            benchmarks/coco_deterministic/verify.sh
           if-no-files-found: warn

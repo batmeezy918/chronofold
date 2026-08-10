@@ -80,6 +80,11 @@ def canonical_sha256(path: Path) -> str:
 
 def main() -> None:
     seed_all(SEED)
+    # Clean previous harness outputs; COCO observer writes under exdata/
+    if RESULT_DIR.exists():
+        for child in RESULT_DIR.iterdir():
+            if child.is_file():
+                child.unlink()
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
     cocoex_version = getattr(cocoex, "__version__", "unknown")
@@ -95,7 +100,9 @@ def main() -> None:
         f"PYTHONHASHSEED={os.environ.get('PYTHONHASHSEED', 'unset')}",
     ]
 
-    observer = cocoex.Observer("bbob", f"result_folder: {RESULT_DIR.as_posix()}")
+    # Fixed observer folder name so repeated runs do not append -0001 suffixes
+    # that affect only the COCO INFO line (filtered by CI/verify.sh).
+    observer = cocoex.Observer("bbob", "result_folder: S6_COCO_OBS")
     suite = cocoex.Suite("bbob", "", SUITE_FILTER)
     rng = np.random.default_rng(SEED)
 
