@@ -19,6 +19,7 @@ env:
 jobs:
   benchmark:
     runs-on: ubuntu-22.04
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,43 +42,68 @@ jobs:
         run: |
           python --version
           python - <<'PY'
-          import cocoex, numpy
+          import cocoex, numpy, sys, os
+          print('python=', sys.version.split()[0])
+          print('PYTHONHASHSEED=', os.environ.get('PYTHONHASHSEED'))
           print('cocoex=', getattr(cocoex, '__version__', 'unknown'))
           print('numpy=', numpy.__version__)
+          print('suites=', cocoex.known_suite_names)
           PY
 
-      - name: Run deterministic harness
+      - name: Prepare evidence dirs
+        run: |
+          mkdir -p S6_RESULTS_1 S6_RESULTS_2 S6_EVIDENCE/provenance
+
+      - name: Run deterministic harness (pass 1)
         working-directory: benchmarks/coco_deterministic
         run: |
-          rm -rf S6_RESULTS ../../S6_RESULTS
+          rm -rf S6_RESULTS
           python s6_coco_harness.py | tee ../../S6_RESULTS_run1.txt
-          cp -a S6_RESULTS ../../S6_RESULTS_1
+          cp -a S6_RESULTS/. ../../S6_RESULTS_1/
 
-      - name: Repeat deterministic harness
+      - name: Run deterministic harness (pass 2)
         working-directory: benchmarks/coco_deterministic
         run: |
           rm -rf S6_RESULTS
           python s6_coco_harness.py | tee ../../S6_RESULTS_run2.txt
-          cp -a S6_RESULTS ../../S6_RESULTS_2
+          cp -a S6_RESULTS/. ../../S6_RESULTS_2/
 
       - name: Verify byte-identical results
         run: |
+          set -euo pipefail
           test -s S6_RESULTS_run1.txt
           test -s S6_RESULTS_run2.txt
-          cmp S6_RESULTS_run1.txt S6_RESULTS_run2.txt
-          cmp S6_RESULTS_1/deterministic_results.json S6_RESULTS_2/deterministic_results.json
-          cmp S6_RESULTS_1/trace.txt S6_RESULTS_2/trace.txt
+          cmp -s S6_RESULTS_run1.txt S6_RESULTS_run2.txt
+          cmp -s S6_RESULTS_1/deterministic_results.json S6_RESULTS_2/deterministic_results.json
+          cmp -s S6_RESULTS_1/trace.txt S6_RESULTS_2/trace.txt
+          cmp -s S6_RESULTS_1/determinism_manifest.json S6_RESULTS_2/determinism_manifest.json
           echo 'DETERMINISM_CHECK=PASS'
+          echo '--- RESULTS HASH ---'
+          python - <<'PY'
+          import json, pathlib
+          m = json.loads(pathlib.Path('S6_RESULTS_1/determinism_manifest.json').read_text())
+          print('results_sha256=', m['results_sha256'])
+          print('trace_sha256=', m['trace_sha256'])
+          print('problem_count=', m.get('problem_count'))
+          print('cocoex_version=', m.get('cocoex_version'))
+          print('numpy_version=', m.get('numpy_version'))
+          print('seed=', m.get('seed'))
+          PY
 
       - name: Capture provenance
+        if: always()
         run: |
-          mkdir -p S6_EVIDENCE/provenance
           git rev-parse HEAD > S6_EVIDENCE/provenance/git_commit.txt
           python --version > S6_EVIDENCE/provenance/python_version.txt
           python -m pip freeze > S6_EVIDENCE/provenance/pip_freeze.txt
           sha256sum benchmarks/coco_deterministic/s6_coco_harness.py > S6_EVIDENCE/provenance/harness.sha256
           sha256sum benchmarks/coco_deterministic/requirements.lock > S6_EVIDENCE/provenance/requirements.sha256
-          cp S6_RESULTS_1/determinism_manifest.json S6_EVIDENCE/determinism_manifest.json
+          if [ -f S6_RESULTS_1/determinism_manifest.json ]; then
+            cp S6_RESULTS_1/determinism_manifest.json S6_EVIDENCE/determinism_manifest.json
+          fi
+          if [ -f S6_RESULTS_1/deterministic_results.json ]; then
+            cp S6_RESULTS_1/deterministic_results.json S6_EVIDENCE/deterministic_results.json
+          fi
 
       - name: Package evidence
         if: always()
@@ -91,4 +117,4 @@ jobs:
             S6_RESULTS_run2.txt
             S6_EVIDENCE/
             benchmarks/coco_deterministic/
-          if-no-files-found: error
+          if-no-files-found: warn
