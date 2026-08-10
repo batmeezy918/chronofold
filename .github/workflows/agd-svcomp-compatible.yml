@@ -1,16 +1,20 @@
-name: AGD × SV-COMP 2026 Compatible Experiment
+name: AGD × SV-COMP 2026 Compatible Experiment (MAX)
 
 on:
   workflow_dispatch:
     inputs:
       max_tasks:
-        description: "Max official-style tasks to process (keep small for Actions limits)"
+        description: "Synthetic official-style tasks (determinism substrate)"
         required: true
-        default: "8"
+        default: "64"
       stress_count:
-        description: "Deterministic stress/replay iterations (not official SV-COMP tasks)"
+        description: "Deterministic stress/replay iterations (maximize within runner)"
         required: true
-        default: "1000"
+        default: "25000"
+      workers:
+        description: "Process workers for stress (0 = auto)"
+        required: true
+        default: "0"
 
 permissions:
   contents: read
@@ -22,7 +26,7 @@ concurrency:
 jobs:
   agd-svcomp-experiment:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout ChronoFold
@@ -38,10 +42,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          # Official BenchExec from PyPI (matches SV-COMP tooling)
-          pip install benchexec
-          pip install pyyaml
-          python -c "import benchexec; print('BenchExec', benchexec.__version__)"
+          pip install benchexec pyyaml
+          python -c "import benchexec; print('BenchExec', getattr(benchexec, '__version__', 'installed'))"
 
       - name: Phase 0 — Environment Audit
         run: |
@@ -56,31 +58,24 @@ jobs:
           print('environment.json.sha256 =', h)
           "
 
-      - name: Phase 1 — Fetch official material (shallow, limited)
+      - name: Phase 1 — Fetch official material (shallow)
         run: |
           set -euo pipefail
           mkdir -p external/svcomp
           cd external/svcomp
-
-          # Official benchmark definitions (tagged)
           git clone --depth 1 --branch svcomp26 \
             https://gitlab.com/sosy-lab/sv-comp/bench-defs.git bench-defs || true
-
-          # Official tasks repo — shallow only (full is multi-GB)
-          # We do NOT clone the entire corpus; we record the official tag and pull a tiny subset later.
-          echo "{\"note\": \"Full sv-benchmarks clone skipped on GitHub Actions (size). Tag svcomp26 recorded.\", \"bench_defs_tag\": \"svcomp26\"}" > corpus_status.json
-
+          echo '{"note": "Full sv-benchmarks skipped (size). Tag svcomp26 recorded.", "bench_defs_tag": "svcomp26"}' > corpus_status.json
           if [ -d bench-defs ]; then
             (cd bench-defs && git rev-parse HEAD) > bench-defs.commit
             echo "bench-defs HEAD: $(cat bench-defs.commit)"
           else
-            echo "bench-defs clone failed or unavailable" > bench-defs.commit
+            echo "unavailable" > bench-defs.commit
           fi
 
-      - name: Phase 2 — Official task count reference
+      - name: Phase 2 — Official task count + SOTA reference
         run: |
           set -euo pipefail
-          # From public SV-COMP 2026 report (not enumerated here)
           cat > artifacts/agd_svcomp/official_task_reference.json << 'EOF'
           {
             "source": "SV-COMP 2026 competition report (public literature)",
@@ -88,18 +83,25 @@ jobs:
             "java_tasks": 1731,
             "total_c_java": 38133,
             "sv_lib_tasks": 254,
-            "note": "Full enumeration NOT EXECUTED on this runner. These are published official counts."
+            "note": "Full enumeration NOT EXECUTED. Published official counts only."
           }
           EOF
 
-      - name: Phase 3–7 — AGD deterministic projection + stress harness
+      - name: Phase 3–7 — Maximum-strength AGD projection + stress
         run: |
           set -euo pipefail
-          export MAX_TASKS="${{ github.event.inputs.max_tasks || '8' }}"
-          export STRESS_COUNT="${{ github.event.inputs.stress_count || '1000' }}"
+          MAX_TASKS="${{ github.event.inputs.max_tasks || '64' }}"
+          STRESS="${{ github.event.inputs.stress_count || '25000' }}"
+          WORKERS="${{ github.event.inputs.workers || '0' }}"
+          if [ "$WORKERS" = "0" ]; then
+            WORKERS=$(( $(nproc) / 2 ))
+            [ "$WORKERS" -lt 1 ] && WORKERS=1
+          fi
+          echo "Running with max_tasks=$MAX_TASKS stress=$STRESS workers=$WORKERS"
           python tools/agd_svcomp/run_agd_svcomp_harness.py \
             --max-tasks "$MAX_TASKS" \
-            --stress-count "$STRESS_COUNT" \
+            --stress-count "$STRESS" \
+            --workers "$WORKERS" \
             --out-dir artifacts/agd_svcomp
 
       - name: Phase 10 — Final certificate
@@ -116,22 +118,22 @@ jobs:
           print('FINAL CERTIFICATE SHA256 =', h)
           "
 
-      - name: Upload all experiment artifacts
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: agd-svcomp-2026-artifacts
+          name: agd-svcomp-2026-max-artifacts
           path: |
             artifacts/agd_svcomp/
             external/svcomp/
           if-no-files-found: warn
 
-      - name: Print required final summary block
+      - name: Print required final summary
         if: always()
         run: |
           set -euo pipefail
           if [ -f artifacts/agd_svcomp/SUMMARY.txt ]; then
             cat artifacts/agd_svcomp/SUMMARY.txt
           else
-            echo "SUMMARY.txt missing — harness may have failed early"
+            echo "SUMMARY.txt missing"
           fi
