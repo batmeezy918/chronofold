@@ -1,50 +1,84 @@
-name: S6 COCO Benchmark
+name: Deterministic COCO S6 Benchmark
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "deterministic-coco-benchmark" ]
     paths:
       - '.github/workflows/coco.yml'
-      - 'coco_s6_benchmark.py'
+      - 'benchmarks/coco_deterministic/**'
 
 permissions:
   contents: read
 
-jobs:
-  run-benchmark:
-    runs-on: ubuntu-latest
+env:
+  PYTHONHASHSEED: '0'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONUNBUFFERED: '1'
 
+jobs:
+  benchmark:
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.10.14'
           cache: 'pip'
+          cache-dependency-path: benchmarks/coco_deterministic/requirements.txt
 
-      - name: Install Python dependencies
+      - name: Install pinned dependencies
+        working-directory: benchmarks/coco_deterministic
         run: |
-          python -m pip install --upgrade pip
-          pip install numpy cocoex
+          python -m pip install --upgrade pip==25.2
+          python -m pip install --require-hashes -r requirements.lock
 
-      - name: Prepare output folder
+      - name: Verify dependency versions
         run: |
-          mkdir -p S6_RESULTS
-          printf 'workflow=s6-coco\nstatus=initialized\n' > S6_RESULTS/run_summary.txt
+          python --version
+          python - <<'PY'
+          import cocoex, numpy
+          print('cocoex=', getattr(cocoex, '__version__', 'unknown'))
+          print('numpy=', numpy.__version__)
+          PY
 
-      - name: Run S6 benchmark
+      - name: Run deterministic harness
+        working-directory: benchmarks/coco_deterministic
         run: |
-          python coco_s6_benchmark.py
-          printf 'workflow=s6-coco\nstatus=completed\n' > S6_RESULTS/run_summary.txt
+          python s6_coco_harness.py | tee ../../S6_RESULTS/run1.txt
 
-      - name: Upload results artifact
+      - name: Repeat deterministic harness
+        working-directory: benchmarks/coco_deterministic
+        run: |
+          rm -rf S6_RESULTS
+          python s6_coco_harness.py | tee ../../S6_RESULTS/run2.txt
+
+      - name: Verify byte-identical results
+        run: |
+          test -s S6_RESULTS/run1.txt
+          test -s S6_RESULTS/run2.txt
+          cmp S6_RESULTS/run1.txt S6_RESULTS/run2.txt
+          echo 'DETERMINISM_CHECK=PASS'
+
+      - name: Capture provenance
+        run: |
+          mkdir -p S6_RESULTS/provenance
+          git rev-parse HEAD > S6_RESULTS/provenance/git_commit.txt
+          python --version > S6_RESULTS/provenance/python_version.txt
+          python -m pip freeze > S6_RESULTS/provenance/pip_freeze.txt
+          sha256sum benchmarks/coco_deterministic/s6_coco_harness.py > S6_RESULTS/provenance/harness.sha256
+          sha256sum benchmarks/coco_deterministic/requirements.txt > S6_RESULTS/provenance/requirements.sha256
+
+      - name: Package evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: s6-coco-results
+          name: deterministic-s6-coco-evidence
           path: |
             S6_RESULTS/
-            coco_s6_benchmark.py
+            benchmarks/coco_deterministic/
           if-no-files-found: error
