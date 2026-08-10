@@ -177,4 +177,63 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+-- ==========================================
+-- CONSTITUTIONAL METAMODEL DEFINITIONS
+-- ==========================================
+
+structure Invariants (α : Type u) where
+  omega : Omega α
+  covariant : Covariant α
+
+structure ConstitutionalObject (α : Type u) where
+  state : State α
+  invariants : Invariants α
+
+structure Witness (α : Type u) (inv : Invariants α) (op : Operator α) where
+  admissible : Admissible α inv.omega inv.covariant op
+
+structure Fiber (α : Type u) (inv : Invariants α) (val : Nat × Nat) where
+  states : List (State α)
+  all_eq : ∀ s ∈ states, inv.omega s = val.1 ∧ inv.covariant s = val.2
+
+structure Registry (α : Type u) (inv : Invariants α) where
+  operators : List (Operator α)
+  witnesses : ∀ op ∈ operators, Admissible α inv.omega inv.covariant op
+
+def replay (α : Type u) : List (Operator α) → State α → State α
+  | [], s => s
+  | op :: ops, s => replay α ops (op s)
+
+theorem replay_preserves_invariants
+    (α : Type u) (inv : Invariants α) (ops : List (Operator α))
+    (hops : ∀ op ∈ ops, Admissible α inv.omega inv.covariant op)
+    (s : State α) :
+    inv.omega (replay α ops s) = inv.omega s ∧ inv.covariant (replay α ops s) = inv.covariant s := by
+  induction ops generalizing s with
+  | nil =>
+    exact ⟨rfl, rfl⟩
+  | cons op ops ih =>
+    have h_op : Admissible α inv.omega inv.covariant op := hops op (List.Mem.head _)
+    have h_ops : ∀ op ∈ ops, Admissible α inv.omega inv.covariant op := fun op' h => hops op' (List.Mem.tail _ h)
+    have ih_res := ih h_ops (op s)
+    have h_admissible := h_op s
+    change inv.omega (replay α ops (op s)) = inv.omega s ∧ inv.covariant (replay α ops (op s)) = inv.covariant s
+    rw [ih_res.1, ih_res.2]
+    exact h_admissible
+
+structure Replay (α : Type u) where
+  run : List (Operator α) → State α → State α
+
+structure Compiler (α : Type u) (β : Type) where
+  compile : State α → β
+
+structure Serialization (α : Type u) where
+  serialize : State α → String
+
+structure Hash (α : Type u) where
+  hash : State α → Nat
+
+structure Builder (α : Type u) where
+  build : Nat → α → State α
+
 end AGD
