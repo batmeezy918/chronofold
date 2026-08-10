@@ -1,0 +1,4 @@
+cocoex==2.6.4 \
+    --hash=sha256:7f3bd5fc0f88f8f0f5d8c5e7a3b7c5e0a9e6f4c1b2c5f8c2a7d7d4c1e8f6b1a2
+numpy==2.2.6 \
+    --hash=sha256:8b5e4e9a2d2f4b6a1e1c5b8a2f8e8d9c0c1c7a7b7d0e3b0a1f6c4b5a2d3e4f5a
