@@ -1,0 +1,137 @@
+name: AGD × SV-COMP 2026 Compatible Experiment
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_tasks:
+        description: "Max official-style tasks to process (keep small for Actions limits)"
+        required: true
+        default: "8"
+      stress_count:
+        description: "Deterministic stress/replay iterations (not official SV-COMP tasks)"
+        required: true
+        default: "1000"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agd-svcomp-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  agd-svcomp-experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout ChronoFold
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install official BenchExec + dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          # Official BenchExec from PyPI (matches SV-COMP tooling)
+          pip install benchexec
+          pip install pyyaml
+          python -c "import benchexec; print('BenchExec', benchexec.__version__)"
+
+      - name: Phase 0 — Environment Audit
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/agd_svcomp
+          python tools/agd_svcomp/phase0_environment.py > artifacts/agd_svcomp/environment.json
+          python -c "
+          import hashlib, pathlib
+          p = pathlib.Path('artifacts/agd_svcomp/environment.json')
+          h = hashlib.sha256(p.read_bytes()).hexdigest()
+          p.with_suffix('.json.sha256').write_text(h + '\n')
+          print('environment.json.sha256 =', h)
+          "
+
+      - name: Phase 1 — Fetch official material (shallow, limited)
+        run: |
+          set -euo pipefail
+          mkdir -p external/svcomp
+          cd external/svcomp
+
+          # Official benchmark definitions (tagged)
+          git clone --depth 1 --branch svcomp26 \
+            https://gitlab.com/sosy-lab/sv-comp/bench-defs.git bench-defs || true
+
+          # Official tasks repo — shallow only (full is multi-GB)
+          # We do NOT clone the entire corpus; we record the official tag and pull a tiny subset later.
+          echo "{\"note\": \"Full sv-benchmarks clone skipped on GitHub Actions (size). Tag svcomp26 recorded.\", \"bench_defs_tag\": \"svcomp26\"}" > corpus_status.json
+
+          if [ -d bench-defs ]; then
+            (cd bench-defs && git rev-parse HEAD) > bench-defs.commit
+            echo "bench-defs HEAD: $(cat bench-defs.commit)"
+          else
+            echo "bench-defs clone failed or unavailable" > bench-defs.commit
+          fi
+
+      - name: Phase 2 — Official task count reference
+        run: |
+          set -euo pipefail
+          # From public SV-COMP 2026 report (not enumerated here)
+          cat > artifacts/agd_svcomp/official_task_reference.json << 'EOF'
+          {
+            "source": "SV-COMP 2026 competition report (public literature)",
+            "c_tasks": 36402,
+            "java_tasks": 1731,
+            "total_c_java": 38133,
+            "sv_lib_tasks": 254,
+            "note": "Full enumeration NOT EXECUTED on this runner. These are published official counts."
+          }
+          EOF
+
+      - name: Phase 3–7 — AGD deterministic projection + stress harness
+        run: |
+          set -euo pipefail
+          export MAX_TASKS="${{ github.event.inputs.max_tasks || '8' }}"
+          export STRESS_COUNT="${{ github.event.inputs.stress_count || '1000' }}"
+          python tools/agd_svcomp/run_agd_svcomp_harness.py \
+            --max-tasks "$MAX_TASKS" \
+            --stress-count "$STRESS_COUNT" \
+            --out-dir artifacts/agd_svcomp
+
+      - name: Phase 10 — Final certificate
+        run: |
+          set -euo pipefail
+          python tools/agd_svcomp/make_certificate.py \
+            --artifact-dir artifacts/agd_svcomp \
+            --out artifacts/agd_svcomp/agd_svcomp2026_certificate.json
+          python -c "
+          import hashlib, pathlib
+          p = pathlib.Path('artifacts/agd_svcomp/agd_svcomp2026_certificate.json')
+          h = hashlib.sha256(p.read_bytes()).hexdigest()
+          p.with_suffix('.json.sha256').write_text(h + '\n')
+          print('FINAL CERTIFICATE SHA256 =', h)
+          "
+
+      - name: Upload all experiment artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agd-svcomp-2026-artifacts
+          path: |
+            artifacts/agd_svcomp/
+            external/svcomp/
+          if-no-files-found: warn
+
+      - name: Print required final summary block
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ -f artifacts/agd_svcomp/SUMMARY.txt ]; then
+            cat artifacts/agd_svcomp/SUMMARY.txt
+          else
+            echo "SUMMARY.txt missing — harness may have failed early"
+          fi
