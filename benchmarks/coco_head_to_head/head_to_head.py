@@ -46,7 +46,7 @@ def _record(problem: Any, best: float, evals: int, success: bool,
         "best_f": float(best),
         "evaluations": int(evals),
         "final_target_hit": bool(success),
-        "final_target": float(problem.final_target_fvalue1),
+        "final_target": None,  # cocoex 2.8.2 Problem has final_target_hit but not final_target_fvalue1
         "omega_residual_max": omega_residual,
         "xi_residual_max": xi_residual,
         "invariant_pass": invariant_pass,
@@ -74,8 +74,7 @@ def s6(problem: Any, seed: int) -> dict[str, Any]:
         step = 0.5 * z + 0.05 * float(np.linalg.norm(z)) * z
         projected = project(x + step, omega_ref, xi_ref)
 
-        # Feasibility is separate from constitutional projection. Clipping can
-        # change Ω/Ξ, so violations are recorded rather than masked.
+        # Feasibility is separate from constitutional projection.
         candidate = np.minimum(np.maximum(projected, lo), hi)
         omega_residual = abs(omega(candidate) - omega_ref)
         xi_residual = abs(xi(candidate) - xi_ref) if candidate.size > 2 else 0.0
@@ -167,19 +166,18 @@ def compare(s6_rows: list[dict[str, Any]], cma_rows: list[dict[str, Any]]) -> di
     details = []
     for a in s6_rows:
         b = cma_by_id[a["problem_id"]]
-        sa, sb = a["final_target_hit"], b["final_target_hit"]
-        if sa and not sb:
+        if a["final_target_hit"] and not b["final_target_hit"]:
             cls = "S6_ONLY"
-        elif sb and not sa:
+        elif b["final_target_hit"] and not a["final_target_hit"]:
             cls = "CMA_ONLY"
-        elif sa and sb:
+        elif a["final_target_hit"] and b["final_target_hit"]:
             cls = "BOTH"
         else:
             cls = "NEITHER"
         counts[cls] += 1
         details.append({
             "problem_id": a["problem_id"],
-            "classification": cls,
+            "class": cls,
             "s6_best_f": a["best_f"],
             "cma_best_f": b["best_f"],
             "s6_evals": a["evaluations"],
