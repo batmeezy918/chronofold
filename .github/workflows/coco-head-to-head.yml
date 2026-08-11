@@ -1,5 +1,7 @@
 name: COCO S6 vs CMA-ES Head-to-Head
 
+# Push-triggered execution is intentional: it provides a GitHub-native way to
+# launch the full deterministic benchmark when workflow dispatch is unavailable.
 on:
   workflow_dispatch:
   push:
