@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import random
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -44,8 +43,8 @@ def s6(problem: Any, seed: int) -> dict[str, Any]:
     evals = 1
     omega_ref = omega(x)
     xi_ref = xi(x)
-    max_omega_residual = abs(omega(x) - omega_ref)
-    max_xi_residual = abs(xi(x) - xi_ref)
+    max_omega_residual = 0.0
+    max_xi_residual = 0.0
     if problem.final_target_hit:
         return _record(problem, fx, evals, True, max_omega_residual, max_xi_residual)
 
@@ -69,7 +68,6 @@ def cmaes(problem: Any, seed: int) -> dict[str, Any]:
     lo = np.asarray(problem.lower_bounds, dtype=np.float64)
     hi = np.asarray(problem.upper_bounds, dtype=np.float64)
     x0 = np.asarray(problem.initial_solution, dtype=np.float64).copy()
-    # Fixed population size makes the 1000-evaluation cap exact: 100 generations x 10.
     es = cma.CMAEvolutionStrategy(
         x0.tolist(),
         0.3,
@@ -83,10 +81,9 @@ def cmaes(problem: Any, seed: int) -> dict[str, Any]:
     best = float("inf")
     evals = 0
     while evals < BUDGET:
-        remaining = BUDGET - evals
         xs = es.ask()
-        if len(xs) > remaining:
-            xs = xs[:remaining]
+        remaining = BUDGET - evals
+        xs = xs[:remaining]
         vals = [float(problem(np.asarray(x, dtype=np.float64))) for x in xs]
         evals += len(vals)
         best = min(best, min(vals))
@@ -116,15 +113,13 @@ def _record(problem: Any, best: float, evals: int, success: bool, omega_residual
 def run_algorithm(name: str, seed: int) -> list[dict[str, Any]]:
     out = ROOT / name
     out.mkdir(parents=True, exist_ok=True)
-    observer = cocoex.Observer("bbob", f"result_folder: {out / 'exdata'}")
+    observer_name = "H2H_S6" if name == "S6" else "H2H_CMA_ES"
+    observer = cocoex.Observer("bbob", f"result_folder: {observer_name}")
     suite = cocoex.Suite("bbob", "", SUITE_FILTER)
     rows: list[dict[str, Any]] = []
     for problem in suite:
         problem.observe_with(observer)
-        if name == "S6":
-            row = s6(problem, seed)
-        else:
-            row = cmaes(problem, seed)
+        row = s6(problem, seed) if name == "S6" else cmaes(problem, seed)
         rows.append(row)
         print(f"{name}\t{row['problem_id']}\tbest={row['best_f']:.17g}\tevals={row['evaluations']}\ttarget={int(row['final_target_hit'])}")
         problem.free()
