@@ -1,0 +1,4 @@
+coco-experiment==2.8.2
+cocopp==2.8.8
+cma==4.4.4
+numpy==2.2.6
