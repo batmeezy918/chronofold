@@ -59,6 +59,7 @@ jobs:
         run: |
           rm -rf COCO_HEAD_TO_HEAD
           python head_to_head.py | tee ../../head_to_head_run1.txt
+          cp -a COCO_HEAD_TO_HEAD ../../COCO_HEAD_TO_HEAD_RUN1
 
       - name: Run head-to-head pass 2
         working-directory: benchmarks/coco_head_to_head
@@ -70,7 +71,9 @@ jobs:
         run: |
           set -euo pipefail
           cmp -s head_to_head_run1.txt head_to_head_run2.txt
-          # Run 2 is the final directory; its algorithm result files must match pass 1 copies.
+          cmp -s COCO_HEAD_TO_HEAD_RUN1/S6/results.json benchmarks/coco_head_to_head/COCO_HEAD_TO_HEAD/S6/results.json
+          cmp -s COCO_HEAD_TO_HEAD_RUN1/CMA_ES/results.json benchmarks/coco_head_to_head/COCO_HEAD_TO_HEAD/CMA_ES/results.json
+          cmp -s COCO_HEAD_TO_HEAD_RUN1/comparison.json benchmarks/coco_head_to_head/COCO_HEAD_TO_HEAD/comparison.json
           test -s head_to_head_run1.txt
           grep -q 'HEAD_TO_HEAD_SUMMARY' head_to_head_run1.txt
           echo 'HEAD_TO_HEAD_DETERMINISM=PASS'
@@ -128,6 +131,7 @@ jobs:
           name: coco-s6-vs-cma-head-to-head
           path: |
             benchmarks/coco_head_to_head/COCO_HEAD_TO_HEAD/
+            COCO_HEAD_TO_HEAD_RUN1/
             head_to_head_run1.txt
             head_to_head_run2.txt
             COCO_HEAD_TO_HEAD_EVIDENCE/
