@@ -28,10 +28,45 @@ def xi(x: np.ndarray) -> float:
 
 
 def project(x: np.ndarray, omega_ref: float, xi_ref: float) -> np.ndarray:
+    """Unconstrained affine projection (may leave the box)."""
     y = np.asarray(x, dtype=np.float64).copy()
     y[0] = omega_ref
     if y.size > 2:
         y[2] = 2.0 * y[1] - y[0] + xi_ref
+    return y
+
+
+def project_feasible(
+    x: np.ndarray,
+    omega_ref: float,
+    xi_ref: float,
+    lo: np.ndarray,
+    hi: np.ndarray,
+) -> np.ndarray | None:
+    """Project onto affine constraints intersected with the box.
+
+    Free coordinates are clipped first; constrained coordinates are then
+    solved exactly. Returns None when the affine plane misses the box
+    for the chosen free coordinates (caller must reject the step).
+    """
+    y = np.asarray(x, dtype=np.float64).copy()
+    # Clip free coordinates (everything except index 0 and 2 when dim>2)
+    for i in range(y.size):
+        if i == 0 or (i == 2 and y.size > 2):
+            continue
+        y[i] = min(max(float(y[i]), float(lo[i])), float(hi[i]))
+    # Omega is x[0]; omega_ref must already be feasible by construction
+    y[0] = float(omega_ref)
+    if y[0] < lo[0] or y[0] > hi[0]:
+        return None
+    if y.size > 2:
+        y2 = 2.0 * y[1] - y[0] + xi_ref
+        if y2 < lo[2] or y2 > hi[2]:
+            return None
+        y[2] = y2
+    # Final safety check
+    if np.any(y < lo) or np.any(y > hi):
+        return None
     return y
 
 
@@ -57,7 +92,25 @@ def s6(problem: Any, seed: int) -> dict[str, Any]:
     rng = np.random.default_rng(seed)
     lo = np.asarray(problem.lower_bounds, dtype=np.float64)
     hi = np.asarray(problem.upper_bounds, dtype=np.float64)
-    x = np.asarray(problem.initial_solution, dtype=np.float64).copy()
+    x0 = np.asarray(problem.initial_solution, dtype=np.float64).copy()
+    # Anchor invariants from the feasible projection of the initial point.
+    omega_ref = omega(x0)
+    # Keep omega_ref inside bounds (should already be).
+    omega_ref = min(max(omega_ref, float(lo[0])), float(hi[0]))
+    xi_ref = xi(x0)
+    x_init = project_feasible(x0, omega_ref, xi_ref, lo, hi)
+    if x_init is None:
+        # Fallback: free coords from x0 clipped; solve xi with x1 mid-box if needed
+        x_init = np.minimum(np.maximum(x0, lo), hi)
+        x_init[0] = omega_ref
+        if x_init.size > 2:
+            mid1 = 0.5 * (float(lo[1]) + float(hi[1]))
+            x_init[1] = mid1
+            y2 = 2.0 * mid1 - omega_ref + xi_ref
+            y2 = min(max(y2, float(lo[2])), float(hi[2]))
+            x_init[2] = y2
+            xi_ref = xi(x_init)  # re-anchor to a feasible xi if plane missed
+    x = x_init
     fx = float(problem(x))
     evals = 1
     omega_ref = omega(x)
@@ -69,13 +122,19 @@ def s6(problem: Any, seed: int) -> dict[str, Any]:
     if problem.final_target_hit:
         return _record(problem, fx, evals, True, 0.0, 0.0, True)
 
+    rejected_steps = 0
     while evals < BUDGET:
         z = rng.standard_normal(problem.dimension)
         step = 0.5 * z + 0.05 * float(np.linalg.norm(z)) * z
-        projected = project(x + step, omega_ref, xi_ref)
+        # Feasible projection onto affine ∩ box; reject if empty.
+        candidate = project_feasible(x + step, omega_ref, xi_ref, lo, hi)
+        if candidate is None:
+            rejected_steps += 1
+            # Still count an evaluation slot? No — constitutional reject does not
+            # spend an objective eval; RNG already advanced for determinism.
+            # To keep budget semantics as "objective evaluations", do not increment evals.
+            continue
 
-        # Feasibility is separate from constitutional projection.
-        candidate = np.minimum(np.maximum(projected, lo), hi)
         omega_residual = abs(omega(candidate) - omega_ref)
         xi_residual = abs(xi(candidate) - xi_ref) if candidate.size > 2 else 0.0
         max_omega_residual = max(max_omega_residual, omega_residual)
@@ -177,7 +236,7 @@ def compare(s6_rows: list[dict[str, Any]], cma_rows: list[dict[str, Any]]) -> di
         counts[cls] += 1
         details.append({
             "problem_id": a["problem_id"],
-            "class": cls,
+            "classification": cls,
             "s6_best_f": a["best_f"],
             "cma_best_f": b["best_f"],
             "s6_evals": a["evaluations"],
