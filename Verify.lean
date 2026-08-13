@@ -177,4 +177,72 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+/-- Metamodel Element 1: ConstitutionalObject -/
+structure ConstitutionalObject (α : Type u) where
+  state : State α
+
+/-- Metamodel Element 2: Witness -/
+structure Witness (α : Type u) (Ω : Omega α) (C : Covariant α) (T : Operator α) where
+  admissible : Admissible α Ω C T
+
+/-- Metamodel Element 3: Fiber -/
+structure Fiber (α : Type u) (Ω : Omega α) (C : Covariant α) (q : QStar α Ω C) where
+  states : List (State α)
+  all_equiv : ∀ s ∈ states, pi α Ω C s = q
+
+/-- Metamodel Element 4: Registry -/
+structure Registry (α : Type u) where
+  operators : List (Operator α)
+
+/-- Metamodel Element 5: Replay -/
+def Replay (α : Type u) : List (Operator α) → State α → State α
+  | [], s => s
+  | T :: Ts, s => Replay α Ts (T s)
+
+/-- Metamodel Element 6: Compiler -/
+structure Compiler (α : Type u) where
+  compile : String → Option (Operator α)
+
+/-- Metamodel Element 7: Serialization -/
+structure Serialization (α : Type u) where
+  serialize : State α → String
+  deserialize : String → Option (State α)
+
+/-- Metamodel Element 8: Hash -/
+structure Hash (α : Type u) where
+  hashState : State α → Nat
+
+/-- Metamodel Element 9: Builder -/
+structure Builder (α : Type u) where
+  build : Nat → α → State α
+
+/-- Metamodel Element 10: Invariants -/
+structure Invariants (α : Type u) where
+  omega : Omega α
+  covariant : Covariant α
+
+/-- Helper definition: All operators in a list are admissible -/
+def AllAdmissible (α : Type u) (Ω : Omega α) (C : Covariant α) (Ts : List (Operator α)) : Prop :=
+  ∀ T ∈ Ts, Admissible α Ω C T
+
+/-- Master Theorem: Sequential replay of admissible operators preserves the invariants -/
+theorem replay_preserves_invariants
+    {α : Type u} (Ω : Omega α) (C : Covariant α)
+    (Ts : List (Operator α)) (hTs : AllAdmissible α Ω C Ts) (s : State α) :
+    Ω (Replay α Ts s) = Ω s ∧ C (Replay α Ts s) = C s := by
+  induction Ts generalizing s with
+  | nil =>
+    exact ⟨rfl, rfl⟩
+  | cons T Ts ih =>
+    have hT_adm : Admissible α Ω C T := hTs T List.mem_cons_self
+    have hTs_adm : AllAdmissible α Ω C Ts := by
+      intro T' hT'
+      exact hTs T' (List.mem_cons_of_mem T hT')
+    have ih_applied := ih hTs_adm (T s)
+    have hT_s := hT_adm s
+    change Ω (Replay α Ts (T s)) = Ω s ∧ C (Replay α Ts (T s)) = C s
+    constructor
+    · rw [ih_applied.1, hT_s.1]
+    · rw [ih_applied.2, hT_s.2]
+
 end AGD
