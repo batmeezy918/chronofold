@@ -177,4 +177,59 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+/-!
+  # Constitutional Metamodel Formulations
+-/
+
+structure ConstitutionalObject (α : Type u) where
+  id   : Nat
+  data : α
+  hash : Nat
+
+structure Witness (α : Type u) (Ω : Omega α) (C : Covariant α) (op : Operator α) where
+  admissible : Admissible α Ω C op
+
+def Fiber (α : Type u) (Ω : Omega α) (C : Covariant α) (q : QStar α Ω C) : Type u :=
+  { s : State α // pi α Ω C s = q }
+
+structure Registry (α : Type u) where
+  objects : List (State α)
+
+def Replay (α : Type u) (ops : List (Operator α)) (initial : State α) : State α :=
+  ops.foldl (fun s op => op s) initial
+
+structure Compiler (α : Type u) (β : Type u) where
+  compile : State α → State β
+
+structure Serialization (α : Type u) where
+  serialize   : State α → String
+  deserialize : String → Option (State α)
+
+def Hash (α : Type u) (s : State α) : Nat :=
+  s.id
+
+structure Builder (α : Type u) where
+  build : Nat → α → State α
+
+structure Invariants (α : Type u) (Ω : Omega α) (C : Covariant α) (s : State α) where
+  omega_val     : Nat := Ω s
+  covariant_val : Nat := C s
+
+theorem replay_preserves_invariants
+    (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (ops : List (Operator α))
+    (h_adm : ∀ op ∈ ops, Admissible α Ω C op)
+    (s : State α) :
+    Ω (Replay α ops s) = Ω s ∧ C (Replay α ops s) = C s := by
+  induction ops generalizing s with
+  | nil =>
+    exact ⟨rfl, rfl⟩
+  | cons op rest ih =>
+    have h_op : Admissible α Ω C op := h_adm op (by simp)
+    have h_rest : ∀ op' ∈ rest, Admissible α Ω C op' := fun op' h_mem => h_adm op' (by simp [h_mem])
+    have ih_app := ih h_rest (op s)
+    change Ω (Replay α rest (op s)) = Ω s ∧ C (Replay α rest (op s)) = C s
+    rw [ih_app.1, ih_app.2]
+    exact ⟨(h_op s).1, (h_op s).2⟩
+
 end AGD
