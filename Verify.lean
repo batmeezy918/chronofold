@@ -177,4 +177,79 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+-- =========================================================================
+-- CONSTITUTIONAL METAMODEL FORMALIZATION
+-- =========================================================================
+
+/-- 1. ConstitutionalObject: Primary constitutional artifact structure -/
+structure ConstitutionalObject (α : Type u) where
+  id    : Nat
+  state : State α
+  hash  : Nat
+  deriving DecidableEq, Repr
+
+/-- 2. Witness: Proof witness for invariant preservation and admissibility -/
+structure Witness (α : Type u) (Ω : Omega α) (C : Covariant α) (T : Operator α) (s : State α) where
+  omega_preserved : Ω (T s) = Ω s
+  c_preserved     : C (T s) = C s
+
+/-- 3. Fiber: Fiber map grouping objects into equivalence classes -/
+def Fiber (α : Type u) (Ω : Omega α) (C : Covariant α) (val_omega val_c : Nat) : Type u :=
+  { s : State α // Ω s = val_omega ∧ C s = val_c }
+
+/-- 4. Registry: Constitutional registry tracking objects and active operators -/
+structure Registry (α : Type u) where
+  objects   : List (ConstitutionalObject α)
+  operators : List (Operator α)
+
+/-- 5. Invariants: Integrated system invariant predicate -/
+def Invariants (α : Type u) (Ω : Omega α) (C : Covariant α) (s : State α) (target_omega target_c : Nat) : Prop :=
+  Ω s = target_omega ∧ C s = target_c
+
+/-- 6. Replay: Replay mechanism executing a list of operators -/
+def Replay (α : Type u) (ops : List (Operator α)) (s : State α) : State α :=
+  ops.foldl (fun acc T => T acc) s
+
+/-- Theorem: Sequential replay of admissible operators preserves the AGD equivalence invariants -/
+theorem replay_preserves_invariants
+    (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (ops : List (Operator α))
+    (h_adm : ∀ T ∈ ops, Admissible α Ω C T)
+    (s : State α) :
+    AGDEquiv α Ω C (Replay α ops s) s := by
+  induction ops generalizing s with
+  | nil =>
+    exact AGDEquiv.refl α Ω C s
+  | cons T ts ih =>
+    unfold Replay
+    simp only [List.foldl_cons]
+    have hT : Admissible α Ω C T := h_adm T (by simp)
+    have h_ts : ∀ T' ∈ ts, Admissible α Ω C T' := fun T' h' => h_adm T' (by simp [h'])
+    have ih_res := ih h_ts (T s)
+    have hT_eq : AGDEquiv α Ω C (T s) s := hT s
+    exact AGDEquiv.trans α Ω C ih_res hT_eq
+
+/-- 7. Compiler: Bridge transforming specifications to executable targets -/
+structure Compiler (α : Type u) where
+  source_id : Nat
+  target_id : Nat
+  proven    : Bool
+
+/-- 8. Serialization: Deterministic state serialization -/
+def Serialization (α : Type u) [ToString α] (s : State α) : String :=
+  s!"State({s.id},{s.payload})"
+
+/-- 9. Hash: Canonical deterministic hash function -/
+def Hash (α : Type u) (s : State α) : Nat :=
+  s.id * 31 + 17
+
+/-- 10. Builder: Incremental constitutional object builder -/
+structure Builder (α : Type u) where
+  current_id : Nat
+  payload    : α
+
+def Builder.build (α : Type u) (b : Builder α) : ConstitutionalObject α :=
+  let st : State α := ⟨b.current_id, b.payload⟩
+  ⟨b.current_id, st, Hash α st⟩
+
 end AGD
