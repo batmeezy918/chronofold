@@ -177,4 +177,79 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+-------------------------------------------------------------------------------
+-- AGD CONSTITUTIONAL METAMODEL FORMALIZATION
+-------------------------------------------------------------------------------
+
+/-- Constitutional Object representation -/
+structure ConstitutionalObject (α : Type u) where
+  id : Nat
+  payload : α
+  hash : Nat
+  deriving DecidableEq, Repr
+
+/-- Invariants bundle on state space -/
+structure Invariants (α : Type u) where
+  omega : State α → Nat
+  covariant : State α → Nat
+
+/-- Witness verification proof record -/
+structure Witness (α : Type u) (inv : Invariants α) (s₁ s₂ : State α) where
+  proof_omega : inv.omega s₁ = inv.omega s₂
+  proof_covariant : inv.covariant s₁ = inv.covariant s₂
+
+/-- Fiber structure for quotient equivalence classes -/
+def Fiber (α : Type u) (inv : Invariants α) (q : QStar α inv.omega inv.covariant) : Type u :=
+  { s : State α // pi α inv.omega inv.covariant s = q }
+
+/-- Global Object Registry -/
+structure Registry (α : Type u) where
+  objects : List (ConstitutionalObject α)
+  valid : ∀ obj ∈ objects, obj.id > 0
+
+/-- Replay mechanism for operator sequences -/
+def Replay (α : Type u) (ops : List (Operator α)) (init : State α) : State α :=
+  ops.foldl (fun s op => op s) init
+
+/-- Replay preserves invariants when all operators are admissible -/
+theorem replay_preserves_invariants (α : Type u) (inv : Invariants α)
+    (ops : List (Operator α))
+    (h_adm : ∀ op ∈ ops, Admissible α inv.omega inv.covariant op)
+    (init : State α) :
+    inv.omega (Replay α ops init) = inv.omega init ∧
+    inv.covariant (Replay α ops init) = inv.covariant init := by
+  induction ops generalizing init with
+  | nil =>
+    exact ⟨rfl, rfl⟩
+  | cons op ops ih =>
+    unfold Replay
+    simp only [List.foldl_cons]
+    have h_op : Admissible α inv.omega inv.covariant op := h_adm op (by simp)
+    have h_rest : ∀ op' ∈ ops, Admissible α inv.omega inv.covariant op' :=
+      fun op' h => h_adm op' (by simp [h])
+    have ih' := ih h_rest (op init)
+    have h_adm_op := h_op init
+    unfold Replay at ih'
+    constructor
+    · rw [ih'.1, h_adm_op.1]
+    · rw [ih'.2, h_adm_op.2]
+
+/-- Canonical Hash function -/
+def Hash (α : Type u) (s : State α) : Nat :=
+  s.id
+
+/-- Serialization function -/
+structure Serialization (α : Type u) where
+  serialize : State α → List Nat
+  deserialize : List Nat → Option (State α)
+
+/-- Builder pattern -/
+structure Builder (α : Type u) where
+  build : Nat → α → State α
+
+/-- Compiler interface producing deterministic IR and witness obligations -/
+structure Compiler (α : Type u) (inv : Invariants α) where
+  compile : Operator α → List Nat
+  verify_witness : ∀ op : Operator α, Admissible α inv.omega inv.covariant op → Bool
+
 end AGD
