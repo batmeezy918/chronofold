@@ -9,3 +9,4 @@ import Chronofold.AgdClassGraph
 import Chronofold.AgdIterate
 import Chronofold.AgdInvariantSafety
 import Chronofold.AgdBidirectional
+import Chronofold.AgdSicConstitutional
