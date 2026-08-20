@@ -1,5 +1,5 @@
 /-
-  Minimal Admissible Quotient (Q*)
+  Minimal Admissible Quotient (Q*) and Constitutional Metamodel
   Operational scaffold for Lean 4
   Goal: unique minimal / initial state space that preserves Ω and C
 -/
@@ -176,5 +176,84 @@ theorem admission_iff_descends
       have h2 : Tbar (pi α Ω C s) = pi α Ω C s := h_id (pi α Ω C s)
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
+
+--------------------------------------------------
+-- CONSTITUTIONAL METAMODEL DEFINITIONS
+--------------------------------------------------
+
+/-- Metamodel Constitutional Object representation. -/
+structure ConstitutionalObject (α : Type u) where
+  id    : Nat
+  state : State α
+  hash  : Nat
+  deriving DecidableEq
+
+/-- Metamodel Witness proving state transitions or properties. -/
+structure Witness (α : Type u) where
+  sourceHash : Nat
+  targetHash : Nat
+  valid      : Bool
+  deriving DecidableEq
+
+/-- Fiber grouping states with equivalent invariants. -/
+structure Fiber (α : Type u) (Ω : Omega α) (C : Covariant α) where
+  omegaVal : Nat
+  cVal     : Nat
+  states   : List (State α)
+
+/-- Registry mapping IDs to Constitutional Objects. -/
+structure Registry (α : Type u) where
+  objects : List (ConstitutionalObject α)
+
+/-- Serialization representation of state/object. -/
+structure Serialization where
+  bytes : List Nat
+  deriving DecidableEq
+
+/-- Deterministic Hash function representation. -/
+def Hash (α : Type u) (s : State α) : Nat :=
+  s.id + 31
+
+/-- Compiler bridging Lean specifications to executable artifacts. -/
+structure Compiler (α : Type u) where
+  specVersion : Nat
+  compileState : State α → Serialization
+
+/-- Builder constructing new states deterministically. -/
+structure Builder (α : Type u) where
+  build : Nat → α → State α
+
+/-- Explicit System Invariants structure. -/
+structure Invariants (α : Type u) (Ω : Omega α) (C : Covariant α) (s : State α) : Prop where
+  omegaConst : Ω s = Ω s
+  cConst     : C s = C s
+
+/-- Sequential Replay execution of operators over an initial state. -/
+def Replay (α : Type u) (ops : List (Operator α)) (s : State α) : State α :=
+  ops.foldl (fun acc op => op acc) s
+
+/-- List-wide admissibility predicate. -/
+def AllAdmissible (α : Type u) (Ω : Omega α) (C : Covariant α) (ops : List (Operator α)) : Prop :=
+  ∀ op ∈ ops, Admissible α Ω C op
+
+/-- Theorem: Sequential replay of admissible operators preserves system invariants. -/
+theorem replay_preserves_invariants
+    (α : Type u) (Ω : Omega α) (C : Covariant α)
+    (ops : List (Operator α)) (hOps : AllAdmissible α Ω C ops) (s : State α) :
+    Ω (Replay α ops s) = Ω s ∧ C (Replay α ops s) = C s := by
+  induction ops generalizing s with
+  | nil =>
+    exact ⟨rfl, rfl⟩
+  | cons op rest ih =>
+    unfold Replay
+    unfold Replay at ih
+    simp only [List.foldl_cons]
+    have h_op : Admissible α Ω C op := hOps op List.mem_cons_self
+    have h_rest : AllAdmissible α Ω C rest := fun op' hmem => hOps op' (List.mem_cons_of_mem op hmem)
+    have ih_app := ih h_rest (op s)
+    have h_adm := h_op s
+    constructor
+    · rw [ih_app.1, h_adm.1]
+    · rw [ih_app.2, h_adm.2]
 
 end AGD
