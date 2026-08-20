@@ -10,8 +10,8 @@ namespace Chronofold.AGD
 
 universe u
 
-/-- If a surjective map between finite types is noninjective, its codomain
-    has strictly smaller cardinality. -/
+/-- A surjective non-injective map between finite types has a strictly
+    smaller codomain. -/
 theorem strict_card_of_surjective_not_injective
     {S : Type u} {Q : Type u}
     [Fintype S] [Fintype Q]
@@ -19,7 +19,16 @@ theorem strict_card_of_surjective_not_injective
     (hsurj : Function.Surjective p)
     (hninj : ¬ Function.Injective p) :
     Fintype.card Q < Fintype.card S := by
-  exact Fintype.card_lt_of_surjective_of_not_injective p hsurj hnin j
+  by_contra hnot
+  have hle : Fintype.card S ≤ Fintype.card Q := Nat.le_of_not_gt hnot
+  obtain ⟨f, hcomp⟩ := Fintype.card_le_of_surjective p hsurj
+  exact hnin j (by
+    intro a b hab
+    have hfa : f (p a) = a := by
+      exact Fintype.rightInverse_of_surjective_of_card_le p hsurj hle a
+    have hfb : f (p b) = b := by
+      exact Fintype.rightInverse_of_surjective_of_card_le p hsurj hle b
+    simpa [hab] using hfa.trans hfb.symm)
 
 /-- AGD's canonical quotient projection is surjective by construction. -/
 theorem pi_surjective
