@@ -1,0 +1,6 @@
+{
+  "theorem_id": "THM_000001__smoke_test",
+  "status": "rejected",
+  "stage": "compile",
+  "log_path": "logs/THM_000001__smoke_test.log"
+}
