@@ -19,16 +19,25 @@ theorem strict_card_of_surjective_not_injective
     (hsurj : Function.Surjective p)
     (hninj : ¬ Function.Injective p) :
     Fintype.card Q < Fintype.card S := by
-  by_contra hnot
-  have hle : Fintype.card S ≤ Fintype.card Q := Nat.le_of_not_gt hnot
-  obtain ⟨f, hcomp⟩ := Fintype.card_le_of_surjective p hsurj
-  exact hnin j (by
-    intro a b hab
-    have hfa : f (p a) = a := by
-      exact Fintype.rightInverse_of_surjective_of_card_le p hsurj hle a
-    have hfb : f (p b) = b := by
-      exact Fintype.rightInverse_of_surjective_of_card_le p hsurj hle b
-    simpa [hab] using hfa.trans hfb.symm)
+  have hle : Fintype.card Q ≤ Fintype.card S :=
+    Fintype.card_le_of_surjective p hsurj
+  have hnot : ¬ Fintype.card S ≤ Fintype.card Q := by
+    intro hbad
+    have hEq : Fintype.card S = Fintype.card Q :=
+      Nat.le_antisymm hbad hle
+    have hinj : Function.Injective p := by
+      intro a b hab
+      let R : Q → S := Fintype.equivOfCardEq hEq |>.toFun
+      have hRp : Function.RightInverse R p := by
+        intro q
+        exact Fintype.equivOfCardEq hEq |>.left_inv q
+      have hRa : R (p a) = a := by
+        exact hRp a
+      have hRb : R (p b) = b := by
+        exact hRp b
+      simpa [hab] using hRa.trans hRb.symm
+    exact hnin j hinj
+  exact Nat.lt_of_not_ge hnot
 
 /-- AGD's canonical quotient projection is surjective by construction. -/
 theorem pi_surjective
