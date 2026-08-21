@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMV AGD Acceptance Quotient</title>
+<style>
+:root{color-scheme:dark;--bg:#111;--panel:#1c1c1c;--border:#3a3a3a;--text:#f4f4f4;--muted:#a7a7a7;--ok:#65e6a5;--bad:#ff7b7b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,-apple-system,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 18px 48px}
+h1{font-size:2.15rem;line-height:1.08;margin:8px 0 10px}.subtitle{color:#c8c8c8;line-height:1.45}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 4px 18px #0003}
+h2{font-size:1.55rem;margin:0 0 18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;color:#ddd;margin:8px 0 5px}input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #505050;background:#111;color:#fff;font-size:1rem}
+.full{grid-column:1/-1}.checks{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px}.check{display:flex;align-items:center;gap:10px;color:#ddd}.check input{width:20px;height:20px}
+button{border:0;border-radius:9px;padding:13px 18px;background:#eee;color:#111;font-size:1rem;font-weight:700;cursor:pointer}button.secondary{background:#303030;color:#fff;border:1px solid #505050}
+.actions{display:flex;gap:12px;flex-wrap:wrap}.actions button{flex:1 1 180px}
+.badge{display:inline-block;border:1px solid #555;border-radius:999px;padding:4px 10px;font-size:.8rem;font-weight:700}.ok{color:var(--ok);border-color:#2f8c65}.bad{color:var(--bad);border-color:#9a4545}.muted{color:var(--muted)}
+pre{white-space:pre-wrap;word-break:break-word;background:#101010;border:1px solid #333;border-radius:10px;padding:14px;overflow:auto}.metric{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric>div{background:#111;border:1px solid #333;border-radius:10px;padding:12px}.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #333}.row:last-child{border-bottom:0}
+@media(max-width:600px){.grid,.checks,.metric{grid-template-columns:1fr}main{padding:18px 12px}h1{font-size:1.9rem}}
+</style>
+</head>
+<body>
+<main>
+<h1>EMV AGD Acceptance Quotient</h1>
+<p class="subtitle">Controlled virtual test-card scenario builder, quotient projection, perturbation/falsification, and deterministic replay evidence.</p>
+
+<section class="card">
+<h2>Test Card</h2>
+<div class="grid">
+<div><label>Card ID</label><input id="card_id" value="CARD-0001"></div>
+<div><label>Profile</label><select id="profile"><option>CONTROL</option><option>VISA</option><option>MASTERCARD</option><option>AMEX</option></select></div>
+<div><label>Test PAN</label><input id="pan" value="4111111111111111"></div>
+<div><label>Expiry</label><input id="expiry" value="1230"></div>
+<div class="full"><label>AID</label><input id="aid" value="A0000000031010"></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Perturbation Matrix</h2>
+<div class="checks">
+<label class="check"><input type="checkbox" value="Timing" checked>Timing</label>
+<label class="check"><input type="checkbox" value="APDU" checked>APDU</label>
+<label class="check"><input type="checkbox" value="TLV" checked>TLV</label>
+<label class="check"><input type="checkbox" value="AIP" checked>AIP</label>
+<label class="check"><input type="checkbox" value="AFL" checked>AFL</label>
+<label class="check"><input type="checkbox" value="CVR" checked>CVR</label>
+<label class="check"><input type="checkbox" value="CDOL" checked>CDOL</label>
+<label class="check"><input type="checkbox" value="Cryptogram" checked>Cryptogram</label>
+<label class="check"><input type="checkbox" value="Terminal Context" checked>Terminal Context</label>
+</div>
+<div class="actions" style="margin-top:18px">
+<button onclick="runPerturbations()">RUN SCENARIO</button>
+<button class="secondary" onclick="checkEngine()">CHECK ENGINE</button>
+<button class="secondary" onclick="resetUI()">RESET</button>
+</div>
+</section>
+
+<section class="card">
+<h2>Verified ChronoFold Core</h2>
+<div id="coreStatus" class="muted">Loading…</div>
+<div class="actions" style="margin-top:14px">
+<button class="secondary" onclick="checkEngine()">REFRESH VERIFIED CORE</button>
+<button class="secondary" onclick="runReplay()">DETERMINISTIC REPLAY</button>
+</div>
+</section>
+
+<section class="card">
+<h2>Quotient Result</h2>
+<div id="status" class="muted">Ready.</div>
+<div id="metrics" style="margin-top:12px"></div>
+<div id="matrix" style="margin-top:12px"></div>
+</section>
+
+<section class="card">
+<h2>Evidence</h2>
+<pre id="evidence">No run yet.</pre>
+</section>
+</main>
+<script>
+function scenario(){return {card_id:v('card_id'),pan:v('pan'),expiry:v('expiry'),aid:v('aid'),profile:v('profile'),cla:'00',ins:'A4',p1:'04',p2:'00',data:v('aid'),le:'00',response_data:'6F0A8407A0000000031010',sw1:'90',sw2:'00',tlv:'6F',aip:'5800',afl:'08010100',cvr:'00000000',cdol:'',cryptogram:'A1B2C3D4E5F67890',terminal_context:'TEST',timing:'1000'}}
+function v(id){return document.getElementById(id).value}
+async function get(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw Error(`${r.status} ${p}`);return r.json()}
+async function post(p,b){const r=await fetch(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});if(!r.ok)throw Error(`${r.status} ${p}`);return r.json()}
+function esc(x){return String(x).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
+function status(t,ok=true){document.getElementById('status').innerHTML=`<span class="badge ${ok?'ok':'bad'}">${esc(t)}</span>`}
+function show(r){const ok=r.acceptance_congruence!==false&&r.projection_idempotence!==false;status(ok?'QUOTIENT CHECK PASS':'COUNTEREXAMPLE / FAIL',ok);document.getElementById('metrics').innerHTML=`<div class="metric"><div><span class="muted">Raw scenarios</span><b>${r.raw_scenarios??'-'}</b></div><div><span class="muted">Quotient classes</span><b>${r.quotient_classes??'-'}</b></div><div><span class="muted">Compression</span><b>${r.compression_ratio??'-'}</b></div><div><span class="muted">Projection idempotent</span><b>${r.projection_idempotence??'-'}</b></div></div>`;if(r.perturbations)document.getElementById('matrix').innerHTML=r.perturbations.map(x=>`<div class="row"><span>${esc(x.mutation)}</span><span class="${x.changed?'bad':'ok'}">${x.changed?'QUOTIENT CHANGED':'SAME CLASS'}</span></div>`).join('');document.getElementById('evidence').textContent=JSON.stringify(r,null,2)}
+async function runPerturbations(){try{show(await post('/api/emv-quotient/perturbations',{scenario:scenario()}))}catch(e){status(e.message,false)}}
+async function checkEngine(){try{const r=await get('/api/emv-quotient/verified-core'),d=r.deterministic_self_check,c=r.canonical_replay,ok=d.status==='PASS'&&d.deterministic_replay&&d.illegal_transition_non_mutating&&c.certificate_valid;document.getElementById('coreStatus').innerHTML=`<span class="badge ${ok?'ok':'bad'}">${ok?'EXECUTABLY VERIFIED':'CHECK FAILED'}</span><p>Replay: <b>${d.deterministic_replay}</b> · Illegal transition non-mutating: <b>${d.illegal_transition_non_mutating}</b></p><p class="muted">Constitution: ${esc(c.constitution_hash)}<br>Trace: ${esc(c.trace_hash)}</p>`}catch(e){document.getElementById('coreStatus').textContent=e.message}}
+async function runReplay(){try{const r=await post('/api/emv-quotient/replay',{scenario:scenario()});status(r.replay_equal?'DETERMINISTIC REPLAY PASS':'REPLAY FAIL',r.replay_equal);document.getElementById('evidence').textContent=JSON.stringify(r,null,2)}catch(e){status(e.message,false)}}
+function resetUI(){location.reload()}
+checkEngine();
+</script>
+</body>
+</html>
