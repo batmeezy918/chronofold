@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EMBProtocolConstitution",
+  "type": "object",
+  "required": [
+    "constitution_id",
+    "constitution_version",
+    "authority_set",
+    "schema_version",
+    "state_schema",
+    "equivalence_relation",
+    "invariants",
+    "lawful_operators",
+    "forbidden_operators",
+    "admission_rules"
+  ],
+  "properties": {
+    "constitution_id": { "type": "string" },
+    "constitution_version": { "type": "string" },
+    "authority_set": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_version": { "type": "string" },
+    "state_schema": { "type": "object" },
+    "equivalence_relation": { "type": "object" },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "lawful_operators": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_operators": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "admission_rules": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}

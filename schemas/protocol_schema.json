@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EMBProtocolState",
+  "type": "object",
+  "required": [
+    "state_id",
+    "sequence_number",
+    "terminal_state",
+    "card_state",
+    "transaction_context",
+    "invariants",
+    "quotient_state"
+  ],
+  "properties": {
+    "state_id": { "type": "string" },
+    "sequence_number": { "type": "integer" },
+    "terminal_state": { "type": "string" },
+    "card_state": { "type": "object" },
+    "transaction_context": { "type": "object" },
+    "invariants": { "type": "object" },
+    "quotient_state": { "type": "object" }
+  }
+}
