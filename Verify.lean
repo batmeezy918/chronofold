@@ -177,4 +177,88 @@ theorem admission_iff_descends
       have h3 : pi α Ω C (T s) = pi α Ω C s := by rw [← h1, h2]
       exact Quotient.exact h3
 
+-- ==========================================
+-- CONSTITUTIONAL METAMODEL FORMALIZATION
+-- ==========================================
+
+/-- Metamodel representation of Constitutional Objects -/
+structure ConstitutionalObject where
+  id : Nat
+  hash : Nat
+  payload : String
+  deriving DecidableEq, Repr
+
+/-- Witnesses for state transitions and proof obligations -/
+structure Witness where
+  sourceHash : Nat
+  targetHash : Nat
+  signature  : Nat
+  deriving DecidableEq, Repr
+
+/-- Equivalence fiber -/
+structure Fiber (α : Type u) where
+  representative : State α
+  members : List (State α)
+
+/-- Object Registry for traceability -/
+structure Registry (α : Type u) where
+  objects : List (State α)
+
+/-- Replay metadata for deterministic state reconstruction -/
+structure Replay (α : Type u) where
+  initialState : State α
+  operators    : List (Operator α)
+
+/-- Compiler interface specification -/
+structure Compiler where
+  source : String
+  target : String
+  irHash : Nat
+  deriving DecidableEq, Repr
+
+/-- Serialization metadata -/
+structure Serialization where
+  format : String
+  canonicalByteHash : Nat
+  deriving DecidableEq, Repr
+
+/-- Hash structure for system artifacts -/
+structure Hash where
+  value : Nat
+  algorithm : String
+  deriving DecidableEq, Repr
+
+/-- System Builder configuration -/
+structure Builder where
+  targetName : String
+  optLevel   : Nat
+  deriving DecidableEq, Repr
+
+/-- Constitutional Invariants container -/
+structure Invariants (α : Type u) where
+  omega     : Omega α
+  covariant : Covariant α
+
+/-- Theorem: Sequential replay of admissible operators preserves system invariants -/
+theorem replay_preserves_invariants
+    (α : Type u) (inv : Invariants α)
+    (s : State α) (ops : List (Operator α))
+    (h_adm : ∀ op ∈ ops, Admissible α inv.omega inv.covariant op) :
+    let s' := ops.foldl (fun st op => op st) s
+    inv.omega s' = inv.omega s ∧ inv.covariant s' = inv.covariant s := by
+  induction ops generalizing s with
+  | nil =>
+    simp
+  | cons op rest ih =>
+    simp only [List.foldl_cons]
+    have h_op := h_adm op (by simp)
+    have h_rest : ∀ op' ∈ rest, Admissible α inv.omega inv.covariant op' :=
+      fun op' h_in => h_adm op' (List.mem_cons_of_mem op h_in)
+    have ih_res := ih (op s) h_rest
+    have h_op_om := (h_op s).1
+    have h_op_cov := (h_op s).2
+    constructor
+    · rw [ih_res.1, h_op_om]
+    · rw [ih_res.2, h_op_cov]
+
 end AGD
