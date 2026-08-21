@@ -26,52 +26,67 @@ jobs:
         run: |
           lake build
 
-      - name: Run all Lean files (discovery mode)
+      - name: Audit canonical Verified Theorems manifest
         run: |
-          echo "=== DISCOVERY MODE ==="
-          find . -name "*.lean" | while read file; do
+          python3 scripts/verify_verified_theorems.py
+
+      - name: Run all Lean files (strict discovery mode)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== STRICT LEAN DISCOVERY MODE ==="
+          mapfile -t files < <(find . -name "*.lean" -not -path "./.lake/*" | sort)
+          failures=0
+          for file in "${files[@]}"; do
             echo "---- RUNNING: $file ----"
-            lake env lean "$file" || echo "FAILED: $file"
+            if ! lake env lean "$file"; then
+              echo "FAILED: $file"
+              failures=$((failures + 1))
+            fi
           done
+          if [ "$failures" -ne 0 ]; then
+            echo "LEAN_DISCOVERY_FAILURES=$failures"
+            exit 1
+          fi
+          echo "LEAN_DISCOVERY_OK=${#files[@]}"
+
+      - name: Reject sorry placeholders in tracked Lean source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RIn --include='*.lean' --exclude-dir=.lake -E '(^|[^A-Za-z0-9_])sorry([^A-Za-z0-9_]|$)' .; then
+            echo "SORRY_PLACEHOLDER_FOUND"
+            exit 1
+          fi
+          echo "NO_SORRY_PLACEHOLDERS=1"
 
       - name: Generate theorem DAG
         run: |
           echo "=== BUILDING DAG ==="
           mkdir -p cfpc_ci
-          find . -name "*.lean" > cfpc_ci/files.txt
+          find . -name "*.lean" -not -path "./.lake/*" | sort > cfpc_ci/files.txt
 
           python3 - << 'PY'
-import json, os
+import json
 
 files = open("cfpc_ci/files.txt").read().splitlines()
-
-graph = {
-    "nodes": [],
-    "edges": []
-}
-
+graph = {"nodes": [], "edges": []}
 for f in files:
     content = open(f, errors="ignore").read()
     score = 0
-
     if "theorem" in content:
         score += 2
     if "sorry" in content:
         score -= 5
     if "by" in content:
         score += 1
-
-    node = {
+    graph["nodes"].append({
         "file": f,
         "score": score,
-        "has_sorry": "sorry" in content
-    }
-
-    graph["nodes"].append(node)
-
+        "has_sorry": "sorry" in content,
+    })
 with open("cfpc_ci/graph.json", "w") as out:
     json.dump(graph, out, indent=2)
-
 print("DAG generated:", graph)
 PY
 
