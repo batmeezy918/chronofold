@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "promotion_policy": {
+    "requires_current_lean_verification": true,
+    "allow_sorry": false,
+    "allow_narrative_only": false,
+    "allow_historical_pr_claim_only": false
+  },
+  "entries": [
+    {"id":"agd_core_definitions","source":"src/Chronofold/AgdCore.lean","status":"verified_by_lean","content_sha256":"7d9c112147618dd5a26cc42385858e29d50e436f"},
+    {"id":"agd_equivalence_and_descent","source":"src/Chronofold/AgdOperators.lean","status":"verified_by_lean","content_sha256":"57d8e84d1829ae3297239dc1e7440ae9aa4f4a31"},
+    {"id":"agd_invariants_and_descent","source":"src/Chronofold/AgdInvariants.lean","status":"verified_by_lean","content_sha256":"e480df0ffd0ba5865028d4767a424b731f0b1088"},
+    {"id":"agd_admissible_composition","source":"src/Chronofold/AgdClosure.lean","status":"verified_by_lean","content_sha256":"81e431448e6eaaa8b02b2436c4859cae3c5635eb"},
+    {"id":"cfpc_kernel_equivalence","source":"core/src/lean/CFPC/KernelEquivalence.lean","status":"verified_by_lean","content_sha256":"a96416ba8481b1740925e573b6308e2b5731cd25"},
+    {"id":"t1_smoke","source":"core/theorems_proven/T1.lean","status":"verified_by_lean","content_sha256":"05ace445fca5f7a94a0e056ac5c8bac92c075dfe"}
+  ],
+  "excluded": [
+    "disabled/*",
+    "templates/theorem_candidate.lean",
+    "core/theorems_rejected/*",
+    "src/Chronofold/Physics.lean"
+  ]
+}
