@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "properties": [
+    {
+      "id": "PROP_CANONICAL_IDEMPOTENCE",
+      "statement": "canonicalize(canonicalize(x)) == canonicalize(x)",
+      "evidence_level": "EXECUTABLY_VERIFIED",
+      "status": "REQUIRED_GATE"
+    },
+    {
+      "id": "PROP_QUOTIENT_EQUIVALENCE",
+      "statement": "x ~ y iff Phi(x) == Phi(y)",
+      "evidence_level": "SPECIFIED_AND_EXECUTABLE",
+      "status": "REQUIRED_GATE"
+    },
+    {
+      "id": "PROP_PROJECTION_IDEMPOTENCE",
+      "statement": "Pi(Pi(x)) == Pi(x)",
+      "evidence_level": "REQUIRED_GATE",
+      "status": "TO_BE_VERIFIED_PER_IMPLEMENTATION"
+    },
+    {
+      "id": "PROP_PROJECTION_INVARIANT_PRESERVATION",
+      "statement": "Phi(Pi(x)) == Phi(x)",
+      "evidence_level": "REQUIRED_GATE",
+      "status": "TO_BE_VERIFIED_PER_IMPLEMENTATION"
+    },
+    {
+      "id": "PROP_LAWFUL_OPERATOR",
+      "statement": "Phi(T(x)) == Phi(x) for every declared lawful operator T",
+      "evidence_level": "REQUIRED_GATE",
+      "status": "TO_BE_VERIFIED_PER_OPERATOR"
+    },
+    {
+      "id": "PROP_REPLAY_DETERMINISM",
+      "statement": "Replay(R, E) == Replay(R, E) for identical canonical replay input and environment manifest",
+      "evidence_level": "REQUIRED_GATE",
+      "status": "TO_BE_VERIFIED"
+    },
+    {
+      "id": "PROP_CERTIFICATE_INDEPENDENCE",
+      "statement": "A certificate can be checked against retained hashes without rerunning the original physical transaction",
+      "evidence_level": "ARCHITECTURAL_REQUIREMENT",
+      "status": "TO_BE_IMPLEMENTED"
+    }
+  ]
+}
