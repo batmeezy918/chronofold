@@ -1,7 +1,3 @@
-"""
-UI Package
-"""
+"""ChronoFold UI package."""
 
-from .server import ProtocolLabHandler
-
-__all__ = ["ProtocolLabHandler"]
+__all__ = []
