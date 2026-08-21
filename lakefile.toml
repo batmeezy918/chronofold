@@ -1,6 +1,6 @@
 name = "chronofold"
 version = "0.1.0"
-defaultTargets = ["Chronofold"]
+defaultTargets = ["Chronofold", "Verify"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -15,6 +15,10 @@ rev = "v4.29.0"
 [[lean_lib]]
 name = "Chronofold"
 srcDir = "src"
+
+[[lean_lib]]
+name = "Verify"
+srcDir = "."
 
 [[lean_exe]]
 name = "Main"
