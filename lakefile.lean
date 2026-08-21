@@ -9,4 +9,4 @@ lean_lib Chronofold where
 
 @[default_target]
 lean_exe Main where
-  root := "Main"
+  root := `Main
