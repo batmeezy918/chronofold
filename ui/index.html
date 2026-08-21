@@ -6,56 +6,29 @@
 <title>ChronoFold — Canonical EMV Protocol Lab</title>
 <style>
 body{font-family:system-ui,-apple-system,sans-serif;background:#0b1220;color:#eef2ff;margin:0;padding:20px}
-h1,h2{margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}.card{background:#151f33;border:1px solid #2d3a52;border-radius:10px;padding:16px}.badge{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:700;font-size:.8rem}.sim{background:#7c3aed}.pass{background:#047857}.block{background:#b45309}pre{white-space:pre-wrap;overflow:auto;background:#080d17;padding:12px;border-radius:7px;font-size:.8rem}button{border:0;border-radius:7px;padding:9px 14px;background:#2563eb;color:white;font-weight:700;cursor:pointer}button+button{margin-left:8px}.mono{font-family:ui-monospace,SFMono-Regular,monospace;word-break:break-all}.row{display:flex;gap:8px;flex-wrap:wrap}.step{padding:8px;border:1px solid #334155;border-radius:7px}.ok{border-color:#059669}.warn{border-color:#b45309}.muted{color:#94a3b8}
+h1,h2{margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}.card{background:#151f33;border:1px solid #2d3a52;border-radius:10px;padding:16px}.badge{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:700;font-size:.8rem}.sim{background:#7c3aed}.pass{background:#047857}.block{background:#b45309}pre{white-space:pre-wrap;overflow:auto;background:#080d17;padding:12px;border-radius:7px;font-size:.8rem}button{border:0;border-radius:7px;padding:9px 14px;background:#2563eb;color:white;font-weight:700;cursor:pointer}button+button{margin-left:8px}.mono{font-family:ui-monospace,SFMono-Regular,monospace;word-break:break-all}.row{display:flex;gap:8px;flex-wrap:wrap}.step{padding:8px;border:1px solid #334155;border-radius:7px}.ok{border-color:#059669}.warn{border-color:#b45309}.muted{color:#94a3b8}.metric{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric div{padding:10px;background:#0f172a;border-radius:6px}.label{color:#94a3b8;font-size:.78rem}
 </style>
 </head>
 <body>
 <h1>ChronoFold — Canonical EMV / EMB Protocol Lab</h1>
 <p><span class="badge sim">SIMULATED</span> Runtime model only. This UI never represents EMVCo, scheme, regulatory, issuer, or laboratory certification.</p>
-
 <div class="grid">
-<section class="card">
-<h2>Canonical Pipeline</h2>
-<div class="row">
-<div class="step ok">Observation</div><div class="step ok">Canonical State</div><div class="step ok">AGD Quotient</div><div class="step ok">Operator</div><div class="step ok">Certificate</div><div class="step ok">Replay</div>
+<section class="card"><h2>Canonical Pipeline</h2><div class="row"><div class="step ok">Observation</div><div class="step ok">Canonical State</div><div class="step ok">AGD Quotient</div><div class="step ok">Operator</div><div class="step ok">Certificate</div><div class="step ok">Replay</div></div><p class="muted">Observation → canonical observation → quotient → EMB state → deterministic trace → certificate → replay.</p></section>
+<section class="card"><h2>Deterministic Self-Check</h2><div id="selfcheck">Loading…</div><button onclick="loadSelfCheck()">Run self-check</button></section>
+<section class="card"><h2>Replay Result</h2><div id="replay">Loading…</div><button onclick="loadReplay()">Run deterministic fixture</button></section>
+<section class="card"><h2>Proof Mapping</h2><div id="proofmap">Loading…</div><button onclick="loadProofMap()">Refresh proof map</button></section>
+<section class="card"><h2>Authority / Constitution</h2><div id="authority">Loading…</div></section>
+<section class="card"><h2>Audit</h2><div id="audit">Loading…</div></section>
 </div>
-<p class="muted">The runtime contract is observation → canonical observation → quotient → EMB state → deterministic trace → certificate → replay.</p>
-</section>
-
-<section class="card">
-<h2>Replay Result</h2>
-<div id="replay">Loading…</div>
-<button onclick="loadReplay()">Run deterministic fixture</button>
-</section>
-
-<section class="card">
-<h2>Proof Mapping</h2>
-<div id="proofmap">Loading…</div>
-<button onclick="loadProofMap()">Refresh proof map</button>
-</section>
-
-<section class="card">
-<h2>Authority / Constitution</h2>
-<div id="authority">Loading…</div>
-</section>
-
-<section class="card">
-<h2>Audit</h2>
-<div id="audit">Loading…</div>
-</section>
-</div>
-
 <script>
 async function getJson(path){const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw new Error(`${r.status} ${path}`);return r.json()}
-async function loadReplay(){
- const d=await getJson('/api/canonical_emv');
- document.getElementById('replay').innerHTML=`<p><b>Certificate:</b> <span class="badge ${d.certificate_valid?'pass':'block'}">${d.certificate_valid?'VALID':'INVALID'}</span></p><p><b>Trace hash</b></p><div class="mono">${d.trace_hash}</div><p><b>Constitution hash</b></p><div class="mono">${d.constitution_hash}</div><pre>${JSON.stringify(d.events,null,2)}</pre>`;
-}
+async function loadSelfCheck(){const d=await getJson('/api/deterministic-self-check');const ok=d.status==='PASS';document.getElementById('selfcheck').innerHTML=`<p><span class="badge ${ok?'pass':'block'}">${d.status}</span> <span class="badge sim">${d.evidence_level}</span></p><div class="metric"><div><div class="label">Replay equality</div><b>${d.deterministic_replay}</b></div><div><div class="label">Illegal transition non-mutating</div><b>${d.illegal_transition_non_mutating}</b></div><div><div class="label">Final state</div><b>${d.final_stage}</b></div><div><div class="label">Sequence</div><b>${d.final_sequence}</b></div></div><p class="label">Trace</p><div class="mono">${d.trace_hash}</div>`}
+async function loadReplay(){const d=await getJson('/api/canonical_emv');document.getElementById('replay').innerHTML=`<p><b>Certificate:</b> <span class="badge ${d.certificate_valid?'pass':'block'}">${d.certificate_valid?'VALID':'INVALID'}</span></p><p><b>Trace hash</b></p><div class="mono">${d.trace_hash}</div><p><b>Constitution hash</b></p><div class="mono">${d.constitution_hash}</div><pre>${JSON.stringify(d.events,null,2)}</pre>`}
 async function loadProofMap(){const d=await getJson('/api/verification-map');document.getElementById('proofmap').innerHTML='<pre>'+escapeHtml(d.content)+'</pre>'}
 async function loadAuthority(){const [a,c]=await Promise.all([getJson('/api/authorities'),getJson('/api/constitution')]);document.getElementById('authority').innerHTML='<p><b>Authorities:</b> '+a.length+'</p><pre>'+escapeHtml(JSON.stringify(c,null,2))+'</pre>'}
 async function loadAudit(){try{const d=await getJson('/api/audit_report');document.getElementById('audit').innerHTML='<pre>'+escapeHtml(JSON.stringify(d,null,2))+'</pre>'}catch(e){document.getElementById('audit').textContent='Audit pending.'}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-loadReplay();loadProofMap();loadAuthority();loadAudit();
+loadSelfCheck();loadReplay();loadProofMap();loadAuthority();loadAudit();
 </script>
 </body>
 </html>
