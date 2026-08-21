@@ -10,3 +10,5 @@ import Chronofold.AgdIterate
 import Chronofold.AgdInvariantSafety
 import Chronofold.AgdBidirectional
 import Chronofold.AgdSicConstitutional
+import Chronofold.AgdFibreClosure
+import Chronofold.AgdProductionWitness
