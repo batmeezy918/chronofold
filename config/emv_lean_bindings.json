@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "status": "CANONICAL_CANDIDATE",
+  "runtime": {
+    "state_machine": "emb/state_machine.py",
+    "canonical_verifier": "scripts/verify_canonical_emv.py",
+    "ui": "ui/index.html",
+    "server": "ui/server.py"
+  },
+  "lean": {
+    "core": [
+      "src/Chronofold/AgdCore.lean",
+      "src/Chronofold/AgdInvariants.lean",
+      "src/Chronofold/AgdOperators.lean",
+      "src/Chronofold/AgdUniversal.lean",
+      "src/Chronofold/AgdBidirectional.lean",
+      "src/Chronofold/AgdIterate.lean"
+    ],
+    "promotion_rule": "Do not label an EMV binding FORMALLY_PROVEN until the exact current source passes the canonical Lean workflow with no sorry/admit and the CI run is recorded."
+  },
+  "transition_contract": [
+    "state_before",
+    "input",
+    "preconditions",
+    "operator",
+    "state_after",
+    "postconditions",
+    "invariant_results",
+    "authority_provenance",
+    "certificate"
+  ],
+  "evidence_levels": [
+    "FORMALLY_PROVEN",
+    "EXECUTABLY_VERIFIED",
+    "EMPIRICALLY_DEMONSTRATED",
+    "SIMULATED",
+    "PROJECTED",
+    "HYPOTHESIZED",
+    "UNSUPPORTED"
+  ]
+}
