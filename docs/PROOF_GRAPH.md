@@ -32,7 +32,7 @@
                 |                                             |
                 v                                             v
   +-------------+-------------+                 +-------------+-------------+
-  | ChronoFold Auto Theorems  |                 |  Intake Processing Pipeline |
+  | Chronofold Auto Theorems   |                 |  Intake Processing Pipeline |
   |   (omega_divides_n, etc)  |                 |  process_inbox.sh Receipts  |
   +---------------------------+                 +---------------------------+
 ```
