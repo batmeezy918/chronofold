@@ -12,6 +12,7 @@ from agd.canonical import sha256_hash
 from constitution.canonical_constitution import build_canonical_constitution
 from emb.state_machine import EMBStateMachine
 from emb.replay_certificate import build_replay_certificate, verify_replay_certificate
+from emb.protocol_contract import verify_trace_contract
 
 
 def main() -> int:
@@ -35,7 +36,11 @@ def main() -> int:
 
     first = execute()
     second = execute()
-    assert sha256_hash(first) == sha256_hash(second), "replay mismatch"
+    replay_hash = sha256_hash(first)
+    assert replay_hash == sha256_hash(second), "replay mismatch"
+
+    contract = verify_trace_contract(first)
+    assert contract["valid"], contract
 
     certificate = build_replay_certificate(
         constitution_hash=c_hash,
@@ -47,9 +52,12 @@ def main() -> int:
     assert verify_replay_certificate(certificate)
 
     audit = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "constitution_hash": c_hash,
+        "trace_hash": certificate["trace_hash"],
         "replay_deterministic": True,
+        "transition_contract_valid": contract["valid"],
+        "transition_count": contract["event_count"],
         "certificate_valid": True,
         "evidence_level": "SIMULATED",
         "note": "This verifies the software model and replay contract; it is not external EMV certification.",
