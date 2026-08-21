@@ -18,6 +18,12 @@ from emb.state_machine import EMBStateMachine
 from emb.replay_certificate import build_replay_certificate, verify_replay_certificate
 
 PORT = 8080
+FIXTURE = [
+    ("OP_SELECT_AID", {"aid": "A0000000031010"}),
+    ("OP_GET_PROCESSING_OPTIONS", {"amount": "000000001000"}),
+    ("OP_READ_RECORD", {"afl": "08010100"}),
+    ("OP_GENERATE_AC", {"ac": "A1B2C3D4E5F67890", "cryptogram_type": "TC"}),
+]
 
 
 def _json(handler, payload, status=200):
@@ -32,25 +38,39 @@ def _json(handler, payload, status=200):
 def _run_demo():
     constitution = build_canonical_constitution()
     sm = EMBStateMachine(constitution)
-    events = []
-    for operator, data in [
-        ("OP_SELECT_AID", {"aid": "A0000000031010"}),
-        ("OP_GET_PROCESSING_OPTIONS", {"amount": "000000001000"}),
-        ("OP_READ_RECORD", {"afl": "08010100"}),
-        ("OP_GENERATE_AC", {"ac": "A1B2C3D4E5F67890", "cryptogram_type": "TC"}),
-    ]:
-        events.append(sm.execute_transition(operator, data))
+    events = [sm.execute_transition(operator, data) for operator, data in FIXTURE]
     return constitution, events
+
+
+def _run_deterministic_self_check():
+    constitution_a, events_a = _run_demo()
+    constitution_b, events_b = _run_demo()
+    trace_a = sha256_hash(events_a)
+    trace_b = sha256_hash(events_b)
+    rejection_machine = EMBStateMachine(build_canonical_constitution())
+    state_before = json.loads(json.dumps(rejection_machine.current_state, sort_keys=True))
+    rejection = rejection_machine.execute_transition("OP_UNKNOWN", {})
+    state_after = json.loads(json.dumps(rejection_machine.current_state, sort_keys=True))
+    deterministic = constitution_a.compute_hash() == constitution_b.compute_hash() and events_a == events_b and trace_a == trace_b
+    non_mutating = rejection.get("status") == "STRUCTURED_REJECTION" and state_before == state_after
+    return {
+        "status": "PASS" if deterministic and non_mutating else "FAIL",
+        "evidence_level": "EXECUTABLY_VERIFIED",
+        "deterministic_replay": deterministic,
+        "illegal_transition_non_mutating": non_mutating,
+        "constitution_hash": constitution_a.compute_hash(),
+        "trace_hash": trace_a,
+        "final_stage": events_a[-1]["state_after"]["stage"],
+        "final_sequence": events_a[-1]["state_after"]["sequence_number"],
+    }
 
 
 class ProtocolLabHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlparse(self.path).path
-
         if path in ("/", "/index.html"):
             self._serve_file("ui/index.html", "text/html; charset=utf-8")
             return
-
         if path == "/api/audit_report":
             report_file = "reports/audit_report.json"
             if os.path.exists(report_file):
@@ -59,7 +79,6 @@ class ProtocolLabHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 _json(self, {"status": "REPORT_PENDING"})
             return
-
         if path == "/api/canonical_emv":
             constitution, events = _run_demo()
             trace_hash = sha256_hash(events)
@@ -70,27 +89,18 @@ class ProtocolLabHandler(http.server.SimpleHTTPRequestHandler):
                 events=events,
                 evidence_level="SIMULATED",
             )
-            _json(self, {
-                "evidence_level": "SIMULATED",
-                "constitution_hash": constitution.compute_hash(),
-                "trace_hash": trace_hash,
-                "certificate_valid": verify_replay_certificate(certificate),
-                "events": events,
-                "certificate": certificate,
-            })
+            _json(self, {"evidence_level": "SIMULATED", "constitution_hash": constitution.compute_hash(), "trace_hash": trace_hash, "certificate_valid": verify_replay_certificate(certificate), "events": events, "certificate": certificate})
             return
-
+        if path == "/api/deterministic-self-check":
+            _json(self, _run_deterministic_self_check())
+            return
         if path == "/api/authorities":
-            g = AuthorityGraph()
-            register_emvco_rules(g)
-            register_network_authorities(g)
+            g = AuthorityGraph(); register_emvco_rules(g); register_network_authorities(g)
             _json(self, [a.to_dict() for a in g.nodes.values()])
             return
-
         if path == "/api/constitution":
             _json(self, build_canonical_constitution().to_dict())
             return
-
         if path == "/api/verification-map":
             filename = "docs/EMV_LEAN_PROOF_MAP.md"
             if os.path.exists(filename):
@@ -99,17 +109,12 @@ class ProtocolLabHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 _json(self, {"status": "MISSING"}, 404)
             return
-
         self.send_error(404, "File Not Found")
 
     def _serve_file(self, filename, content_type):
         with open(filename, "rb") as f:
             body = f.read()
-        self.send_response(200)
-        self.send_header("Content-Type", content_type)
-        self.send_header("Cache-Control", "no-store")
-        self.end_headers()
-        self.wfile.write(body)
+        self.send_response(200); self.send_header("Content-Type", content_type); self.send_header("Cache-Control", "no-store"); self.end_headers(); self.wfile.write(body)
 
 
 def start_server_background():
