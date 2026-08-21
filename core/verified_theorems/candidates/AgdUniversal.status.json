@@ -1,0 +1,6 @@
+{
+  "source": "src/Chronofold/AgdUniversal.lean",
+  "promotion": "blocked_until_current_lean_ci_passes",
+  "required": ["lake build", "lake env lean src/Chronofold/AgdUniversal.lean", "no_sorry"],
+  "status": "candidate"
+}
