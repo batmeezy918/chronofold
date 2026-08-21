@@ -1,0 +1,37 @@
+name: Canonical Theorem Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  agd-universal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Toolchain
+        run: |
+          lean --version
+          lake --version
+      - name: Project build
+        run: lake build
+      - name: Direct AgdUniversal check
+        run: lake env lean src/Chronofold/AgdUniversal.lean
+      - name: No-sorry gate
+        run: |
+          if grep -R -n -E '\\bsorry\\b|admit|by_contra!\s+_\s*=>\s*trivial' src/Chronofold/AgdUniversal.lean; then
+            echo 'Placeholder or disallowed proof marker found.'
+            exit 1
+          fi
+      - name: Candidate manifest check
+        run: test -f core/verified_theorems/candidates/AgdUniversal.status.json
