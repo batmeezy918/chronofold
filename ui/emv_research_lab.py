@@ -8,7 +8,6 @@ with a machine-readable reason.
 from __future__ import annotations
 
 import hashlib, itertools, json
-from dataclasses import dataclass, asdict
 from typing import Any
 
 EVIDENCE = {
@@ -59,7 +58,13 @@ def h(value: Any) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",",":"), default=str).encode()).hexdigest()
 
 
-def canonical_observation(profile: dict, scenario: dict) -> dict:
+def mutation_of(scenario: dict) -> dict:
+    """Return a normalized mutation object; control scenarios legitimately use None."""
+    mutation = scenario.get("mutation")
+    return mutation if isinstance(mutation, dict) else {}
+
+
+def canonical_observation(profile: dict, scenario: dict) -> tuple[dict, dict]:
     raw = {
         "aid": profile["aid"], "bin": profile["bin"], "brand": profile["brand"],
         "issuer": profile["issuer"], "profile_id": profile["profile_id"],
@@ -69,7 +74,7 @@ def canonical_observation(profile: dict, scenario: dict) -> dict:
         "cvr":"00000000","cdol":"","cryptogram":"A1B2C3D4E5F67890",
         "terminal_context":"TEST","timing":"1000"
     }
-    mutation = scenario.get("mutation")
+    mutation = mutation_of(scenario)
     if mutation:
         raw[mutation["field"]] = mutation["value"]
     # Timing is explicitly residual/non-semantic in this canonical quotient.
@@ -84,7 +89,8 @@ def admission(profile: dict, scenario: dict) -> tuple[bool, str]:
         return False, "IIN_LENGTH_NOT_SUPPORTED_BY_REGISTRY_SCHEMA"
     if profile["aid"] not in ALLOWED_AIDS.get(profile["brand"], set()):
         return False, "PROFILE_AID_COMBINATION_UNDECLARED"
-    if scenario["category"] == "CRYPTO" and scenario["mutation"]["field"] == "cryptogram":
+    mutation = mutation_of(scenario)
+    if scenario["category"] == "CRYPTO" and mutation.get("field") == "cryptogram":
         return True, "VIRTUAL_MUTATION_ADMITTED"
     return True, "VIRTUAL_FIXTURE_ADMITTED"
 
@@ -94,7 +100,8 @@ def run_one(profile: dict, scenario: dict) -> dict:
     raw, canonical = canonical_observation(profile, scenario)
     qclass = "Q_EMV-" + h(canonical)[:16]
     accepted = raw["sw1"] == "90" and raw["sw2"] == "00"
-    if scenario.get("mutation",{}).get("field") == "sw2": accepted = False
+    if mutation_of(scenario).get("field") == "sw2":
+        accepted = False
     state_before = {"state_id":"STATE_000","stage":"INIT","sequence_number":0}
     state_after = {"state_id":"STATE_001","stage":"SELECTED","sequence_number":1}
     return {
