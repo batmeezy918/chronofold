@@ -1,0 +1,11 @@
+coco-experiment==2.8.2
+nevergrad==1.0.12
+cocopp==2.8.8
+numpy==2.5.2
+scipy==1.18.1
+pandas==3.0.5
+scikit-learn==1.9.0
+cython==3.3.0
+meson==1.12.0
+meson-python==0.20.0
+setuptools==84.0.0
