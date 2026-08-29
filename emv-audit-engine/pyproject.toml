@@ -1,0 +1,13 @@
+[project]
+name = "emv-audit-engine"
+version = "1.0.0"
+description = "Deterministic synthetic EMV transaction audit and replay engine"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "pydantic>=2.8"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
