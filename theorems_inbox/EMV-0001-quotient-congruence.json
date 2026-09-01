@@ -1,0 +1,36 @@
+{
+  "claim_id": "EMV-0001",
+  "domain": "EMV",
+  "status": "HYPOTHESIZED",
+  "informal_statement": "Under an explicitly declared EMV observational equivalence, an admissible transition preserves equivalence.",
+  "formal_candidate": "x ~ y -> T(x) ~ T(y)",
+  "assumptions": [
+    "EMV state type is explicitly defined",
+    "observational boundary is explicitly defined",
+    "equivalence relation is proven reflexive, symmetric, and transitive",
+    "T is an admissible transition with explicit semantics"
+  ],
+  "implementation": {
+    "state_machine": "emb/state_machine.py",
+    "canonical_verifier": "scripts/verify_canonical_emv.py",
+    "quotient_engine": "ui/emv_quotient_engine.py"
+  },
+  "evidence": {
+    "empirical": "PENDING",
+    "replay": "PENDING",
+    "witness": "PENDING"
+  },
+  "lean": {
+    "source": "PENDING",
+    "declaration": "PENDING",
+    "status": "PENDING"
+  },
+  "promotion": {
+    "target": "CONSTITUTIONALLY_ESTABLISHED",
+    "correspondence_required": true
+  },
+  "limitations": [
+    "This candidate is not an EMVCo certification claim.",
+    "No formal EMV instantiation is claimed until the state, observable boundary, transition semantics, and Lean declaration are supplied."
+  ]
+}
