@@ -1,6 +1,3 @@
-import Mathlib.Data.Nat.GCD.Basic
-import Mathlib.Data.Nat.Basic
-
 namespace Chronofold
 
 -- Base Rho step
@@ -34,9 +31,9 @@ theorem omega_nonneg (x n : Nat) :
 -- ==========================================
 -- THEOREM 3: Ω bounded by n
 -- ==========================================
-theorem omega_le_n (x n : Nat) :
+theorem omega_le_n (x n : Nat) (hn : 0 < n) :
   omega x n ≤ n := by
   unfold omega
-  exact Nat.gcd_le_right (x * x - x) n
+  exact Nat.le_of_dvd hn (Nat.gcd_dvd_right (x * x - x) n)
 
 end Chronofold
