@@ -31,16 +31,11 @@ theorem omega_nonneg (x n : Nat) :
     0 ≤ omega x n :=
   Nat.zero_le _
 
-/-- THEOREM 3: Ω is bounded by n when n is positive. -/
+/-- THEOREM 3: Ω is bounded by n when n is positive.
+`n = 0` is excluded: `Nat.gcd a 0 = a`, which need not be `≤ 0`. -/
 theorem omega_le_n (x n : Nat) (hn : 0 < n) :
     omega x n ≤ n := by
   unfold omega
   exact Nat.le_of_dvd hn (Nat.gcd_dvd_right (x * x - x) n)
-
-/-- Zero modulus is the only remaining bound case. -/
-theorem omega_le_n_zero (x : Nat) :
-    omega x 0 ≤ 0 := by
-  unfold omega
-  exact Nat.le_of_eq (Nat.gcd_zero_right (x * x - x))
 
 end Chronofold.AutoOmega
