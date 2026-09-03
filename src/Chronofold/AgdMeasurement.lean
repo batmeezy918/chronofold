@@ -2,7 +2,6 @@
 # Measurement / jitter / certificate theorems
 Harvested from chronofold PRs #10 and #12.
 Lean 4 core only. No Mathlib. No `sorry`.
-Reals replaced by `Nat` so the statements typecheck on the current Chronofold package.
 -/
 
 namespace Chronofold.AgdMeasurement
@@ -45,7 +44,6 @@ theorem agd_measurement_invariant
     measurement_equiv ct.before ct.after :=
   h
 
-/-- PR #10 THM_000101: jitter closeness is reflexive. -/
 def jitter_close {Device : Type} (J : Device → Nat) (ε : Nat) (A B : Device) : Prop :=
   Nat.dist (J A) (J B) ≤ ε
 
@@ -54,7 +52,6 @@ theorem jitter_close_reflexive {Device : Type} (J : Device → Nat) (ε : Nat) (
   unfold jitter_close
   simp [Nat.dist_self]
 
-/-- PR #10 THM_000102. -/
 theorem jitter_close_symmetric {Device : Type} (J : Device → Nat) (ε : Nat)
     {A B : Device} :
     jitter_close J ε A B → jitter_close J ε B A := by
@@ -62,7 +59,6 @@ theorem jitter_close_symmetric {Device : Type} (J : Device → Nat) (ε : Nat)
   unfold jitter_close at *
   simpa [Nat.dist_comm] using h
 
-/-- PR #10 THM_000103 triangle form: two ε-steps give a 2ε bound. -/
 theorem jitter_close_triangle {Device : Type} (J : Device → Nat) (ε : Nat)
     {A B C : Device}
     (hAB : jitter_close J ε A B)
@@ -80,23 +76,19 @@ structure RuntimeCert where
 def valid_certificate (c : RuntimeCert) : Prop :=
   0 < c.agd ∧ 0 < c.baseline ∧ c.baseline = c.speedup * c.agd
 
-/-- PR #10 THM_000105. -/
 theorem speedup_positive (c : RuntimeCert) (h : valid_certificate c) :
     0 < c.speedup := by
-  rcases h with ⟨ha, hb, heq⟩
-  cases c.speedup with
-  | zero =>
-    simp at heq
-    exact absurd (heq.symm.trans rfl ▸ Nat.not_lt_zero _) hb
-  | succ n =>
-    exact Nat.succ_pos n
+  rcases h with ⟨_ha, hb, heq⟩
+  refine Nat.pos_of_ne_zero ?_
+  intro hz
+  have : c.baseline = 0 := by
+    rw [heq, hz, Nat.zero_mul]
+  exact Nat.ne_of_gt hb this
 
-/-- PR #10 THM_000106 reconstruction identity. -/
 theorem benchmark_claim_valid (c : RuntimeCert) (h : valid_certificate c) :
     c.baseline = c.speedup * c.agd :=
   h.2.2
 
-/-- PR #10 THM_000107 transport closure under a flow that fixes the observable. -/
 theorem agd_transport_closure
     {Q : Type} (Ω : Q → Nat) (T : Nat → Q → Q) (q : Q)
     (h_flow : ∀ t, T t q = q) :
@@ -104,7 +96,6 @@ theorem agd_transport_closure
   intro t
   rw [h_flow]
 
-/-- PR #10 THM_000109 bisimulation of an invariant-preserving flow. -/
 def AGDEquiv {Q : Type} (Ω : Q → Nat) (q1 q2 : Q) : Prop := Ω q1 = Ω q2
 
 theorem agd_bisimulation {Q : Type} (Ω : Q → Nat) (T : Nat → Q → Q)
@@ -116,13 +107,11 @@ theorem agd_bisimulation {Q : Type} (Ω : Q → Nat) (T : Nat → Q → Q)
   rw [h_transport, h_transport]
   exact h_init
 
-/-- PR #10 THM_000110 semigroup rewrite. -/
 theorem agd_flow_semigroup {Q : Type} (T : Nat → Q → Q)
     (h_flow : ∀ t s q, T (t + s) q = T t (T s q)) :
     ∀ t s q, T (t + s) q = (T t ∘ T s) q :=
   h_flow
 
-/-- PR #10 THM_000111 master dynamic closure. -/
 theorem agd_master_dynamic_closure {Q : Type}
     (T : Nat → Q → Q) (Ω : Q → Nat) (q : Q)
     (h_transport : ∀ t q', Ω (T t q') = Ω q')
@@ -131,7 +120,6 @@ theorem agd_master_dynamic_closure {Q : Type}
     (∀ t, Ω (T t q) = Ω q) ∧ (∀ t, 0 < t → J t < J 0) :=
   ⟨fun t => h_transport t q, h_convergence⟩
 
-/-- PR #10 THM_000202 rollback restores the pre-state. -/
 structure Transition (α : Type) where
   before : α
   after : α
@@ -153,7 +141,6 @@ theorem agd_failure_recovery {H : Type} (Ω : H → Nat) (t : Transition H)
     rw [h_eq] at h_before
     exact h_after h_before
 
-/-- PR #10 THM_000204 lineage reconstruction witness. -/
 def reconstruct_state {H : Type} (start : H) : List (H → H) → H
   | [] => start
   | f :: rest => reconstruct_state (f start) rest
