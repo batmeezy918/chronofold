@@ -44,3 +44,5 @@
 3. **`AGD.TBar`**: Descended state operator on $Q^*$.
 4. **`AGD.admission_iff_descends`**: Proves an operator is admissible if and only if its descended map acts as the identity on $Q^*$.
 5. **`AGD.replay_preserves_invariants`**: Proves list induction preservation of invariants across arbitrary operator replay chains.
+6. **`theorems_proven.THM_000001__smoke_test`**: `smoke_test` verified via `process_inbox.sh` pipeline intake.
+7. **`theorems_proven.THM_000002__t1`**: `t1` verified via `process_inbox.sh` pipeline intake.
