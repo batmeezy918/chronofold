@@ -12,3 +12,5 @@ import Chronofold.AgdBidirectional
 import Chronofold.AgdSicConstitutional
 import Chronofold.AgdFibreClosure
 import Chronofold.AgdProductionWitness
+import Chronofold.AutoOmega
+import Chronofold.CvrPhase0
