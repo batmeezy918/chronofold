@@ -14,3 +14,5 @@ import Chronofold.AgdFibreClosure
 import Chronofold.AgdProductionWitness
 import Chronofold.AutoOmega
 import Chronofold.CvrPhase0
+import Chronofold.AgdMeasurement
+import Chronofold.AgdOperationalQuotient
