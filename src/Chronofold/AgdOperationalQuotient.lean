@@ -2,7 +2,6 @@
 # Constitutional operational quotient
 Harvested from `chronoflow-proof` PR #1 (`ChronoFlow/Constitutional.lean`).
 Lean 4 core only. No Mathlib. No `sorry`.
-Cost comparison is stated in `Nat` so it does not pull `ℝ`.
 -/
 
 namespace Chronofold.AgdOperationalQuotient
@@ -119,15 +118,9 @@ structure CostModel where
 def faster (C : CostModel) (d r : Nat) : Prop :=
   C.reduced d r < C.dense d
 
-/-- Nat form of chronoflow-proof `speedup_gt_one` (no `ℝ` division). -/
 theorem speedup_implies_faster (C : CostModel) {d r : Nat}
     (h : C.reduced d r < C.dense d) :
     faster C d r :=
   h
-
-theorem faster_irrefl_dense (C : CostModel) (d : Nat) :
-    ¬ faster C d d ↔ True → C.reduced d d < C.dense d → True := by
-  intro
-  exact fun _ => trivial
 
 end Chronofold.AgdOperationalQuotient
