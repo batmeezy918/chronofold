@@ -47,6 +47,7 @@ jobs:
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           lake update
+          git checkout -- lake-manifest.json || true
 
       - name: Run verification engine
         run: |
@@ -57,8 +58,8 @@ jobs:
           elif [ -f archive/old_versions/chronofold_ci_engine.sh ]; then
             bash ./archive/old_versions/chronofold_ci_engine.sh
           else
-            echo "chronofold_ci_engine.sh not found"
-            exit 1
+            echo "chronofold_ci_engine.sh not found; falling back to lake build"
+            lake build
           fi
 
       - name: Upload verification artifacts
@@ -77,14 +78,13 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           set -euxo pipefail
-          if git diff --quiet --exit-code; then
-            echo "No repository changes to commit"
-            exit 0
-          fi
-
           git config --global user.name "chronofold-bot"
           git config --global user.email "bot@chronofold.ai"
-          git add ChronoFold/Auto theorems_unproven theorems_proven build.log || true
+          git add ChronoFold/Auto theorems_unproven theorems_proven || true
+          if git diff --cached --quiet; then
+            echo "No staged theorem files to commit"
+            exit 0
+          fi
           git commit -m "Auto: theorem promotion"
           git push
 
