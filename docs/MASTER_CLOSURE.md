@@ -1,14 +1,18 @@
 # Master Bidirectional Operational Closure — landing
 
-Status: **FORMAL CANDIDATE** until `lake build Chronofold` is green.
-After kernel accept + zero `sorry`/`admit`: **VERIFIED_BY_LEAN / GREEN**.
+Status: **VERIFIED_BY_LEAN / GREEN**
+
+Evidence: [PR #67](https://github.com/batmeezy918/chronofold/pull/67) merged.
+CI: `lake build Chronofold`, `verify`, `agd-universal` all success. Zero `sorry` / `admit`.
+
+Module: `src/Chronofold/MasterBidirectionalOperationalClosure.lean`
 
 ## The closed gap
 
 Previously the kernel had:
 
-- `Admissible T ⇒ AGDEquiv (T s) s`  (`admissible_preserves_class`)
-- `pi s1 = pi s2 ↔ AGDEquiv s1 s2`  (`interchangeable_iff`)
+- `Admissible T ⇒ AGDEquiv (T s) s` (`admissible_preserves_class`)
+- `pi s1 = pi s2 ↔ AGDEquiv s1 s2` (`interchangeable_iff`)
 
 It did **not** name the converse as a first-class theorem:
 
@@ -19,6 +23,10 @@ It did **not** name the converse as a first-class theorem:
 That biconditional is `admissible_iff_preservesClass` / `admissible_iff_class_eq`.
 The counterexample `not_admissible_breaks_class` is the necessity direction:
 a non-admissible operator leaves some class.
+
+Also landed:
+- `constitution_iff_class` — quotient equality is exactly Ω/C equality
+- `TBar_unique` — any intertwining map is the canonical T̄
 
 ## Master conjunction
 
@@ -31,7 +39,11 @@ a non-admissible operator leaves some class.
 5. unique AGD-respecting factorization through Q*
 6. `invariantSafe Ω C [Ω, C]`
 
-Plus uniqueness of descended dynamics: `TBar_unique`.
+## CI repairs (Init-only)
+
+Harvested modules now compile without Mathlib:
+- `AgdMeasurement`: local `dist` replacing `Nat.dist`
+- `AgdOperationalQuotient`: local `opPow` replacing `f^[n]`
 
 ## Evidence boundary (do not elevate past this)
 
