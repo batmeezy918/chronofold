@@ -1,26 +1,40 @@
-# Theorem Inventory
+# Theorem Inventory — proven pile is GREEN
+
+Status values: `verified_by_lean` (GREEN) | `rejected` | `narrative_only` | `hypothesized`
 
 | File Path | Status | Notes |
 |-----------|--------|-------|
+| src/Chronofold/AgdCore.lean | verified_by_lean | types |
+| src/Chronofold/AgdOperators.lean | verified_by_lean | AGDEquiv, TBar_sound |
+| src/Chronofold/AgdInvariants.lean | verified_by_lean | interchangeable_iff, admission_iff_TBar |
+| src/Chronofold/AgdClosure.lean | verified_by_lean | admissible_compose |
+| src/Chronofold/AgdIterate.lean | verified_by_lean | admissible_iterate |
+| src/Chronofold/AgdUniversal.lean | verified_by_lean | lift_pi |
+| src/Chronofold/AgdRank.lean | verified_by_lean | projective_collapse |
+| src/Chronofold/AgdMultiOmega.lean | verified_by_lean | MultiEquiv |
+| src/Chronofold/AgdClassGraph.lean | verified_by_lean | certifiedEdge_class_step |
+| src/Chronofold/AgdBidirectional.lean | verified_by_lean | exists_reconstruct |
+| src/Chronofold/AgdFibreClosure.lean | verified_by_lean | fibre_witness_collapses |
+| src/Chronofold/AgdFiniteReduction.lean | verified_by_lean | pi_surjective |
+| src/Chronofold/AgdInvariantSafety.lean | verified_by_lean | invariantSafe suite |
+| src/Chronofold/AgdSicConstitutional.lean | verified_by_lean | SIC operational equality |
+| src/Chronofold/AgdWitness.lean | verified_by_lean | fibre witnesses |
+| src/Chronofold/AgdProductionWitness.lean | verified_by_lean | production witnesses |
+| src/Chronofold/AgdCiMarker.lean | verified_by_lean | smoke True |
+| src/Chronofold/AutoOmega.lean | verified_by_lean | omega_divides_n, omega_le_n |
+| src/Chronofold/CvrPhase0.lean | verified_by_lean | constitutional_closure |
+| src/Chronofold/AgdMeasurement.lean | verified_by_lean | jitter / cert / transport |
+| src/Chronofold/AgdOperationalQuotient.lean | verified_by_lean | quotient_of_full_chain |
+| src/Chronofold/Benchmarks.lean | verified_by_lean | structures only |
+| core/theorems_proven/T1.lean | verified_by_lean | t1 |
+| core/theorems_proven/THM_000001__nat_add_zero_right.lean | verified_by_lean | n+0=n |
+| core/theorems_proven/THM_000002__correct_by_construction_search.lean | verified_by_lean | CBC search |
+| core/theorems_proven/THM_000003__omega_divides_n.lean | verified_by_lean | intake copy of AutoOmega |
 | disabled/Auto.lean | rejected | |
 | disabled/Theorems.lean | rejected | |
 | disabled/Operators.lean | rejected | |
 | disabled/Base.lean | rejected | |
 | templates/theorem_candidate.lean | narrative_only | |
-| src/Chronofold/AgdClosure.lean | verified_by_lean | AGD_Universal_Closure |
-| src/Chronofold/AgdInvariants.lean | verified_by_lean | omega_preserves_invariant |
-| core/src/lean/Chronofold/Pipeline.lean | verified_by_lean | pipeline_invariants |
-| core/src/lean/Chronofold/SNAP.lean | verified_by_lean | SNAP_invariants |
-| core/src/lean/CFPC/KernelEquivalence.lean | verified_by_lean | fun_equiv, iff_equiv, self_invariant, comp_assoc |
-| core/CFPC/KernelEquivalence.lean | verified_by_lean | matches core/src/lean/CFPC/KernelEquivalence.lean |
-| core/CFPC/FormalKernel.lean | verified_by_lean | invariant_trivial, compose_assoc, self_anchor_identity, cfpc_shell, transport_invariant |
-| core/src/lean/ChronoFold/Threadlock.lean | verified_by_lean | workflow_stability, stage_ordering |
-| core/src/lean/ChronoFold/LeanBridge.lean | verified_by_lean | transition_hash_stable |
-| core/src/lean/Verify.lean | verified_by_lean | t1 smoke test |
-| core/src/lean/ChronoFold/Auto/T1.lean | verified_by_lean | t1 smoke test |
 | core/theorems_rejected/THM_000001__smoke_test.lean | rejected | |
-| core/theorems_rejected/THM_000001__nat_add_zero_right.lean | rejected | |
-| core/theorems_proven/T1.lean | verified_by_lean | t1 smoke test |
-| core/src/lean/ChronoFold/Physics.lean | narrative_only | Placeholder for physics-based invariants |
-| src/Chronofold/AgdCore.lean | verified_by_lean | Type system definitions |
-| src/Chronofold/AgdOperators.lean | verified_by_lean | Operator definitions |
+| core/theorems_rejected/THM_000001__nat_add_zero_right.lean | rejected | Mathlib import |
+| theorems_inbox/EMV-0001 (PR #61) | hypothesized | not Lean-closed |
