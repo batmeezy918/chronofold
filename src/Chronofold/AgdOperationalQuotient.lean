@@ -1,6 +1,5 @@
 /-!
 # Constitutional operational quotient
-Harvested from `chronoflow-proof` PR #1 (`ChronoFlow/Constitutional.lean`).
 Lean 4 core only. No Mathlib. No `sorry`.
 -/
 
@@ -95,9 +94,16 @@ theorem quotient_of_full_chain (C : S.Closure) (x : H) :
     _ = S.Vbar (S.R (S.O x)) := C.volterra _
     _ = S.Vbar (S.Obar (S.R x)) := by rw [C.operator x]
 
+def opPow (O : α → α) : Nat → α → α :=
+  fun n x =>
+    match n with
+    | 0 => x
+    | n + 1 => O (opPow O n x)
+
 theorem quotient_iterate_operator
     (hO : S.OperatorIntertwining) :
-    ∀ (n : Nat) (x : H), S.R ((S.O)^[n] x) = (S.Obar)^[n] (S.R x) := by
+    ∀ (n : Nat) (x : H),
+      S.R (opPow S.O n x) = opPow S.Obar n (S.R x) := by
   intro n
   induction n with
   | zero =>
@@ -105,7 +111,7 @@ theorem quotient_iterate_operator
     rfl
   | succ n ih =>
     intro x
-    simp only [Function.iterate_succ_apply]
+    simp only [opPow]
     rw [hO]
     exact congrArg S.Obar (ih x)
 

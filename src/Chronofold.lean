@@ -16,3 +16,4 @@ import Chronofold.AutoOmega
 import Chronofold.CvrPhase0
 import Chronofold.AgdMeasurement
 import Chronofold.AgdOperationalQuotient
+import Chronofold.MasterBidirectionalOperationalClosure

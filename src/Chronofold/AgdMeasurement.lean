@@ -1,6 +1,5 @@
 /-!
 # Measurement / jitter / certificate theorems
-Harvested from chronofold PRs #10 and #12.
 Lean 4 core only. No Mathlib. No `sorry`.
 -/
 
@@ -44,28 +43,43 @@ theorem agd_measurement_invariant
     measurement_equiv ct.before ct.after :=
   h
 
+/-- Init-only absolute difference. `Nat.dist` is Mathlib-only. -/
+def dist (a b : Nat) : Nat := (a - b) + (b - a)
+
+theorem dist_self (a : Nat) : dist a a = 0 := by
+  simp [dist]
+
+theorem dist_comm (a b : Nat) : dist a b = dist b a := by
+  simp [dist, Nat.add_comm]
+
+theorem dist_triangle (a b c : Nat) :
+    dist a c ≤ dist a b + dist b c := by
+  simp [dist]
+  omega
+
 def jitter_close {Device : Type} (J : Device → Nat) (ε : Nat) (A B : Device) : Prop :=
-  Nat.dist (J A) (J B) ≤ ε
+  dist (J A) (J B) ≤ ε
 
 theorem jitter_close_reflexive {Device : Type} (J : Device → Nat) (ε : Nat) (A : Device) :
     jitter_close J ε A A := by
   unfold jitter_close
-  simp [Nat.dist_self]
+  simp [dist_self]
 
 theorem jitter_close_symmetric {Device : Type} (J : Device → Nat) (ε : Nat)
     {A B : Device} :
     jitter_close J ε A B → jitter_close J ε B A := by
   intro h
   unfold jitter_close at *
-  simpa [Nat.dist_comm] using h
+  rw [dist_comm]
+  exact h
 
 theorem jitter_close_triangle {Device : Type} (J : Device → Nat) (ε : Nat)
     {A B C : Device}
     (hAB : jitter_close J ε A B)
     (hBC : jitter_close J ε B C) :
-    Nat.dist (J A) (J C) ≤ ε + ε := by
+    dist (J A) (J C) ≤ ε + ε := by
   unfold jitter_close at hAB hBC
-  have h := Nat.dist_triangle (J A) (J B) (J C)
+  have h := dist_triangle (J A) (J B) (J C)
   exact Nat.le_trans h (Nat.add_le_add hAB hBC)
 
 structure RuntimeCert where
