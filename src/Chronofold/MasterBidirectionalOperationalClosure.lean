@@ -8,27 +8,19 @@ import Chronofold.AgdIterate
 
 The missing bidirectional interface: class preservation is *equivalent*
 to admissibility. Everything else in this module is a composition of
-already-verified AGD lemmas (TBar soundness, iterate soundness,
-reconstruction, universal factorization, invariant safety).
+already-verified AGD lemmas.
 
 No `sorry`. No `admit`. No Mathlib. No numerical or physical claims.
-
-Evidence boundary (do not promote past this):
-- does **not** claim universal speedup, termination, optimizer dominance,
-  external-world restoration, cryptographic power, or quantum advantage.
-- GREEN only after `lake build Chronofold` accepts this module.
 -/
 
 namespace Chronofold.AGD
 
 universe u v
 
-/-- T preserves every AGD class: `π(T s) = π s`. -/
 def PreservesClass (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) : Prop :=
   ∀ s, pi α Ω C (T s) = pi α Ω C s
 
-/-- Admissible operators stay inside the fibre of every state. -/
 theorem preservesClass_of_admissible
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) (hT : Admissible α Ω C T) :
@@ -36,8 +28,6 @@ theorem preservesClass_of_admissible
   intro s
   exact Quotient.sound (admissible_preserves_class α Ω C T hT s)
 
-/-- Class preservation implies observability preservation, hence admissibility.
-This is the converse that was not previously a first-class theorem. -/
 theorem admissible_of_preservesClass
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) (h : PreservesClass α Ω C T) :
@@ -45,8 +35,6 @@ theorem admissible_of_preservesClass
   intro s
   exact Quotient.exact (h s)
 
-/-- **THE GAP CLOSURE.**
-    `π(T s) = π s` for all `s`  if and only if  `T` is admissible. -/
 theorem admissible_iff_preservesClass
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) :
@@ -54,27 +42,21 @@ theorem admissible_iff_preservesClass
   ⟨preservesClass_of_admissible α Ω C T,
    admissible_of_preservesClass α Ω C T⟩
 
-/-- Unfolded form matching the staff landing declaration. -/
 theorem admissible_iff_class_eq
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) :
     (∀ s, pi α Ω C (T s) = pi α Ω C s) ↔ Admissible α Ω C T :=
   (admissible_iff_preservesClass α Ω C T).symm
 
-/-- Counterexample direction: a non-admissible operator leaves some class. -/
 theorem not_admissible_breaks_class
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) (h : ¬ Admissible α Ω C T) :
     ∃ s, pi α Ω C (T s) ≠ pi α Ω C s := by
   have hnp : ¬ PreservesClass α Ω C T :=
     fun hpc => h (admissible_of_preservesClass α Ω C T hpc)
-  by_contra hnone
-  apply hnp
-  intro s
-  by_contra hne
-  exact hnone ⟨s, hne⟩
+  unfold PreservesClass at hnp
+  exact Classical.not_forall.mp hnp
 
-/-- Quotient equality is exactly equality of the retained constitution. -/
 theorem constitution_iff_class
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (s₁ s₂ : State α) :
@@ -85,8 +67,6 @@ theorem constitution_iff_class
   · intro h
     exact Quotient.sound h
 
-/-- Unique descended dynamics: any map that intertwines with `T` on `π`
-    is the canonical `T̄`. -/
 theorem TBar_unique
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) (hT : Admissible α Ω C T)
@@ -101,7 +81,6 @@ theorem TBar_unique
     _ = TBar α Ω C T hT (pi α Ω C s) :=
           (TBar_sound α Ω C T hT s).symm
 
-/-- Master landing. Composition of verified interfaces plus the new iff. -/
 theorem master_bidirectional_operational_closure
     (α : Type u) (Ω : Omega α) (C : Covariant α)
     (T : Operator α) :
