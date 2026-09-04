@@ -1,0 +1,11 @@
+{
+  "source": "src/Chronofold/AgdMaximalConstitutionalOperationalClosure.lean",
+  "promotion": "blocked_until_current_lean_ci_passes",
+  "required": ["lake build", "lake env lean src/Chronofold/AgdMaximalConstitutionalOperationalClosure.lean", "no_sorry"],
+  "status": "candidate",
+  "theorems": [
+    "Chronofold.MaximalConstitutional.maximal_constitutional_operational_closure",
+    "Chronofold.AGD.agd_maximal_constitutional_operational_closure",
+    "Chronofold.AGD.maximal_constitutional_operational_closure"
+  ]
+}
