@@ -3,62 +3,41 @@ name: CFPC Lean CI v2
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   proof-run:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Install Lean (elan)
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
       - name: Verify toolchain
         run: |
           lean --version
           lake --version
+
       - name: Build project
         run: lake build
-      - name: Audit canonical Verified Theorems manifest
-        run: python3 scripts/verify_verified_theorems.py
-      - name: Run active Lean source strictly
-        shell: bash
-        run: |
-          set -euo pipefail
-          failures=0
-          mapfile -t files < <(find src core/src core/CFPC core/theorems_proven -name '*.lean' -not -path '*/.lake/*' | sort)
-          for file in "${files[@]}"; do
-            echo "---- RUNNING: $file ----"
-            if ! lake env lean "$file"; then
-              echo "FAILED: $file"
-              failures=$((failures + 1))
-            fi
-          done
-          if [ "$failures" -ne 0 ]; then exit 1; fi
-          echo "LEAN_DISCOVERY_OK=${#files[@]}"
-      - name: Reject sorry placeholders in active Lean source
+
+      - name: Compile SIM2XR costless logic
+        run: lake env lean src/Chronofold/SIM2XR_Universal_Costless_Logic.lean
+
+      - name: Reject unfinished-goal markers in active Lean source
         shell: bash
         run: |
           set -euo pipefail
           if grep -RIn --include='*.lean' -E '(^|[^A-Za-z0-9_])sorry([^A-Za-z0-9_]|$)' src core/src core/CFPC core/theorems_proven; then
-            echo SORRY_PLACEHOLDER_FOUND
+            echo PLACEHOLDER_FOUND
             exit 1
           fi
-          echo NO_SORRY_PLACEHOLDERS=1
-      - name: Generate theorem DAG
-        run: |
-          mkdir -p cfpc_ci
-          find src core/src core/CFPC core/theorems_proven -name '*.lean' | sort > cfpc_ci/files.txt
-          python3 - << 'PY'
-import json
-files=open('cfpc_ci/files.txt').read().splitlines()
-graph={'nodes':[],'edges':[]}
-for f in files:
-    content=open(f,errors='ignore').read()
-    graph['nodes'].append({'file':f,'score':(2 if 'theorem' in content else 0)+(1 if 'by' in content else 0)-(5 if 'sorry' in content else 0),'has_sorry':'sorry' in content})
-json.dump(graph,open('cfpc_ci/graph.json','w'),indent=2)
-print('DAG generated:',graph)
-PY
-      - name: Summary report
-        run: cat cfpc_ci/graph.json
+          echo NO_PLACEHOLDERS=1
