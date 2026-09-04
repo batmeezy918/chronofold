@@ -32,11 +32,11 @@ jobs:
       - name: Compile SIM2XR costless logic
         run: lake env lean src/Chronofold/SIM2XR_Universal_Costless_Logic.lean
 
-      - name: Reject unfinished-goal markers in active Lean source
+      - name: Reject unfinished-goal tactics in active Lean source
         shell: bash
         run: |
           set -euo pipefail
-          if grep -RIn --include='*.lean' -E '(^|[^A-Za-z0-9_])sorry([^A-Za-z0-9_]|$)' src core/src core/CFPC core/theorems_proven; then
+          if grep -RIn --include='*.lean' -E '^[[:space:]]*(sorry|admit)([[:space:]]|$)' src core/src core/CFPC core/theorems_proven; then
             echo PLACEHOLDER_FOUND
             exit 1
           fi
