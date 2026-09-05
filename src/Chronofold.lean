@@ -19,3 +19,4 @@ import Chronofold.AgdOperationalQuotient
 import Chronofold.MasterBidirectionalOperationalClosure
 import Chronofold.AgdMaximalConstitutionalOperationalClosure
 import Chronofold.SIM2XR_Universal_Costless_Logic
+import Chronofold.EmvConstitution
