@@ -1,0 +1,8 @@
+import Verify
+import Chronofold
+
+namespace Verified_10_CorrectByConstructionSearch
+
+ theorem correct_by_construction_search := correct_by_construction_search
+
+end Verified_10_CorrectByConstructionSearch
