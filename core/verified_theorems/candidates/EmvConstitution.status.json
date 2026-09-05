@@ -1,0 +1,31 @@
+{
+  "source": "src/Chronofold/EmvConstitution.lean",
+  "promotion": "blocked_until_current_lean_ci_passes",
+  "required": ["lake build Chronofold.EmvConstitution", "no_sorry"],
+  "status": "candidate",
+  "extracted_from": ["PR#69 dirty", "PR#24 dirty theorems already on main as AutoOmega"],
+  "instance_of": [
+    "Chronofold.AGD.maximal_constitutional_operational_closure",
+    "Chronofold.MaximalConstitutional.maximal_constitutional_operational_closure"
+  ],
+  "theorems": [
+    "Chronofold.EMV.annotate_admissible",
+    "Chronofold.EMV.stampSequence_admissible",
+    "Chronofold.EMV.sealOverlay_admissible",
+    "Chronofold.EMV.advance_wellDefined_phase",
+    "Chronofold.EMV.advance_not_always_admissible",
+    "Chronofold.EMV.transition_not_wellDefined",
+    "Chronofold.EMV.transition_not_admissible",
+    "Chronofold.EMV.failed_is_omega_level",
+    "Chronofold.EMV.criticalFailed_factors_pi",
+    "Chronofold.EMV.emv_master_closure",
+    "Chronofold.EMV.emv_maximal_abstract",
+    "Chronofold.EMV.emv_agd_maximal",
+    "Chronofold.EMV.emv_overlays_closed"
+  ],
+  "non_claims": [
+    "Does not model APDU, TLV, PAN, keys, or cryptograms",
+    "Does not establish payment-network certification or normative EMV conformance",
+    "Does not merge conflicted PRs #24, #69, #61"
+  ]
+}
