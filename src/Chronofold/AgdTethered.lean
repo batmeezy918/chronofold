@@ -1,14 +1,14 @@
 import Chronofold.AgdCore
 import Chronofold.AgdOperators
+import Chronofold.AgdIterate
 
 /-!
 # Tethered Operators
 
-A minimal, fully constructive kernel for the fixed-operator/bounded-state
-pattern developed in the research thread.
-
-The results below are actual Lean theorems: no `sorry`, `admit`, or axioms
-are used in this file.
+A constructive kernel for the fixed-operator/bounded-state pattern.
+Finite-iterate preservation reuses the repository's existing `opIterate`
+and `admissible_iterate` definitions rather than introducing a second
+iteration semantics.
 -/
 
 namespace Chronofold.AGD
@@ -40,18 +40,25 @@ theorem TetheredOperator.preserve_covariant
     C (T.step s) = C s := by
   exact (T.admissible s).2
 
-/-- Every finite iterate of a tethered operator preserves Ω. -/
+/-- Every finite iterate of a tethered operator preserves both observables. -/
+theorem TetheredOperator.iterate_preserves
+    {α : Type u} {Ω : Omega α} {C : Covariant α}
+    (T : TetheredOperator α Ω C) (n : Nat) :
+    Admissible α Ω C (opIterate α T.op n) := by
+  exact admissible_iterate α Ω C T.op T.admissible n
+
+/-- Every finite iterate preserves the invariant observable Ω. -/
 theorem TetheredOperator.iterate_preserve_omega
     {α : Type u} {Ω : Omega α} {C : Covariant α}
-    (T : TetheredOperator α Ω C) :
-    ∀ n s, Ω (Function.iterate T.step n s) = Ω s := by
-  intro n
-  induction n with
-  | zero =>
-      intro s
-      simp
-  | succ n ih =>
-      intro s
-      simpa [Function.iterate_succ_apply] using ih (T.step s)
+    (T : TetheredOperator α Ω C) (n : Nat) (s : State α) :
+    Ω (opIterate α T.op n s) = Ω s := by
+  exact (T.iterate_preserves n s).1
+
+/-- Every finite iterate preserves the covariant observable C. -/
+theorem TetheredOperator.iterate_preserve_covariant
+    {α : Type u} {Ω : Omega α} {C : Covariant α}
+    (T : TetheredOperator α Ω C) (n : Nat) (s : State α) :
+    C (opIterate α T.op n s) = C s := by
+  exact (T.iterate_preserves n s).2
 
 end Chronofold.AGD
