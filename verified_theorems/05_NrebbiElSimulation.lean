@@ -1,0 +1,11 @@
+import Chronofold.NrebbiElSimulation
+
+namespace Verified_05_NrebbiElSimulation
+
+ theorem simulation_iff_descent := NrebbiElSimulation.simulation_iff_descent
+ theorem simulation_iff_recursive_simulation := NrebbiElSimulation.simulation_iff_recursive_simulation
+ theorem descends_iff_exact_trajectory := NrebbiElSimulation.descends_iff_exact_trajectory
+ theorem simulation_iff_exact_trajectory := NrebbiElSimulation.simulation_iff_exact_trajectory
+ theorem nrebbi_el_simulation_theorem := NrebbiElSimulation.nrebbi_el_simulation_theorem
+
+end Verified_05_NrebbiElSimulation
