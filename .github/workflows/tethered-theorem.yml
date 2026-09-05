@@ -1,0 +1,56 @@
+name: Tethered Operator Theorem
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Chronofold/AgdTethered.lean'
+      - 'src/Chronofold.lean'
+      - '.github/workflows/tethered-theorem.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan/Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Install project toolchain
+        run: |
+          set -euo pipefail
+          lake --version
+          elan toolchain list
+          if [[ -f lean-toolchain ]]; then
+            elan toolchain install "$(cat lean-toolchain)"
+            elan default "$(cat lean-toolchain)"
+          fi
+
+      - name: Get mathlib dependencies
+        run: lake update
+
+      - name: Prove tethered operator theorems
+        run: |
+          set -euo pipefail
+          lake env lean src/Chronofold/AgdTethered.lean
+          lake build
+
+      - name: Fail closed on proof placeholders
+        run: |
+          set -euo pipefail
+          if grep -RInE '\b(sorry|admit|axiom|unsafe)\b' src/Chronofold/AgdTethered.lean; then
+            echo 'Forbidden proof placeholder or axiom detected.'
+            exit 1
+          fi
+          echo 'No forbidden proof placeholders found.'
