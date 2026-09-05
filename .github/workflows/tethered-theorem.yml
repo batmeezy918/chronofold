@@ -43,8 +43,8 @@ jobs:
       - name: Prove tethered operator theorems
         run: |
           set -euo pipefail
-          lake env lean src/Chronofold/AgdTethered.lean
-          lake build
+          lake build Chronofold
+          lake env lean -o /tmp/AgdTethered.olean src/Chronofold/AgdTethered.lean
 
       - name: Fail closed on proof placeholders
         run: |
