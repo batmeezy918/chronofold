@@ -1,0 +1,89 @@
+name: EMV Constitutional Proof Loop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'emb/**'
+      - 'sim2xr/**'
+      - 'constitution/**'
+      - 'agd/**'
+      - 'config/emv_lean_bindings.json'
+      - 'scripts/verify_canonical_emv.py'
+      - 'docs/EMV_*.md'
+      - 'theorems_inbox/**'
+      - '.github/workflows/emv-constitutional-proof.yml'
+  pull_request:
+    paths:
+      - 'emb/**'
+      - 'sim2xr/**'
+      - 'constitution/**'
+      - 'agd/**'
+      - 'config/emv_lean_bindings.json'
+      - 'scripts/verify_canonical_emv.py'
+      - 'docs/EMV_*.md'
+      - 'theorems_inbox/**'
+      - '.github/workflows/emv-constitutional-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-emv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run canonical EMV deterministic verifier
+        run: python scripts/verify_canonical_emv.py
+
+      - name: Upload EMV audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: emv-canonical-audit
+          path: reports/canonical_emv_smoke_audit.json
+
+  lean-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean toolchain
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Download Mathlib dependencies
+        run: lake update
+
+      - name: Build Lean formalization
+        run: lake build
+
+  theorem-intake-compatibility:
+    runs-on: ubuntu-latest
+    needs: [deterministic-emv, lean-verification]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify theorem intake entrypoint exists
+        run: |
+          test -x scripts/process_inbox.sh
+          test -f scripts/validate_theorem.py
+
+      - name: Validate EMV proof-map boundary
+        run: |
+          test -f docs/EMV_LEAN_PROOF_MAP.md
+          test -f docs/EMV_CONSTITUTIONAL_PROOF_LOOP.md
+          test -f docs/EMV_CLAIM_PROTOCOL.md
+          grep -q 'FORMALLY_PROVEN' docs/EMV_LEAN_PROOF_MAP.md
+          grep -q 'correspondence' docs/EMV_CONSTITUTIONAL_PROOF_LOOP.md
