@@ -1,0 +1,12 @@
+import Chronofold.SIM2XR_Universal_Costless_Logic
+
+namespace Verified_03_SIM2XR_Universal_Costless_Logic
+
+ theorem descends_iff_recursive := SIM2XR.UniversalCostless.descends_iff_recursive
+ theorem quotient_operator_unique := SIM2XR.UniversalCostless.quotient_operator_unique
+ theorem induced_descends := SIM2XR.UniversalCostless.induced_descends
+ theorem observable_factor_unique := SIM2XR.UniversalCostless.observable_factor_unique
+ theorem universal_cost_independent_operational_closure := SIM2XR.UniversalCostless.universal_cost_independent_operational_closure
+ theorem instances_and_counterexamples := SIM2XR.UniversalCostless.instances_and_counterexamples
+
+end Verified_03_SIM2XR_Universal_Costless_Logic
