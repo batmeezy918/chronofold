@@ -1,0 +1,15 @@
+import Chronofold.AgdMaximalConstitutionalOperationalClosure
+
+namespace Verified_02_MaximalConstitutionalOperationalClosure
+
+open Chronofold.MaximalConstitutional
+
+ theorem maximal_constitutional_operational_closure :=
+  Chronofold.MaximalConstitutional.maximal_constitutional_operational_closure
+ theorem agd_maximal_constitutional_operational_closure :=
+  Chronofold.AGD.agd_maximal_constitutional_operational_closure
+ theorem agd_operationalEq_iff := Chronofold.AGD.agd_operationalEq_iff
+ theorem agd_TBar_unique := Chronofold.AGD.agd_TBar_unique
+ theorem agd_quotient_iterate := Chronofold.AGD.agd_quotient_iterate
+
+end Verified_02_MaximalConstitutionalOperationalClosure
