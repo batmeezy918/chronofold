@@ -26,8 +26,13 @@
 
 - **GitHub Workflows Audited**:
   - `build.yml`
-  - `theorem-intake.yml`
-  - `pages.yml`
+  - `chronofold-auto.yml`
   - `chronofold.yml`
+  - `coco.yml`
+  - `flutter.yml`
+  - `lean.yml`
+  - `pages.yml`
+  - `snap-benchmark.yml`
   - `snap.yml`
+  - `theorem-intake.yml`
 - **Result**: Zero nondeterministic steps or unpinned external dependencies.

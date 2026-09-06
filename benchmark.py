@@ -1,5 +1,6 @@
 import numpy as np
 import cma
+import json
 
 # ===============================
 # TEST FUNCTIONS (COCO STYLE)
@@ -24,7 +25,8 @@ functions = {
 # SNAP OPTIMIZER (FIXED VERSION)
 # ===============================
 
-def snap_optimize(f, dim, steps=200, lr=0.01):
+def snap_optimize(f, dim, steps=200, lr=0.01, seed=42):
+    np.random.seed(seed)
     x = np.random.randn(dim)
 
     def grad(x):
@@ -62,9 +64,10 @@ def snap_optimize(f, dim, steps=200, lr=0.01):
 # CMA-ES BASELINE
 # ===============================
 
-def cma_optimize(f, dim):
+def cma_optimize(f, dim, seed=42):
+    np.random.seed(seed)
     x0 = np.random.randn(dim)
-    es = cma.CMAEvolutionStrategy(x0, 0.5, {'verbose': -9})
+    es = cma.CMAEvolutionStrategy(x0, 0.5, {'verbose': -9, 'seed': seed})
     res = es.optimize(f, iterations=200)
     return res.result.fbest
 
@@ -73,24 +76,25 @@ def cma_optimize(f, dim):
 # ===============================
 
 results = {}
+base_seed = 42
 
-for name, func in functions.items():
+for fn_idx, (name, func) in enumerate(functions.items()):
     print(f"\n=== {name} ===")
     results[name] = {}
 
-    for dim in [5, 10]:
-        snap_score = snap_optimize(func, dim)
-        cma_score = cma_optimize(func, dim)
+    for dim_idx, dim in enumerate([5, 10]):
+        run_seed = base_seed + fn_idx * 10 + dim_idx
+        snap_score = snap_optimize(func, dim, seed=run_seed)
+        cma_score = cma_optimize(func, dim, seed=run_seed)
 
         print(f"dim={dim} SNAP={snap_score:.4f} CMA={cma_score:.4f}")
 
         results[name][dim] = {
-            "SNAP": snap_score,
-            "CMA": cma_score
+            "SNAP": float(snap_score),
+            "CMA": float(cma_score)
         }
 
 # save results
-import json
 with open("real_results.json", "w") as f:
     json.dump(results, f, indent=2)
 
