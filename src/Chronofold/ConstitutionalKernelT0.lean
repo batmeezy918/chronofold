@@ -220,7 +220,8 @@ theorem stampVersion_admissible (n : Nat) :
     admissible_operator (stampVersion n) := by
   refine ⟨deterministic_all _, replayable_all _, traceable_all _, ?_, ?_, ?_, ?_, ?_⟩
   · intro psi h; exact h
-  · intro psi h; exact Nat.add_pos_left (Nat.pos_of_ne_zero h) n
+  · intro psi h
+    exact Nat.ne_of_gt (Nat.add_pos_left (Nat.pos_of_ne_zero h) n)
   · intro psi h; exact h
   · intro psi h e he; exact h e he
   · intro psi h e he; exact h e he
@@ -233,7 +234,7 @@ theorem addNode_admissible (x : Nat) :
   · intro psi h; exact h
   · intro psi h e he
     have hr := h e he
-    exact ⟨List.Mem.tail x hr.1, List.Mem.tail x hr.2⟩
+    exact ⟨List.mem_cons_of_mem x hr.1, List.mem_cons_of_mem x hr.2⟩
   · intro psi h e he; exact h e he
 
 theorem wipeNs_not_namespace_preserving : ¬ namespace_preserving wipeNs := by
@@ -244,7 +245,7 @@ theorem wipeNs_not_namespace_preserving : ¬ namespace_preserving wipeNs := by
 theorem wipeNs_breaks_omega : Omega initial ∧ ¬ Omega (wipeNs initial) := by
   constructor
   · exact initial_omega
-  · intro h; exact False.elim (h.ns rfl)
+  · intro h; exact h.ns rfl
 
 theorem t0_maximal_operational_kernel
     (O : Operator) (hO : admissible_operator O) (psi : State) (hpsi : Omega psi) :
