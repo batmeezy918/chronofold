@@ -19,14 +19,6 @@ open SIM2XR.UniversalCostless
 
 set_option linter.unusedVariables false
 
-/-! ## Identity pair (T0 / SIM2XR inheritance)
-
-`S = id` is the unique involution that exists on every carrier without
-adding structure. Equivariance and constitutional invariance are free.
-Antisymmetry of `D` under `id` is `D = -D`, hence `D ≡ 0` by the
-already-verified `int_eq_neg_self_zero`.
--/
-
 theorem id_involution {H : Type} : IsInvolution (id : H → H) := by
   intro x
   rfl
@@ -40,8 +32,6 @@ theorem id_constitution {H Y : Type} (C : H → Y) :
   intro x
   rfl
 
-/-- Operational effect of the newest theorems: identity reflection plus
-antisymmetry annihilates defect with no fibre hypothesis. -/
 theorem id_antisym_forces_zero {H : Type} (D : H → Int)
     (h : DefectAntisymmetric D (id : H → H)) :
     ∀ x, D x = 0 := by
@@ -51,12 +41,6 @@ theorem id_antisym_forces_zero {H : Type} (D : H → Int)
 theorem id_reflection_class {H Y : Type} (C : H → Y) (T : H → H) :
     ∀ x, PiEq C T x ((id : H → H) x) :=
   reflection_mem_RInf C T id (id_constitution C) (id_equivariant T) id_involution
-
-/-! ## Signed cell pair
-
-Carrier constructed internally: height (constitutional observable) and
-a boolean side (reflection coordinate). No analysis, no zeta zeros.
--/
 
 structure Cell where
   height : Nat
@@ -198,13 +182,7 @@ theorem derived_pair_closed_system :
    signed_D_not_fiber_constant,
    zero_certificate_annihilates⟩
 
-/-! ## Remaining obligation, derived
-
-Fibre-constancy of the signed defect is not an extra axiom.
-On this pair it is equivalent to the zero-height slice.
-The stepping map `T` does not preserve that slice.
-The only endomorphism the closed system can put on the slice is `id`.
--/
+/-! ## Remaining obligation, derived -/
 
 def opposite (x : Cell) : Cell := { height := x.height, side := !x.side }
 
@@ -218,37 +196,31 @@ theorem D_opposite (x : Cell) : D (opposite x) = - D x := by
   | mk h s =>
     cases s <;> simp [D, opposite]
 
-theorem nat_cast_eq_neg_zero (n : Nat) (h : (n : Int) = - (n : Int)) : n = 0 := by
-  have : (n : Int) = 0 := int_eq_neg_self_zero (n : Int) h
-  exact Int.ofNat_eq_zero.mp this
-
 theorem D_eq_zero_of_height_zero (x : Cell) (h : C x = 0) : D x = 0 := by
   cases x with
   | mk height side =>
     simp [C] at h
     cases side <;> simp [D, h]
 
-theorem height_zero_of_D_eq_neg (x : Cell) (h : D x = D (opposite x)) : C x = 0 := by
-  have hAnti : D (opposite x) = - D x := D_opposite x
-  have hZero : D x = 0 := int_eq_neg_self_zero (D x) (h.trans hAnti)
+theorem height_zero_of_same_D_as_opposite
+    (x : Cell) (h : D x = D (opposite x)) : C x = 0 := by
+  have hZero : D x = 0 :=
+    int_eq_neg_self_zero (D x) (h.trans (D_opposite x))
   cases x with
   | mk height side =>
-    cases side <;> simp [D, C] at hZero ⊢
-    · exact nat_cast_eq_neg_zero height (by
-        have : (height : Int) = 0 := hZero
-        simp [this])
-    · have : - (height : Int) = 0 := hZero
-      have hN : (height : Int) = 0 := by omega
-      exact Int.ofNat_eq_zero.mp hN
+    cases side
+    · simp [D, C] at hZero ⊢
+      omega
+    · simp [D, C] at hZero ⊢
+      omega
 
-/-- Derivation of the remaining obligation on the constructed pair. -/
 theorem fiber_constant_iff_height_zero :
     FiberConstant D (RInf C T) ↔ ∀ x, C x = 0 := by
   constructor
   · intro hFactor x
-    have hSame : D x = D (opposite x) := hFactor x (opposite x) (opposite_RInf x)
-    exact height_zero_of_D_eq_neg x hSame
-  · intro hZero x y hR
+    exact height_zero_of_same_D_as_opposite x
+      (hFactor x (opposite x) (opposite_RInf x))
+  · intro hZero x y _
     have hx : D x = 0 := D_eq_zero_of_height_zero x (hZero x)
     have hy : D y = 0 := D_eq_zero_of_height_zero y (hZero y)
     exact hx.trans hy.symm
@@ -262,9 +234,6 @@ theorem stepping_T_not_endomorphism_of_zero_slice :
   intro h
   have hx : C { height := 0, side := false } = 0 := rfl
   exact T_escapes_zero_slice { height := 0, side := false } hx (h _ hx)
-
-/-! Zero-height slice: the only carrier on which signed `D` factors.
-Stepping `T` is not an endomorphism. Identity is. -/
 
 structure ZeroCell where
   side : Bool
@@ -323,11 +292,6 @@ theorem slice_uses_forcing_contract :
     C0_invariant T0_equivariant S0_involution
     D0slice_antisymmetric D0slice_fiber
 
-/-- Remaining obligation, conducted:
-1. fibre-constancy of signed `D` ⇔ every cell has height 0;
-2. stepping `T` leaves that slice;
-3. identity on the slice inhabits the full forcing contract.
-No analytic zero-to-zero map is produced. -/
 theorem remaining_obligation_derived :
     (FiberConstant D (RInf C T) ↔ ∀ x, C x = 0) ∧
     (¬ ∀ x, C x = 0 → C (T x) = 0) ∧
