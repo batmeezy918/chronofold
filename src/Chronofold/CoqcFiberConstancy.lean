@@ -5,8 +5,7 @@ import Chronofold.CoqcDerivedPair
 /-!
 # Fibre-constancy derived from operational consequences
 
-`FiberConstant` is the SIM2XR statement that a defect respects the
-constitutional projection, transported along `RInf ⊆ R0`.
+`FiberConstant` is SIM2XR `Respects` transported along `RInf ⊆ R0`.
 No `sorry`. No extra axioms. Does not prove RH.
 -/
 
@@ -18,8 +17,6 @@ open SIM2XR.UniversalCostless
 set_option linter.unusedVariables false
 
 universe u w
-
-/-! ## Tower inclusion -/
 
 theorem Rn_imp_R0 {H : Type u} {Y : Type w}
     (obs : H → Y) (step : H → H) :
@@ -37,8 +34,6 @@ theorem RInf_imp_R0 {H : Type u} {Y : Type w}
     (obs : H → Y) (step : H → H) {x y : H} :
     RInf obs step x y → R0 obs x y :=
   fun h => Rn_imp_R0 obs step 0 x y (h 0)
-
-/-! ## Operational origin of fibre-constancy -/
 
 theorem respects_implies_fiber_R0 {H : Type u} {Y : Type w}
     (obs : H → Y) (defc : H → Int)
@@ -70,8 +65,6 @@ theorem annihilated_defect_is_fiber_constant {H : Type u} {Y : Type w}
   intro x y _
   exact (hZero x).trans (hZero y).symm
 
-/-! ## Compatibility: respects + antisymmetry ⇒ annihilation -/
-
 theorem respects_antisym_forces_zero {H : Type u} {Y : Type w}
     (obs : H → Y) (refl : H → H) (defc : H → Int)
     (hC : ConstitutionInvariant obs refl)
@@ -92,8 +85,6 @@ theorem forcing_from_respects {H : Type u} {Y : Type w}
     ∀ x, defc x = 0 :=
   coqc_forcing_contract obs step refl defc hC hT hS hD
     (respects_implies_fiber_RInf obs step defc hR)
-
-/-! ## Instantiation on the derived Cell pair -/
 
 open Chronofold.CoqcDerivedPair
 
@@ -124,12 +115,34 @@ theorem cell_forcing_from_zero_respects :
   forcing_from_respects C T S D0
     C_invariant T_equivariant S_involution D0_antisymmetric cell_D0_respects
 
-theorem cell_respects_antisym_zero :
-    ∀ x, D0 x = 0 :=
-  respects_antisym_forces_zero C S D0 C_invariant D0_antisymmetric cell_D0_respects
+theorem D_eq_zero_of_height_zero (x : Cell) (h : C x = 0) : D x = 0 := by
+  cases x with
+  | mk height side =>
+    simp [C] at h
+    cases side <;> simp [D, h]
 
-/-- Maximal operational package for fibre-constancy.
-General transport, Cell witnesses, signed obstruction, derived forcing. -/
+theorem height_zero_of_same_D_as_S
+    (x : Cell) (h : D x = D (S x)) : C x = 0 := by
+  have hZero : D x = 0 :=
+    int_eq_neg_self_zero (D x) (h.trans (D_antisymmetric x))
+  cases x with
+  | mk height side =>
+    cases side
+    · simp [D, C] at hZero ⊢
+      omega
+    · simp [D, C] at hZero ⊢
+      omega
+
+theorem signed_fiber_iff_height_zero :
+    FiberConstant D (RInf C T) ↔ ∀ x, C x = 0 := by
+  constructor
+  · intro hFactor x
+    have hR : RInf C T x (S x) := signed_reflection_class x
+    exact height_zero_of_same_D_as_S x (hFactor x (S x) hR)
+  · intro hZero x y _
+    exact (D_eq_zero_of_height_zero x (hZero x)).trans
+      (D_eq_zero_of_height_zero y (hZero y)).symm
+
 theorem fiber_constancy_maximal_operational_closure :
     FiberConstant heightInt (RInf C T) ∧
     FiberConstant D0 (RInf C T) ∧
@@ -146,6 +159,6 @@ theorem fiber_constancy_maximal_operational_closure :
    cell_signed_not_respects,
    signed_D_not_fiber_constant,
    cell_forcing_from_zero_respects,
-   fiber_constant_iff_height_zero⟩
+   signed_fiber_iff_height_zero⟩
 
 end Chronofold.CoqcFiberConstancy
