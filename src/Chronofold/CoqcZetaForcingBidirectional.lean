@@ -1,6 +1,6 @@
 namespace Chronofold.CoqcZetaForcingBidirectional
 
-universe u v w
+universe u w
 
 /-!
 # COQC zeta forcing / bidirectional collapse
@@ -85,13 +85,7 @@ theorem reflection_projection_identity
   reflection_mem_RInf C T S hC hT hS
 
 theorem int_eq_neg_self_zero (a : Int) (h : a = -a) : a = 0 := by
-  have h2 : a + a = 0 := by
-    calc
-      a + a = a + (-a) := by rw [h]
-      _     = 0 := Int.add_neg_cancel a
-  have : (2 : Int) * a = 0 := by
-    simpa [Int.two_mul] using h2
-  exact Int.eq_of_mul_eq_zero this (by decide : (2 : Int) ≠ 0)
+  omega
 
 theorem reflection_collapse_forces_defect_zero
     (D : H → Int) (C : H → Y) (T S : H → H)
