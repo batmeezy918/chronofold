@@ -2,12 +2,35 @@ namespace Chronofold.CoqcZetaForcingBidirectional
 
 universe u w
 
+set_option linter.unusedVariables false
+
 /-!
 # COQC zeta forcing / bidirectional collapse
 
 Strictly internal kernel. No Hilbert space, inner product, self-adjointness,
 external spectral operator, or complex analysis is assumed.
 Does not prove RH. Remaining obligations are explicit in `ZetaDynamicsCertificate`.
+
+## Objects
+
+* `C : H → Y` — constitutional observable (phase / class).
+* `T : H → H` — discrete dynamical step (candidate zero-to-zero map).
+* `S : H → H` — reflection involution.
+* `D : H → Int` — integer defect; antisymmetric under `S`.
+
+## Refinement tower
+
+`R0` is fibre equality of `C`. `Phi T R` tightens `R` by requiring both the pair
+and its `T`-image to lie in `R`. `Rn` iterates that tightening; `RInf` is the
+intersection (omega-limit refinement). `PiEq` is the induced operational
+equivalence on that limit.
+
+## Forcing direction
+
+Constitutional invariance of `C` under `S` plus dynamical equivariance of `T`
+with `S` places every point in the same `RInf`-class as its reflection.
+Independent fibre-constancy of `D` on `RInf` plus antisymmetry then annihilates
+`D`. The converse uses an explicit fixed-point obligation `D x = 0 → S x = x`.
 -/
 
 variable {H : Type u} {Y : Type w}
@@ -40,13 +63,22 @@ def DefectAntisymmetric (D : H → Int) (S : H → H) : Prop :=
 def FiberConstant (D : H → Int) (R : H → H → Prop) : Prop :=
   ∀ x y, R x y → D x = D y
 
+theorem R0_symm (C : H → Y) (x y : H) (h : R0 C x y) : R0 C y x :=
+  h.symm
+
 theorem Rn_refl (C : H → Y) (T : H → H) : ∀ n x, Rn C T n x x
-  | 0, x => rfl
+  | 0, _ => rfl
   | n + 1, x => ⟨Rn_refl C T n x, Rn_refl C T n (T x)⟩
 
 theorem RInf_refl (C : H → Y) (T : H → H) (x : H) : RInf C T x x := by
   intro n
   exact Rn_refl C T n x
+
+theorem R0_of_constitution
+    (C : H → Y) (S : H → H)
+    (hC : ConstitutionInvariant C S) (x : H) :
+    R0 C x (S x) :=
+  (hC x).symm
 
 theorem reflection_mem_Rn
     (C : H → Y) (T S : H → H)
@@ -58,7 +90,7 @@ theorem reflection_mem_Rn
   induction n with
   | zero =>
       intro x
-      exact hC x
+      exact R0_of_constitution C S hC x
   | succ n ih =>
       intro x
       constructor
@@ -129,6 +161,9 @@ theorem equivariant_constitutional_forcing
     ∀ x, PiEq C T x (S x) :=
   reflection_mem_RInf C T S hC hT hS
 
+/-- Forward contract: invariance + equivariance + involution + antisymmetric
+fibre-constant defect ⇒ defect identically zero. Does not itself produce `T`
+or fibre-constancy; those remain certificate obligations. -/
 theorem coqc_forcing_contract
     (C : H → Y) (T S : H → H) (D : H → Int)
     (hC : ConstitutionInvariant C S)
@@ -158,5 +193,11 @@ theorem certificate_forces_zero
   coqc_forcing_contract Z.C Z.T Z.S Z.defect
     Z.constitution_invariant Z.equivariant Z.reflection_involution
     Z.defect_antisymmetric Z.defect_factor
+
+theorem certificate_forces_reflection_class
+    (Z : ZetaDynamicsCertificate (Y := Y)) :
+    ∀ x, PiEq Z.C Z.T x (Z.S x) :=
+  reflection_mem_RInf Z.C Z.T Z.S
+    Z.constitution_invariant Z.equivariant Z.reflection_involution
 
 end Chronofold.CoqcZetaForcingBidirectional
