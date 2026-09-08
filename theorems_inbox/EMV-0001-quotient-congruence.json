@@ -1,0 +1,113 @@
+{
+  "claim_id": "EMV-0001",
+  "version": "1.1.0",
+  "domain": {
+    "name": "EMV",
+    "state_type": "PENDING_FORMAL_INSTANTIATION",
+    "admissible_state_predicate": "PENDING_FORMAL_INSTANTIATION"
+  },
+  "status": "HYPOTHESIZED",
+  "scope": {
+    "kind": "single_transition",
+    "quantification": "PENDING_FORMAL_INSTANTIATION",
+    "universal_over_admissible_states": true,
+    "universal_over_admissible_transitions": false,
+    "iteration_scope": "single_step_only",
+    "excluded_scope": ["arbitrary_iterates", "external_EMVCo_certification"]
+  },
+  "informal_statement": "Under an explicitly declared EMV observational equivalence, an admissible transition preserves equivalence.",
+  "formal_candidate": "forall x y : X, x ~ y -> Admissible(T, x, y) -> T(x) ~ T(y)",
+  "variables": {
+    "X": "PENDING_FORMAL_INSTANTIATION",
+    "x": "X",
+    "y": "X",
+    "T": "PENDING_FORMAL_INSTANTIATION"
+  },
+  "quantifiers": {
+    "x": "forall",
+    "y": "forall",
+    "transition": "explicit_admissibility_condition"
+  },
+  "relations": {
+    "equivalence": "~",
+    "equivalence_definition": "PENDING_FORMAL_INSTANTIATION",
+    "observable_boundary": "PENDING_FORMAL_INSTANTIATION"
+  },
+  "operators": {
+    "transition": "T",
+    "admissibility": "Admissible",
+    "projection": "PENDING_FORMAL_INSTANTIATION",
+    "reconstruction": "PENDING_FORMAL_INSTANTIATION"
+  },
+  "invariants": [
+    "equivalence_relation",
+    "acceptance_relevant_observables",
+    "declared_quotient_invariants"
+  ],
+  "assumptions": [
+    "EMV state type is explicitly defined",
+    "observational boundary is explicitly defined",
+    "equivalence relation is proven reflexive, symmetric, and transitive",
+    "T is an admissible transition with explicit semantics",
+    "formal and executable state representations have a declared correspondence"
+  ],
+  "preconditions": [
+    "x and y inhabit the declared state domain",
+    "x ~ y holds under the declared observational relation",
+    "T satisfies the declared admissibility predicate"
+  ],
+  "derivation_refs": [],
+  "implementation": {
+    "state_machine": "emb/state_machine.py",
+    "canonical_verifier": "scripts/verify_canonical_emv.py",
+    "quotient_engine": "ui/emv_quotient_engine.py"
+  },
+  "benchmark": {
+    "reference": "CVR_STAGE_04_06",
+    "status": "PENDING"
+  },
+  "evidence": {
+    "deterministic_execution": "PENDING",
+    "empirical": "PENDING",
+    "replay": "PENDING",
+    "witness": "PENDING",
+    "counterexample_search": "PENDING"
+  },
+  "lean": {
+    "source": "PENDING",
+    "declaration": "PENDING",
+    "toolchain": "leanprover/lean4:v4.29.0",
+    "status": "PENDING",
+    "result_hash": "PENDING"
+  },
+  "correspondence": {
+    "reference": "PENDING",
+    "formal_state_to_runtime_state": "PENDING",
+    "formal_transition_to_runtime_transition": "PENDING",
+    "formal_observation_to_runtime_observation": "PENDING",
+    "status": "PENDING"
+  },
+  "promotion": {
+    "target": "CONSTITUTIONALLY_ESTABLISHED",
+    "required_gates": [
+      "scope",
+      "determinism",
+      "replay",
+      "witness",
+      "lean_proof",
+      "correspondence"
+    ],
+    "correspondence_required": true
+  },
+  "limitations": [
+    "This candidate is not an EMVCo certification claim.",
+    "No formal EMV instantiation is claimed until the state, observable boundary, transition semantics, and Lean declaration are supplied.",
+    "The current proposition is single-transition; it does not assert preservation under arbitrary transition compositions."
+  ],
+  "counterexamples": [],
+  "lineage": {
+    "parent_claim": null,
+    "refinements": [],
+    "supersedes": "EMV-0001 version 1.0.0"
+  }
+}
