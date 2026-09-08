@@ -5,30 +5,25 @@ import Chronofold.CoqcDerivedPair
 /-!
 # Fibre-constancy derived from operational consequences
 
-`FiberConstant` is not an extra axiom. It is the SIM2XR statement that a
-defect respects the constitutional projection, transported along the
-already-proved inclusion `RInf ⊆ R0`.
-
-This module derives that fact in general, then instantiates it on the
-closed pair. It does not prove RH.
+`FiberConstant` is the SIM2XR statement that a defect respects the
+constitutional projection, transported along `RInf ⊆ R0`.
+No `sorry`. No extra axioms. Does not prove RH.
 -/
 
 namespace Chronofold.CoqcFiberConstancy
 
 open Chronofold.CoqcZetaForcingBidirectional
 open SIM2XR.UniversalCostless
-open Chronofold.CoqcDerivedPair
 
 set_option linter.unusedVariables false
 
 universe u w
 
-variable {H : Type u} {Y : Type w}
+/-! ## Tower inclusion -/
 
-/-! ## Tower inclusion already guaranteed by the kernel -/
-
-theorem Rn_imp_R0 (C : H → Y) (T : H → H) :
-    ∀ n x y, Rn C T n x y → R0 C x y := by
+theorem Rn_imp_R0 {H : Type u} {Y : Type w}
+    (obs : H → Y) (step : H → H) :
+    ∀ n x y, Rn obs step n x y → R0 obs x y := by
   intro n
   induction n with
   | zero =>
@@ -38,114 +33,119 @@ theorem Rn_imp_R0 (C : H → Y) (T : H → H) :
       intro x y h
       exact ih x y h.1
 
-theorem RInf_imp_R0 (C : H → Y) (T : H → H) {x y : H} :
-    RInf C T x y → R0 C x y :=
-  fun h => Rn_imp_R0 C T 0 x y (h 0)
+theorem RInf_imp_R0 {H : Type u} {Y : Type w}
+    (obs : H → Y) (step : H → H) {x y : H} :
+    RInf obs step x y → R0 obs x y :=
+  fun h => Rn_imp_R0 obs step 0 x y (h 0)
 
-/-! ## Operational origin of fibre-constancy
+/-! ## Operational origin of fibre-constancy -/
 
-SIM2XR `Respects π f` is constancy of `f` on `ker π`.
-`R0 C` *is* `ker C`. Therefore any defect that respects `C` is
-fibre-constant on every refinement, including `RInf`.
--/
-
-theorem respects_implies_fiber_R0
-    (C : H → Y) (D : H → Int)
-    (h : Respects C D) :
-    FiberConstant D (R0 C) :=
+theorem respects_implies_fiber_R0 {H : Type u} {Y : Type w}
+    (obs : H → Y) (defc : H → Int)
+    (h : Respects obs defc) :
+    FiberConstant defc (R0 obs) :=
   h
 
-theorem respects_implies_fiber_RInf
-    (C : H → Y) (T : H → H) (D : H → Int)
-    (h : Respects C D) :
-    FiberConstant D (RInf C T) := by
+theorem respects_implies_fiber_RInf {H : Type u} {Y : Type w}
+    (obs : H → Y) (step : H → H) (defc : H → Int)
+    (h : Respects obs defc) :
+    FiberConstant defc (RInf obs step) := by
   intro x y hR
-  exact h x y (RInf_imp_R0 C T hR)
+  exact h x y (RInf_imp_R0 obs step hR)
 
-theorem zero_respects (C : H → Y) :
-    Respects C (fun _ : H => (0 : Int)) := by
+theorem zero_respects {H : Type u} {Y : Type w} (obs : H → Y) :
+    Respects obs (fun _ : H => (0 : Int)) := by
   intro x y _
   rfl
 
-theorem zero_fiber (C : H → Y) (T : H → H) :
-    FiberConstant (fun _ : H => (0 : Int)) (RInf C T) :=
-  respects_implies_fiber_RInf C T (fun _ => 0) (zero_respects C)
+theorem zero_fiber {H : Type u} {Y : Type w}
+    (obs : H → Y) (step : H → H) :
+    FiberConstant (fun _ : H => (0 : Int)) (RInf obs step) :=
+  respects_implies_fiber_RInf obs step (fun _ => (0 : Int)) (zero_respects obs)
 
-/-- Any defect that is identically zero is fibre-constant.
-This is the defect the forcing contract itself produces. -/
-theorem annihilated_defect_is_fiber_constant
-    (C : H → Y) (T : H → H) (D : H → Int)
-    (hZero : ∀ x, D x = 0) :
-    FiberConstant D (RInf C T) := by
+theorem annihilated_defect_is_fiber_constant {H : Type u} {Y : Type w}
+    (obs : H → Y) (step : H → H) (defc : H → Int)
+    (hZero : ∀ x, defc x = 0) :
+    FiberConstant defc (RInf obs step) := by
   intro x y _
   exact (hZero x).trans (hZero y).symm
 
-/-! ## Compatibility: antisymmetry + respects ⇒ annihilation
+/-! ## Compatibility: respects + antisymmetry ⇒ annihilation -/
 
-Once `D` respects `C` and `C` is `S`-invariant, `x` and `Sx` share a
-fibre, so antisymmetry collapses `D`. No extra certificate field. -/
-
-theorem respects_antisym_forces_zero
-    (C : H → Y) (S : H → H) (D : H → Int)
-    (hC : ConstitutionInvariant C S)
-    (hD : DefectAntisymmetric D S)
-    (hR : Respects C D) :
-    ∀ x, D x = 0 := by
+theorem respects_antisym_forces_zero {H : Type u} {Y : Type w}
+    (obs : H → Y) (refl : H → H) (defc : H → Int)
+    (hC : ConstitutionInvariant obs refl)
+    (hD : DefectAntisymmetric defc refl)
+    (hR : Respects obs defc) :
+    ∀ x, defc x = 0 := by
   intro x
-  have hSame : D x = D (S x) := hR x (S x) (hC x).symm
-  exact int_eq_neg_self_zero (D x) (hSame.trans (hD x))
+  have hSame : defc x = defc (refl x) := hR x (refl x) (hC x).symm
+  exact int_eq_neg_self_zero (defc x) (hSame.trans (hD x))
 
-/-- Closed-system derivation of the forcing contract when the defect is
-a constitutional observable (SIM2XR `Respects`). Equivariance is used
-only to name the same collapse already proved for `RInf`. -/
-theorem forcing_from_respects
-    (C : H → Y) (T S : H → H) (D : H → Int)
-    (hC : ConstitutionInvariant C S)
-    (hT : Equivariant T S)
-    (hS : IsInvolution S)
-    (hD : DefectAntisymmetric D S)
-    (hR : Respects C D) :
-    ∀ x, D x = 0 :=
-  coqc_forcing_contract C T S D hC hT hS hD
-    (respects_implies_fiber_RInf C T D hR)
+theorem forcing_from_respects {H : Type u} {Y : Type w}
+    (obs : H → Y) (step refl : H → H) (defc : H → Int)
+    (hC : ConstitutionInvariant obs refl)
+    (hT : Equivariant step refl)
+    (hS : IsInvolution refl)
+    (hD : DefectAntisymmetric defc refl)
+    (hR : Respects obs defc) :
+    ∀ x, defc x = 0 :=
+  coqc_forcing_contract obs step refl defc hC hT hS hD
+    (respects_implies_fiber_RInf obs step defc hR)
 
-/-! ## Instantiation on the derived pair -/
+/-! ## Instantiation on the derived Cell pair -/
 
-theorem cell_height_respects :
-    Respects C (fun x : Cell => (x.height : Int)) := by
+open Chronofold.CoqcDerivedPair
+
+def heightInt (x : Cell) : Int := (x.height : Int)
+
+theorem cell_height_respects : Respects C heightInt := by
   intro x y h
   exact congrArg (fun n : Nat => (n : Int)) h
 
 theorem cell_height_fiber :
-    FiberConstant (fun x : Cell => (x.height : Int)) (RInf C T) :=
-  respects_implies_fiber_RInf C T (fun x => (x.height : Int)) cell_height_respects
+    FiberConstant heightInt (RInf C T) :=
+  respects_implies_fiber_RInf C T heightInt cell_height_respects
 
 theorem cell_zero_fiber :
     FiberConstant D0 (RInf C T) :=
   D0_fiber
 
-theorem cell_signed_not_respects :
-    ¬ Respects C D := by
-  intro h
-  have : D pos1 = D neg1 := h pos1 neg1 rfl
-  simp [D, pos1, neg1] at this
+theorem cell_D0_respects : Respects C D0 :=
+  zero_respects C
 
-/-- The operational calculus guarantees fibre-constancy exactly for
-defects that respect `C`. The signed height defect does not. The
-zero defect and the raw height observable do. -/
-theorem fiber_constancy_derived :
-    (∀ {H : Type} {Y : Type} (C : H → Y) (T : H → H) (D : H → Int),
-      Respects C D → FiberConstant D (RInf C T)) ∧
+theorem cell_signed_not_respects : ¬ Respects C D := by
+  intro h
+  have hx : D pos1 = D neg1 := h pos1 neg1 rfl
+  simp [D, pos1, neg1] at hx
+
+theorem cell_forcing_from_zero_respects :
+    ∀ x, D0 x = 0 :=
+  forcing_from_respects C T S D0
+    C_invariant T_equivariant S_involution D0_antisymmetric cell_D0_respects
+
+theorem cell_respects_antisym_zero :
+    ∀ x, D0 x = 0 :=
+  respects_antisym_forces_zero C S D0 C_invariant D0_antisymmetric cell_D0_respects
+
+/-- Maximal operational package for fibre-constancy.
+General transport, Cell witnesses, signed obstruction, derived forcing. -/
+theorem fiber_constancy_maximal_operational_closure :
+    FiberConstant heightInt (RInf C T) ∧
     FiberConstant D0 (RInf C T) ∧
-    FiberConstant (fun x : Cell => (x.height : Int)) (RInf C T) ∧
+    Respects C heightInt ∧
+    Respects C D0 ∧
     ¬ Respects C D ∧
     ¬ FiberConstant D (RInf C T) ∧
-    (Respects C D0) :=
-  ⟨fun _ _ C T D h => respects_implies_fiber_RInf C T D h,
+    (∀ x, D0 x = 0) ∧
+    (FiberConstant D (RInf C T) ↔ ∀ x, C x = 0) :=
+  ⟨cell_height_fiber,
    cell_zero_fiber,
-   cell_height_fiber,
+   cell_height_respects,
+   cell_D0_respects,
    cell_signed_not_respects,
    signed_D_not_fiber_constant,
-   zero_respects C⟩
+   cell_forcing_from_zero_respects,
+   fiber_constant_iff_height_zero⟩
 
 end Chronofold.CoqcFiberConstancy
