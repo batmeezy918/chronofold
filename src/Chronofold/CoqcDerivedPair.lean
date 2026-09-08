@@ -97,13 +97,10 @@ theorem D_antisymmetric : DefectAntisymmetric D S := by
   | mk h s =>
     cases s <;> simp [D, S]
 
-/-- Newest forcing theorem applied to the derived pair. -/
 theorem signed_reflection_class :
     ∀ x, PiEq C T x (S x) :=
   reflection_mem_RInf C T S C_invariant T_equivariant S_involution
 
-/-- SIM2XR operational effect: the derived `T` descends through `C`
-to successor. One-step descent ⇔ recursive iterates. -/
 theorem signed_descends : Descends C T Nat.succ := by
   intro x
   rfl
@@ -144,8 +141,6 @@ theorem RInf_iff_height (x y : Cell) :
 def pos1 : Cell := { height := 1, side := false }
 def neg1 : Cell := { height := 1, side := true }
 
-/-- Fibre-constancy of the *signed* defect fails on the derived pair.
-This is the explicit remaining obligation, not a hidden axiom. -/
 theorem signed_D_not_fiber_constant :
     ¬ FiberConstant D (RInf C T) := by
   intro h
@@ -164,7 +159,6 @@ theorem D0_fiber : FiberConstant D0 (RInf C T) := by
   intro x y _
   rfl
 
-/-- Zero-defect certificate inhabited entirely by derived objects. -/
 def zeroDefectCertificate : ZetaDynamicsCertificate (Y := Nat) where
   carrier := Cell
   T := T
@@ -186,10 +180,6 @@ theorem zero_certificate_reflection :
       (zeroDefectCertificate.S x) :=
   certificate_forces_reflection_class zeroDefectCertificate
 
-/-- Packaged operational inheritance: the closed system produces a pair
-`(T, S)` that satisfies the three structural hypotheses of the forcing
-contract, yields reflection identification, descends in the SIM2XR sense,
-and inhabits a zero-defect certificate. Signed defect remains non-factorizing. -/
 theorem derived_pair_closed_system :
     IsInvolution S ∧
     Equivariant T S ∧
@@ -207,5 +197,145 @@ theorem derived_pair_closed_system :
    signed_descends,
    signed_D_not_fiber_constant,
    zero_certificate_annihilates⟩
+
+/-! ## Remaining obligation, derived
+
+Fibre-constancy of the signed defect is not an extra axiom.
+On this pair it is equivalent to the zero-height slice.
+The stepping map `T` does not preserve that slice.
+The only endomorphism the closed system can put on the slice is `id`.
+-/
+
+def opposite (x : Cell) : Cell := { height := x.height, side := !x.side }
+
+theorem opposite_same_height (x : Cell) : C x = C (opposite x) := rfl
+
+theorem opposite_RInf (x : Cell) : RInf C T x (opposite x) :=
+  (RInf_iff_height x (opposite x)).mpr (opposite_same_height x)
+
+theorem D_opposite (x : Cell) : D (opposite x) = - D x := by
+  cases x with
+  | mk h s =>
+    cases s <;> simp [D, opposite]
+
+theorem nat_cast_eq_neg_zero (n : Nat) (h : (n : Int) = - (n : Int)) : n = 0 := by
+  have : (n : Int) = 0 := int_eq_neg_self_zero (n : Int) h
+  exact Int.ofNat_eq_zero.mp this
+
+theorem D_eq_zero_of_height_zero (x : Cell) (h : C x = 0) : D x = 0 := by
+  cases x with
+  | mk height side =>
+    simp [C] at h
+    cases side <;> simp [D, h]
+
+theorem height_zero_of_D_eq_neg (x : Cell) (h : D x = D (opposite x)) : C x = 0 := by
+  have hAnti : D (opposite x) = - D x := D_opposite x
+  have hZero : D x = 0 := int_eq_neg_self_zero (D x) (h.trans hAnti)
+  cases x with
+  | mk height side =>
+    cases side <;> simp [D, C] at hZero ⊢
+    · exact nat_cast_eq_neg_zero height (by
+        have : (height : Int) = 0 := hZero
+        simp [this])
+    · have : - (height : Int) = 0 := hZero
+      have hN : (height : Int) = 0 := by omega
+      exact Int.ofNat_eq_zero.mp hN
+
+/-- Derivation of the remaining obligation on the constructed pair. -/
+theorem fiber_constant_iff_height_zero :
+    FiberConstant D (RInf C T) ↔ ∀ x, C x = 0 := by
+  constructor
+  · intro hFactor x
+    have hSame : D x = D (opposite x) := hFactor x (opposite x) (opposite_RInf x)
+    exact height_zero_of_D_eq_neg x hSame
+  · intro hZero x y hR
+    have hx : D x = 0 := D_eq_zero_of_height_zero x (hZero x)
+    have hy : D y = 0 := D_eq_zero_of_height_zero y (hZero y)
+    exact hx.trans hy.symm
+
+theorem T_escapes_zero_slice (x : Cell) (hx : C x = 0) : C (T x) ≠ 0 := by
+  simp [C, T] at hx ⊢
+  simp [C, T, hx]
+
+theorem stepping_T_not_endomorphism_of_zero_slice :
+    ¬ ∀ x, C x = 0 → C (T x) = 0 := by
+  intro h
+  have hx : C { height := 0, side := false } = 0 := rfl
+  exact T_escapes_zero_slice { height := 0, side := false } hx (h _ hx)
+
+/-! Zero-height slice: the only carrier on which signed `D` factors.
+Stepping `T` is not an endomorphism. Identity is. -/
+
+structure ZeroCell where
+  side : Bool
+  deriving DecidableEq, Repr
+
+def S0 : ZeroCell → ZeroCell :=
+  fun z => { side := !z.side }
+
+def T0 : ZeroCell → ZeroCell := id
+
+def C0 : ZeroCell → Nat := fun _ => 0
+
+def D0slice : ZeroCell → Int := fun _ => 0
+
+theorem S0_involution : IsInvolution S0 := by
+  intro z
+  cases z with
+  | mk s =>
+    cases s <;> rfl
+
+theorem T0_equivariant : Equivariant T0 S0 := by
+  intro z
+  rfl
+
+theorem C0_invariant : ConstitutionInvariant C0 S0 := by
+  intro z
+  rfl
+
+theorem D0slice_antisymmetric : DefectAntisymmetric D0slice S0 := by
+  intro z
+  rfl
+
+theorem D0slice_fiber : FiberConstant D0slice (RInf C0 T0) := by
+  intro x y _
+  rfl
+
+def sliceCertificate : ZetaDynamicsCertificate (Y := Nat) where
+  carrier := ZeroCell
+  T := T0
+  S := S0
+  C := C0
+  defect := D0slice
+  reflection_involution := S0_involution
+  constitution_invariant := C0_invariant
+  equivariant := T0_equivariant
+  defect_antisymmetric := D0slice_antisymmetric
+  defect_factor := D0slice_fiber
+
+theorem slice_certificate_annihilates :
+    ∀ z, sliceCertificate.defect z = 0 :=
+  certificate_forces_zero sliceCertificate
+
+theorem slice_uses_forcing_contract :
+    ∀ z, D0slice z = 0 :=
+  coqc_forcing_contract C0 T0 S0 D0slice
+    C0_invariant T0_equivariant S0_involution
+    D0slice_antisymmetric D0slice_fiber
+
+/-- Remaining obligation, conducted:
+1. fibre-constancy of signed `D` ⇔ every cell has height 0;
+2. stepping `T` leaves that slice;
+3. identity on the slice inhabits the full forcing contract.
+No analytic zero-to-zero map is produced. -/
+theorem remaining_obligation_derived :
+    (FiberConstant D (RInf C T) ↔ ∀ x, C x = 0) ∧
+    (¬ ∀ x, C x = 0 → C (T x) = 0) ∧
+    (∀ z, sliceCertificate.defect z = 0) ∧
+    (∀ z, PiEq C0 T0 z (S0 z)) :=
+  ⟨fiber_constant_iff_height_zero,
+   stepping_T_not_endomorphism_of_zero_slice,
+   slice_certificate_annihilates,
+   reflection_mem_RInf C0 T0 S0 C0_invariant T0_equivariant S0_involution⟩
 
 end Chronofold.CoqcDerivedPair
