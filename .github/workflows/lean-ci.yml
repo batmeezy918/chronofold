@@ -32,6 +32,18 @@ jobs:
       - name: Compile SIM2XR costless logic
         run: lake env lean src/Chronofold/SIM2XR_Universal_Costless_Logic.lean
 
+      - name: Compile AGD-GEMM work model
+        run: lake env lean src/Chronofold/AGDGemmWork.lean
+
+      - name: Compile AGD-GEMM projection
+        run: lake env lean src/Chronofold/AGDGemmProjection.lean
+
+      - name: Compile AGD-GEMM reconstruction
+        run: lake env lean src/Chronofold/AGDGemmReconstruction.lean
+
+      - name: Compile AGD-GEMM modeled speedup boundary
+        run: lake env lean src/Chronofold/AGDGemmSpeedup.lean
+
       - name: Reject unfinished-goal tactics in active Lean source
         shell: bash
         run: |
