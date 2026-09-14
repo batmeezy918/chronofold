@@ -1,5 +1,6 @@
 # AGD Determinism & Replayability Audit
 
+**Timestamp**: 2026-03-31T14:30:00Z
 **Toolchain**: Lean v4.33.1 / Lake 5.0.0
 **Python Runtime**: Python 3.12.13
 **Deterministic Environment**: Linux x86_64 sandbox
