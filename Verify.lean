@@ -261,4 +261,15 @@ theorem replay_preserves_invariants
     · rw [ih_res.1, h_op_om]
     · rw [ih_res.2, h_op_cov]
 
+/-- SNAP continuous manifold optimizer parameter update bridge structure -/
+structure SnapOptimizerBridge (α : Type u) (inv : Invariants α) where
+  stepOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant stepOp
+
+/-- Theorem: SNAP optimizer parameter step preservation under invariants -/
+theorem snap_optimizer_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (bridge : SnapOptimizerBridge α inv) (s : State α) :
+    inv.omega (bridge.stepOp s) = inv.omega s ∧ inv.covariant (bridge.stepOp s) = inv.covariant s :=
+  bridge.h_admissible s
+
 end AGD
