@@ -28,13 +28,13 @@
                        |  (Oracle - Single Source)     |
                        +---------------+---------------+
                                        |
-                +----------------------+----------------------+
-                |                                             |
-                v                                             v
-  +-------------+-------------+                 +-------------+-------------+
-  | Chronofold Auto Theorems   |                 |  Intake Processing Pipeline |
-  |   (omega_divides_n, etc)  |                 |  process_inbox.sh Receipts  |
-  +---------------------------+                 +---------------------------+
+       +-------------------------------+-------------------------------+
+       |                               |                               |
+       v                               v                               v
++------+--------------------+    +-----+---------------------+   +-----+---------------------+
+| Chronofold Auto Theorems  |    | SNAP Optimizer Bridge     |   | Intake Processing Pipeline|
+|  (omega_divides_n, etc)   |    | snap_optimizer_step_...   |   | process_inbox.sh Receipts |
++---------------------------+    +---------------------------+   +---------------------------+
 ```
 
 ## Proof Node Registry
@@ -44,5 +44,7 @@
 3. **`AGD.TBar`**: Descended state operator on $Q^*$.
 4. **`AGD.admission_iff_descends`**: Proves an operator is admissible if and only if its descended map acts as the identity on $Q^*$.
 5. **`AGD.replay_preserves_invariants`**: Proves list induction preservation of invariants across arbitrary operator replay chains.
-6. **`theorems_proven.THM_000001__smoke_test`**: `smoke_test` verified via `process_inbox.sh` pipeline intake.
-7. **`theorems_proven.THM_000002__t1`**: `t1` verified via `process_inbox.sh` pipeline intake.
+6. **`AGD.snap_optimizer_step_preserves_invariants`**: Proves SNAP optimizer parameter update step preservation under system invariants.
+7. **`theorems_proven.THM_000001__smoke_test`**: `smoke_test` verified via `process_inbox.sh` pipeline intake.
+8. **`theorems_proven.THM_000002__t1`**: `t1` verified via `process_inbox.sh` pipeline intake.
+9. **`theorems_proven.THM_000003__snap_optimizer_bridge`**: `snap_optimizer_bridge` verified via `process_inbox.sh` pipeline intake.
