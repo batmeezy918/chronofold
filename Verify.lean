@@ -272,4 +272,15 @@ theorem snap_optimizer_step_preserves_invariants
     inv.omega (bridge.stepOp s) = inv.omega s ∧ inv.covariant (bridge.stepOp s) = inv.covariant s :=
   bridge.h_admissible s
 
+/-- Spectral adaptive control operator structure -/
+structure AdaptiveControlOperator (α : Type u) (inv : Invariants α) where
+  adaptOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant adaptOp
+
+/-- Theorem: Spectral adaptive control step preservation under invariants -/
+theorem adaptive_control_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (ctrl : AdaptiveControlOperator α inv) (s : State α) :
+    inv.omega (ctrl.adaptOp s) = inv.omega s ∧ inv.covariant (ctrl.adaptOp s) = inv.covariant s :=
+  ctrl.h_admissible s
+
 end AGD

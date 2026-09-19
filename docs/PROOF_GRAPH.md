@@ -32,8 +32,9 @@
        |                               |                               |
        v                               v                               v
 +------+--------------------+    +-----+---------------------+   +-----+---------------------+
-| Chronofold Auto Theorems  |    | SNAP Optimizer Bridge     |   | Intake Processing Pipeline|
+| Chronofold Auto Theorems  |    | SNAP / Adaptive Control   |   | Intake Processing Pipeline|
 |  (omega_divides_n, etc)   |    | snap_optimizer_step_...   |   | process_inbox.sh Receipts |
+|                           |    | adaptive_control_step_... |   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -48,3 +49,5 @@
 7. **`theorems_proven.THM_000001__smoke_test`**: `smoke_test` verified via `process_inbox.sh` pipeline intake.
 8. **`theorems_proven.THM_000002__t1`**: `t1` verified via `process_inbox.sh` pipeline intake.
 9. **`theorems_proven.THM_000003__snap_optimizer_bridge`**: `snap_optimizer_bridge` verified via `process_inbox.sh` pipeline intake.
+10. **`AGD.adaptive_control_step_preserves_invariants`**: Proves spectral adaptive control step preservation under system invariants.
+11. **`theorems_proven.THM_000004__spectral_adaptive_control`**: `spectral_adaptive_control` verified via `process_inbox.sh` pipeline intake.
