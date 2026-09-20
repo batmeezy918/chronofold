@@ -25,6 +25,7 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 | **Builder** | `structure Builder` | Formally Verified |
 | **Invariants** | `structure Invariants (α : Type u)` | Formally Verified |
 | **SnapOptimizerBridge** | `structure SnapOptimizerBridge (α : Type u)` | Formally Verified |
+| **AdaptiveControlOperator** | `structure AdaptiveControlOperator (α : Type u)` | Formally Verified |
 
 ---
 
@@ -47,7 +48,14 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
       (α : Type u) (inv : Invariants α) (bridge : SnapOptimizerBridge α inv) (s : State α) :
       inv.omega (bridge.stepOp s) = inv.omega s ∧ inv.covariant (bridge.stepOp s) = inv.covariant s
   ```
-- **Proof Status**: Discharged via Lean 4 induction on operator chain without axioms or unproven dependencies.
+- **Adaptive Control Theorem**: `adaptive_control_step_preserves_invariants`
+- **Formal Statement**:
+  ```lean
+  theorem adaptive_control_step_preserves_invariants
+      (α : Type u) (inv : Invariants α) (ctrl : AdaptiveControlOperator α inv) (s : State α) :
+      inv.omega (ctrl.adaptOp s) = inv.omega s ∧ inv.covariant (ctrl.adaptOp s) = inv.covariant s
+  ```
+- **Proof Status**: Discharged via Lean 4 without axioms or unproven dependencies.
 
 ---
 

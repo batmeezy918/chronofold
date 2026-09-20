@@ -5,16 +5,16 @@
 
 ---
 
-## Completed Operator: $O_{\text{formal\_optimizer\_bridge}}$
-- **Status**: Discharged via `Verify.lean` (`snap_optimizer_step_preserves_invariants`) and `THM_000003__snap_optimizer_bridge.lean`.
+## Completed Operator: $O_{\text{spectral\_adaptive\_control}}$
+- **Status**: Discharged via `Verify.lean` (`adaptive_control_step_preserves_invariants`) and `THM_000004__spectral_adaptive_control.lean`.
 - **Defect Delta**: $\Delta D = 0$.
 
 ---
 
-## Recommended Next Operator: $O_{\text{spectral\_adaptive\_control}}$
+## Recommended Next Operator: $O_{\text{manifold\_rollback\_bounds}}$
 
 ### Operator Details
-- **Objective**: Formalize Lean specifications for adaptive learning and rollback bounds in high-dimensional optimizer control loops.
-- **Affected Invariants**: $\Omega$ stability under dynamic search landscape contractions.
+- **Objective**: Formalize Lean specifications for automated state rollback bounds and error recovery trajectories in non-convex optimization steps.
+- **Affected Invariants**: $\Omega$ and $C$ stability under non-monotonic energy field state resets.
 - **Expected Defect Delta**: $\Delta D = 0$.
 - **Admissibility Decision**: Fully admissible under AGD constitutional constraints.

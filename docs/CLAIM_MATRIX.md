@@ -17,6 +17,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-007** | `theorems_proven/THM_000002__t1.lean` | Arithmetic soundness check (`t1`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-008** | `Verify.lean` | SNAP continuous parameter update step invariant preservation (`snap_optimizer_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-009** | `theorems_proven/THM_000003__snap_optimizer_bridge.lean` | SNAP optimizer formal bridge receipt (`snap_optimizer_bridge`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-010** | `Verify.lean` | Spectral adaptive control operator step invariant preservation (`adaptive_control_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-011** | `theorems_proven/THM_000004__spectral_adaptive_control.lean` | Spectral adaptive control formal receipt (`spectral_adaptive_control`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 
