@@ -1,0 +1,11 @@
+{
+  "source": "src/Chronofold/ConstitutionalTeleportation.lean",
+  "promotion": "blocked_until_current_lean_ci_passes",
+  "required": ["lake build Chronofold.ConstitutionalTeleportation", "no_sorry"],
+  "status": "candidate",
+  "theorems": [
+    "Chronofold.ConstitutionalTeleportation.constitutional_teleportation_master",
+    "Chronofold.AGD.agd_constitutional_teleportation",
+    "Chronofold.EMV.emv_constitutional_teleportation"
+  ]
+}
