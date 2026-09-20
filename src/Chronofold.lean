@@ -26,3 +26,4 @@ import Chronofold.CoqcZetaForcingBidirectional
 import Chronofold.CoqcDerivedPair
 import Chronofold.CoqcFiberConstancy
 import Chronofold.AgdFecu
+import Chronofold.ConstitutionalTeleportation
