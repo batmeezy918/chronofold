@@ -283,4 +283,15 @@ theorem adaptive_control_step_preserves_invariants
     inv.omega (ctrl.adaptOp s) = inv.omega s ∧ inv.covariant (ctrl.adaptOp s) = inv.covariant s :=
   ctrl.h_admissible s
 
+/-- Manifold rollback and error recovery operator structure -/
+structure ManifoldRollbackOperator (α : Type u) (inv : Invariants α) where
+  rollbackOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant rollbackOp
+
+/-- Theorem: Manifold rollback step preservation under invariants -/
+theorem manifold_rollback_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (rb : ManifoldRollbackOperator α inv) (s : State α) :
+    inv.omega (rb.rollbackOp s) = inv.omega s ∧ inv.covariant (rb.rollbackOp s) = inv.covariant s :=
+  rb.h_admissible s
+
 end AGD
