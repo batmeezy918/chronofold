@@ -51,3 +51,5 @@
 9. **`theorems_proven.THM_000003__snap_optimizer_bridge`**: `snap_optimizer_bridge` verified via `process_inbox.sh` pipeline intake.
 10. **`AGD.adaptive_control_step_preserves_invariants`**: Proves spectral adaptive control step preservation under system invariants.
 11. **`theorems_proven.THM_000004__spectral_adaptive_control`**: `spectral_adaptive_control` verified via `process_inbox.sh` pipeline intake.
+12. **`AGD.manifold_rollback_step_preserves_invariants`**: Proves manifold rollback step preservation under system invariants.
+13. **`theorems_proven.THM_000005__manifold_rollback_bounds`**: `manifold_rollback_bounds` verified via `process_inbox.sh` pipeline intake.
