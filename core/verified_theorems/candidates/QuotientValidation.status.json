@@ -1,0 +1,12 @@
+{
+  "source": "src/Chronofold/QuotientValidation.lean",
+  "promotion": "blocked_until_current_lean_ci_passes",
+  "required": ["lake build Chronofold.QuotientValidation", "no_sorry"],
+  "status": "candidate",
+  "theorems": [
+    "Chronofold.QuotientValidation.validated_master",
+    "Chronofold.QuotientValidation.factorization_iff_no_collision",
+    "Chronofold.AGD.agd_quotient_validation",
+    "Chronofold.EMV.emv_quotient_validation"
+  ]
+}
