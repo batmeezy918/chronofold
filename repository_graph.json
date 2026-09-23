@@ -1,0 +1,776 @@
+{
+  "psi_hash": "122780364d50c27c43a9a4fca642d395eb7eafee2349e0f93b7aa463446895ec",
+  "nodes": [
+    {
+      "id": "Chronofold.lean",
+      "label": "Chronofold.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    },
+    {
+      "id": "snap_release_final.sh",
+      "label": "snap_release_final.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "generate_theorem.py",
+      "label": "generate_theorem.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "snap_pp_benchmark.sh",
+      "label": "snap_pp_benchmark.sh",
+      "category": "Benchmarks",
+      "type": "Shell"
+    },
+    {
+      "id": "real_results.json",
+      "label": "real_results.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "s7_plus_full_pipeline.sh",
+      "label": "s7_plus_full_pipeline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_pp.py",
+      "label": "snap_pp.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "snap_final.py",
+      "label": "snap_final.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "chronofold_final_fix.sh",
+      "label": "chronofold_final_fix.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_plus_benchmark.sh",
+      "label": "snap_plus_benchmark.sh",
+      "category": "Benchmarks",
+      "type": "Shell"
+    },
+    {
+      "id": "run_iqvf_coco_full.py",
+      "label": "run_iqvf_coco_full.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "push_chronofold_baseline.sh",
+      "label": "push_chronofold_baseline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "install_coco.sh",
+      "label": "install_coco.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_core.py",
+      "label": "snap_core.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "snap_true_final.sh",
+      "label": "snap_true_final.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "push_chronofold_fix.sh",
+      "label": "push_chronofold_fix.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "run_s6_coco_equivalent.py",
+      "label": "run_s6_coco_equivalent.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "snap_ppp_benchmark.sh",
+      "label": "snap_ppp_benchmark.sh",
+      "category": "Benchmarks",
+      "type": "Shell"
+    },
+    {
+      "id": "get_artifact.sh",
+      "label": "get_artifact.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "results.json",
+      "label": "results.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "S7_PLUS_RESULTS.json",
+      "label": "S7_PLUS_RESULTS.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "chronofold_full_system.sh",
+      "label": "chronofold_full_system.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "build.log",
+      "label": "build.log",
+      "category": "Miscellaneous",
+      "type": "Unknown"
+    },
+    {
+      "id": "snap_fixed.py",
+      "label": "snap_fixed.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "bootstrap_chronofold_theorem_system.sh",
+      "label": "bootstrap_chronofold_theorem_system.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_plus.py",
+      "label": "snap_plus.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "fix_binding_real.sh",
+      "label": "fix_binding_real.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "push_project.sh",
+      "label": "push_project.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "coco_final_pipeline.sh",
+      "label": "coco_final_pipeline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold_ci_engine.sh",
+      "label": "chronofold_ci_engine.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold_finalize_cycle.sh",
+      "label": "chronofold_finalize_cycle.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "ChronoFold.lean",
+      "label": "ChronoFold.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    },
+    {
+      "id": "fix_chronofold_ci.sh",
+      "label": "fix_chronofold_ci.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_vs_cma_fast.sh",
+      "label": "snap_vs_cma_fast.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_real_optimizer.py",
+      "label": "snap_real_optimizer.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "run_s8_covariance.py",
+      "label": "run_s8_covariance.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "coco_s6_benchmark.py",
+      "label": "coco_s6_benchmark.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "setup_coco_pipeline.sh",
+      "label": "setup_coco_pipeline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold_auto_fix.sh",
+      "label": "chronofold_auto_fix.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_full_pipeline.sh",
+      "label": "fix_full_pipeline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold_loop.sh",
+      "label": "chronofold_loop.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_and_push_project.sh",
+      "label": "fix_and_push_project.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_lake_manifest.sh",
+      "label": "fix_lake_manifest.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "lakefile.lean",
+      "label": "lakefile.lean",
+      "category": "Build/Config",
+      "type": "Lean"
+    },
+    {
+      "id": "snap_pure_evolution.py",
+      "label": "snap_pure_evolution.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "fix_chronofold_build.sh",
+      "label": "fix_chronofold_build.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_coco_build.sh",
+      "label": "fix_coco_build.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_plus_results.json",
+      "label": "snap_plus_results.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "push_snap.sh",
+      "label": "push_snap.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "benchmark_snap.py",
+      "label": "benchmark_snap.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "S7_STATS.json",
+      "label": "S7_STATS.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "requirements.txt",
+      "label": "requirements.txt",
+      "category": "Build/Config",
+      "type": "Text"
+    },
+    {
+      "id": "push_full_required.sh",
+      "label": "push_full_required.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold_pipeline_with_bench.sh",
+      "label": "chronofold_pipeline_with_bench.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_final_fixed.sh",
+      "label": "snap_final_fixed.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_pp_results.json",
+      "label": "snap_pp_results.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "snap_release.py",
+      "label": "snap_release.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "codex_prompt.txt",
+      "label": "codex_prompt.txt",
+      "category": "Miscellaneous",
+      "type": "Text"
+    },
+    {
+      "id": "chronofold_push.sh",
+      "label": "chronofold_push.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "benchmark.py",
+      "label": "benchmark.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "snap_pure_evolution.sh",
+      "label": "snap_pure_evolution.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_coco_real.sh",
+      "label": "snap_coco_real.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "lean-toolchain",
+      "label": "lean-toolchain",
+      "category": "Build/Config",
+      "type": "Unknown"
+    },
+    {
+      "id": "lake-manifest.json",
+      "label": "lake-manifest.json",
+      "category": "Build/Config",
+      "type": "JSON"
+    },
+    {
+      "id": "AGENTS.md",
+      "label": "AGENTS.md",
+      "category": "Documentation",
+      "type": "Markdown"
+    },
+    {
+      "id": "snap_core_fixed.sh",
+      "label": "snap_core_fixed.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_true.py",
+      "label": "snap_true.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "cement",
+      "label": "cement",
+      "category": "Miscellaneous",
+      "type": "Unknown"
+    },
+    {
+      "id": "snap_real_optimizer.sh",
+      "label": "snap_real_optimizer.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_cma_harness.py",
+      "label": "snap_cma_harness.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "enable_theorem_pipeline.sh",
+      "label": "enable_theorem_pipeline.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "install_chronofold_full.sh",
+      "label": "install_chronofold_full.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_vs_cma.py",
+      "label": "snap_vs_cma.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "S7_RESULTS.json",
+      "label": "S7_RESULTS.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "finalize_chronofold.sh",
+      "label": "finalize_chronofold.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "run_s7_coco_equivalent.py",
+      "label": "run_s7_coco_equivalent.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "snap_vs_cma_zero.sh",
+      "label": "snap_vs_cma_zero.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "chronofold.zip",
+      "label": "chronofold.zip",
+      "category": "Miscellaneous",
+      "type": "Unknown"
+    },
+    {
+      "id": "fix_snap_workflow.sh",
+      "label": "fix_snap_workflow.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_final_system.sh",
+      "label": "fix_final_system.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "Verify.lean",
+      "label": "Verify.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    },
+    {
+      "id": "snap_vs_cma_real.sh",
+      "label": "snap_vs_cma_real.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "snap_final_verified.sh",
+      "label": "snap_final_verified.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_chronofold_full.sh",
+      "label": "fix_chronofold_full.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_git_auth.sh",
+      "label": "fix_git_auth.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "s7_stats.py",
+      "label": "s7_stats.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "snap_vs_cma_benchmark.sh",
+      "label": "snap_vs_cma_benchmark.sh",
+      "category": "Benchmarks",
+      "type": "Shell"
+    },
+    {
+      "id": "fix_snap_dispatch.sh",
+      "label": "fix_snap_dispatch.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "README.md",
+      "label": "README.md",
+      "category": "Documentation",
+      "type": "Markdown"
+    },
+    {
+      "id": "cleanup.sh",
+      "label": "cleanup.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "S6_RESULTS.json",
+      "label": "S6_RESULTS.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "FORCE_REAL_BUILD.sh",
+      "label": "FORCE_REAL_BUILD.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "run_s7_plus.py",
+      "label": "run_s7_plus.py",
+      "category": "Benchmarks",
+      "type": "Python"
+    },
+    {
+      "id": "install_codex_scaffold.sh",
+      "label": "install_codex_scaffold.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "Main.lean",
+      "label": "Main.lean",
+      "category": "Executable",
+      "type": "Lean"
+    },
+    {
+      "id": "disabled/Auto.lean",
+      "label": "disabled/Auto.lean",
+      "category": "Disabled",
+      "type": "Lean"
+    },
+    {
+      "id": "disabled/Theorems.lean",
+      "label": "disabled/Theorems.lean",
+      "category": "Disabled",
+      "type": "Lean"
+    },
+    {
+      "id": "disabled/Operators.lean",
+      "label": "disabled/Operators.lean",
+      "category": "Disabled",
+      "type": "Lean"
+    },
+    {
+      "id": "disabled/Base.lean",
+      "label": "disabled/Base.lean",
+      "category": "Disabled",
+      "type": "Lean"
+    },
+    {
+      "id": "templates/theorem_candidate.lean",
+      "label": "templates/theorem_candidate.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    },
+    {
+      "id": "theorems_inbox/THM_000001__smoke_test.lean",
+      "label": "theorems_inbox/THM_000001__smoke_test.lean",
+      "category": "Tests",
+      "type": "Lean"
+    },
+    {
+      "id": "theorems_inbox/README.md",
+      "label": "theorems_inbox/README.md",
+      "category": "Documentation",
+      "type": "Markdown"
+    },
+    {
+      "id": "papers/thm_1774769187.md",
+      "label": "papers/thm_1774769187.md",
+      "category": "Documentation",
+      "type": "Markdown"
+    },
+    {
+      "id": "docs/theorem_ui_contract.md",
+      "label": "docs/theorem_ui_contract.md",
+      "category": "Documentation",
+      "type": "Markdown"
+    },
+    {
+      "id": "docs/index.html",
+      "label": "docs/index.html",
+      "category": "Documentation",
+      "type": "Unknown"
+    },
+    {
+      "id": "theorems_rejected/THM_000001__nat_add_zero_right.lean",
+      "label": "theorems_rejected/THM_000001__nat_add_zero_right.lean",
+      "category": "Tests",
+      "type": "Lean"
+    },
+    {
+      "id": "theorem_receipts/THM_000001__nat_add_zero_right.json",
+      "label": "theorem_receipts/THM_000001__nat_add_zero_right.json",
+      "category": "Miscellaneous",
+      "type": "JSON"
+    },
+    {
+      "id": "scripts/validate_theorem.py",
+      "label": "scripts/validate_theorem.py",
+      "category": "Scripts",
+      "type": "Python"
+    },
+    {
+      "id": "scripts/process_inbox.sh",
+      "label": "scripts/process_inbox.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "scripts/verify_codex_prereqs.sh",
+      "label": "scripts/verify_codex_prereqs.sh",
+      "category": "Scripts",
+      "type": "Shell"
+    },
+    {
+      "id": "theorems_proven/T1.lean",
+      "label": "theorems_proven/T1.lean",
+      "category": "Tests",
+      "type": "Lean"
+    },
+    {
+      "id": ".github/workflows/chronofold-auto.yml",
+      "label": ".github/workflows/chronofold-auto.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/flutter.yml",
+      "label": ".github/workflows/flutter.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/build.yml",
+      "label": ".github/workflows/build.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/theorem-intake.yml",
+      "label": ".github/workflows/theorem-intake.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/coco.yml",
+      "label": ".github/workflows/coco.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/chronofold.yml",
+      "label": ".github/workflows/chronofold.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/pages.yml",
+      "label": ".github/workflows/pages.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/lean.yml",
+      "label": ".github/workflows/lean.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/snap.yml",
+      "label": ".github/workflows/snap.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": ".github/workflows/snap-benchmark.yml",
+      "label": ".github/workflows/snap-benchmark.yml",
+      "category": "Workflows",
+      "type": "YAML"
+    },
+    {
+      "id": "logs/THM_000001__nat_add_zero_right.log",
+      "label": "logs/THM_000001__nat_add_zero_right.log",
+      "category": "Miscellaneous",
+      "type": "Unknown"
+    },
+    {
+      "id": "ChronoFold/Auto.lean",
+      "label": "ChronoFold/Auto.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    },
+    {
+      "id": "ChronoFold/Auto/T1.lean",
+      "label": "ChronoFold/Auto/T1.lean",
+      "category": "Core Library",
+      "type": "Lean"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Main.lean",
+      "target": "Verify.lean",
+      "relation": "imports"
+    },
+    {
+      "source": "templates/theorem_candidate.lean",
+      "target": "Verify.lean",
+      "relation": "imports"
+    },
+    {
+      "source": "theorems_inbox/THM_000001__smoke_test.lean",
+      "target": "Verify.lean",
+      "relation": "imports"
+    },
+    {
+      "source": "theorems_rejected/THM_000001__nat_add_zero_right.lean",
+      "target": "Verify.lean",
+      "relation": "imports"
+    },
+    {
+      "source": "theorems_proven/T1.lean",
+      "target": "ChronoFold/Auto/T1.lean",
+      "relation": "tests"
+    }
+  ]
+}
