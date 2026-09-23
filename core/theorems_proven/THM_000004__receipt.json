@@ -1,0 +1,34 @@
+{
+  "id": "THM_000004",
+  "title": "Formal Consequence Traversal v1.1",
+  "assembled_at": "2026-09-23T16:30:00Z",
+  "claim_law": "CLAIM_STRENGTH <= EVIDENCE_STRENGTH",
+  "supersedes": "FORMAL_CLOSURE_PATCH_v1",
+  "folder": "core/theorems_proven",
+  "status": "FORMAL_PARTIAL",
+  "closed": [
+    "CLOSED_AGD_ADMISSIBLE_ALGEBRA",
+    "CLOSED_FORMAL_WORK_RATIO_16",
+    "CLOSED_OIC_DIAGNOSTIC_CALCULUS_EXTERNAL"
+  ],
+  "excluded_sorry_modules": [
+    "src/Chronofold/AgdBidirectional.lean",
+    "src/Chronofold/AgdOperationalQuotient.lean"
+  ],
+  "missing_operators": [
+    "O_AGDinject",
+    "O_section_from_core",
+    "O_derive_nontrivial",
+    "O_authorize_nontrivial",
+    "O_reverseDerive",
+    "O_runtime_bridge",
+    "O_official_X"
+  ],
+  "canonical_work": {
+    "fullWork_1024": 2147483648,
+    "quotientWork_256": 134217728,
+    "ratio": 16,
+    "class": "FORMAL_PARTIAL"
+  },
+  "compiled_cross_repo_edges": 0
+}
