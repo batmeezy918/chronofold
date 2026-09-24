@@ -21,6 +21,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-011** | `theorems_proven/THM_000004__spectral_adaptive_control.lean` | Spectral adaptive control formal receipt (`spectral_adaptive_control`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-012** | `Verify.lean` | Manifold rollback bounds operator step invariant preservation (`manifold_rollback_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-013** | `theorems_proven/THM_000005__manifold_rollback_bounds.lean` | Manifold rollback bounds formal receipt (`manifold_rollback_bounds`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-014** | `Verify.lean` | Learning manifold operator step invariant preservation (`learning_manifold_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-015** | `theorems_proven/THM_000006__learning_manifold_stability.lean` | Learning manifold stability formal receipt (`learning_manifold_stability`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 

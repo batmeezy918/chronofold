@@ -27,6 +27,7 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 | **SnapOptimizerBridge** | `structure SnapOptimizerBridge (α : Type u)` | Formally Verified |
 | **AdaptiveControlOperator** | `structure AdaptiveControlOperator (α : Type u)` | Formally Verified |
 | **ManifoldRollbackOperator** | `structure ManifoldRollbackOperator (α : Type u)` | Formally Verified |
+| **LearningManifoldOperator** | `structure LearningManifoldOperator (α : Type u)` | Formally Verified |
 
 ---
 
@@ -62,6 +63,13 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
   theorem manifold_rollback_step_preserves_invariants
       (α : Type u) (inv : Invariants α) (rb : ManifoldRollbackOperator α inv) (s : State α) :
       inv.omega (rb.rollbackOp s) = inv.omega s ∧ inv.covariant (rb.rollbackOp s) = inv.covariant s
+  ```
+- **Learning Manifold Stability Theorem**: `learning_manifold_step_preserves_invariants`
+- **Formal Statement**:
+  ```lean
+  theorem learning_manifold_step_preserves_invariants
+      (α : Type u) (inv : Invariants α) (lm : LearningManifoldOperator α inv) (s : State α) :
+      inv.omega (lm.learnOp s) = inv.omega s ∧ inv.covariant (lm.learnOp s) = inv.covariant s
   ```
 - **Proof Status**: Discharged via Lean 4 without axioms or unproven dependencies.
 

@@ -5,16 +5,16 @@
 
 ---
 
-## Completed Operator: $O_{\text{manifold\_rollback\_bounds}}$
-- **Status**: Discharged via `Verify.lean` (`manifold_rollback_step_preserves_invariants`) and `THM_000005__manifold_rollback_bounds.lean`.
+## Completed Operator: $O_{\text{learning\_manifold\_stability}}$
+- **Status**: Discharged via `Verify.lean` (`learning_manifold_step_preserves_invariants`) and `THM_000006__learning_manifold_stability.lean`.
 - **Defect Delta**: $\Delta D = 0$.
 
 ---
 
-## Recommended Next Operator: $O_{\text{learning\_manifold\_stability}}$
+## Recommended Next Operator: $O_{\text{memory\_lineage\_traceability}}$
 
 ### Operator Details
-- **Objective**: Formalize Lean specifications for learning manifold stability and adaptive feature contraction bounds.
-- **Affected Invariants**: $\Omega$ and $C$ stability under online learning step parameter adaptations.
+- **Objective**: Formalize Lean specifications for memory lineage state tracking and lineage history replay preservation.
+- **Affected Invariants**: $\Omega$ and $C$ stability under state lineage record append operations.
 - **Expected Defect Delta**: $\Delta D = 0$.
 - **Admissibility Decision**: Fully admissible under AGD constitutional constraints.
