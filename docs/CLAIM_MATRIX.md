@@ -23,6 +23,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-013** | `theorems_proven/THM_000005__manifold_rollback_bounds.lean` | Manifold rollback bounds formal receipt (`manifold_rollback_bounds`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-014** | `Verify.lean` | Learning manifold operator step invariant preservation (`learning_manifold_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-015** | `theorems_proven/THM_000006__learning_manifold_stability.lean` | Learning manifold stability formal receipt (`learning_manifold_stability`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-016** | `Verify.lean` | Memory lineage operator step invariant preservation (`memory_lineage_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-017** | `theorems_proven/THM_000007__memory_lineage_traceability.lean` | Memory lineage traceability formal receipt (`memory_lineage_traceability`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 
