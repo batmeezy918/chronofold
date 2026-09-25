@@ -294,4 +294,15 @@ theorem manifold_rollback_step_preserves_invariants
     inv.omega (rb.rollbackOp s) = inv.omega s ∧ inv.covariant (rb.rollbackOp s) = inv.covariant s :=
   rb.h_admissible s
 
+/-- Learning manifold stability operator structure -/
+structure LearningManifoldOperator (α : Type u) (inv : Invariants α) where
+  learnOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant learnOp
+
+/-- Theorem: Learning manifold step preservation under invariants -/
+theorem learning_manifold_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (lm : LearningManifoldOperator α inv) (s : State α) :
+    inv.omega (lm.learnOp s) = inv.omega s ∧ inv.covariant (lm.learnOp s) = inv.covariant s :=
+  lm.h_admissible s
+
 end AGD

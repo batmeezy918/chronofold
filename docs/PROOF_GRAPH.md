@@ -35,6 +35,7 @@
 | Chronofold Auto Theorems  |    | SNAP / Adaptive Control   |   | Intake Processing Pipeline|
 |  (omega_divides_n, etc)   |    | snap_optimizer_step_...   |   | process_inbox.sh Receipts |
 |                           |    | adaptive_control_step_... |   |                           |
+|                           |    | learning_manifold_step_...|   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -53,3 +54,5 @@
 11. **`theorems_proven.THM_000004__spectral_adaptive_control`**: `spectral_adaptive_control` verified via `process_inbox.sh` pipeline intake.
 12. **`AGD.manifold_rollback_step_preserves_invariants`**: Proves manifold rollback step preservation under system invariants.
 13. **`theorems_proven.THM_000005__manifold_rollback_bounds`**: `manifold_rollback_bounds` verified via `process_inbox.sh` pipeline intake.
+14. **`AGD.learning_manifold_step_preserves_invariants`**: Proves learning manifold step preservation under system invariants.
+15. **`theorems_proven.THM_000006__learning_manifold_stability`**: `learning_manifold_stability` verified via `process_inbox.sh` pipeline intake.
