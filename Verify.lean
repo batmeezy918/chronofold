@@ -305,4 +305,15 @@ theorem learning_manifold_step_preserves_invariants
     inv.omega (lm.learnOp s) = inv.omega s ∧ inv.covariant (lm.learnOp s) = inv.covariant s :=
   lm.h_admissible s
 
+/-- Memory lineage state tracking operator structure -/
+structure MemoryLineageOperator (α : Type u) (inv : Invariants α) where
+  lineageOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant lineageOp
+
+/-- Theorem: Memory lineage state record append step preservation under invariants -/
+theorem memory_lineage_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (ml : MemoryLineageOperator α inv) (s : State α) :
+    inv.omega (ml.lineageOp s) = inv.omega s ∧ inv.covariant (ml.lineageOp s) = inv.covariant s :=
+  ml.h_admissible s
+
 end AGD

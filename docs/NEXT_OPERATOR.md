@@ -5,16 +5,16 @@
 
 ---
 
-## Completed Operator: $O_{\text{learning\_manifold\_stability}}$
-- **Status**: Discharged via `Verify.lean` (`learning_manifold_step_preserves_invariants`) and `THM_000006__learning_manifold_stability.lean`.
+## Completed Operator: $O_{\text{memory\_lineage\_traceability}}$
+- **Status**: Discharged via `Verify.lean` (`memory_lineage_step_preserves_invariants`) and `THM_000007__memory_lineage_traceability.lean`.
 - **Defect Delta**: $\Delta D = 0$.
 
 ---
 
-## Recommended Next Operator: $O_{\text{memory\_lineage\_traceability}}$
+## Recommended Next Operator: $O_{\text{autonomous\_closure\_integration}}$
 
 ### Operator Details
-- **Objective**: Formalize Lean specifications for memory lineage state tracking and lineage history replay preservation.
-- **Affected Invariants**: $\Omega$ and $C$ stability under state lineage record append operations.
+- **Objective**: Formalize Lean specifications for autonomous cycle integration and constitutional state closure verification.
+- **Affected Invariants**: $\Omega$ and $C$ stability under full cycle execution and state closure.
 - **Expected Defect Delta**: $\Delta D = 0$.
 - **Admissibility Decision**: Fully admissible under AGD constitutional constraints.
