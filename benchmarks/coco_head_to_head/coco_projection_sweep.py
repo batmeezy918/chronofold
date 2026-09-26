@@ -96,11 +96,7 @@ def run_cmaes(problem: Any, budget: int) -> dict[str, Any]:
 def run_algorithm(name: str, dim: int, budget: int, rq: int) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     out = ROOT / f"dim{dim}" / name
     out.mkdir(parents=True, exist_ok=True)
-    exroot = ROOT / f"dim{dim}" / "exdata"
-    exroot.mkdir(parents=True, exist_ok=True)
-    observer_dir = exroot / name
-    observer_dir.mkdir(parents=True, exist_ok=True)
-    observer_name = str(observer_dir.resolve())
+    observer_name = f"S6X_PROJ_{name}_D{dim}"
     observer = cocoex.Observer("bbob", f"result_folder: {observer_name}")
     suite = cocoex.Suite("bbob", "", f"dimensions:{dim}")
     rows: list[dict[str, Any]] = []
@@ -115,6 +111,24 @@ def run_algorithm(name: str, dim: int, budget: int, rq: int) -> tuple[dict[str, 
         rows.append(row)
         print(f"{name}\tdim={dim}\t{row['problem_id']}\tbest={row['best_f']:.17g}\tevals={row['evaluations']}", flush=True)
         problem.free()
+    del observer
+    import gc
+    gc.collect()
+    written = Path("exdata") / observer_name
+    if written.exists():
+        target = ROOT / f"dim{dim}" / "exdata" / (name if name != "CMA_ES" else "CMA_ES")
+        target.mkdir(parents=True, exist_ok=True)
+        for child in written.iterdir():
+            dest = target / child.name
+            if child.is_dir():
+                import shutil
+                if dest.exists():
+                    shutil.rmtree(dest)
+                shutil.move(str(child), str(dest))
+            else:
+                if dest.exists():
+                    dest.unlink()
+                shutil.move(str(child), str(dest))
     payload = {
         "algorithm": name, "seed": SEED, "suite": "bbob", "dimension": dim,
         "budget": budget, "r_quotient": rq,
