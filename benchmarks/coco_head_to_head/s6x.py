@@ -71,7 +71,6 @@ class S6X:
         self.evals = 0
         self.sigma = self.sigma0
         self.m = np.clip(np.asarray(x0, dtype=np.float64), self.lo, self.hi).astype(np.float64).copy()
-        self.r_eff = self.r_quotient
         self.Q = np.eye(self.dim)[:, : self.r_quotient].copy()
         self.pc = np.zeros(self.dim, dtype=np.float64)
         self.ps = np.zeros(self.dim, dtype=np.float64)
@@ -95,7 +94,7 @@ class S6X:
         for i in range(self.lambd):
             z = self.rng.standard_normal(self.dim)
             u = self.B @ (z * self.D)
-            if self.r_eff < self.dim and self.rng.random() < 0.5:
+            if self.r_quotient < self.dim and self.rng.random() < 0.5:
                 uQ = (u @ self.Q) @ self.Q.T
                 u = uQ + 0.25 * (u - uQ)
             ys[i] = self._clip(self.m + self.sigma * u)
@@ -113,14 +112,6 @@ class S6X:
         if s[0] == 0.0:
             return
         r = min(self.r_quotient, X.shape[1], vh.shape[1])
-        s2 = s * s
-        total = float(s2.sum())
-        cum = float(s2[:r].sum())
-        self.r_eff = r
-        while cum < 0.9 * total and self.r_eff < min(s.size, X.shape[1]):
-            cum += s2[self.r_eff]
-            self.r_eff += 1
-        r = self.r_eff
         if r == 0:
             return
         Qnew = np.ascontiguousarray(vh[:r].T)
@@ -195,12 +186,15 @@ class S6X:
         return self.done or self.evals >= self.budget
 
 
-def minimize(problem, seed: int, budget: int = 1000) -> dict:
+def minimize(problem, seed: int, budget: int = 1000, r_quotient: int | None = None) -> dict:
     lo = np.asarray(problem.lower_bounds, dtype=np.float64)
     hi = np.asarray(problem.upper_bounds, dtype=np.float64)
     x0 = np.asarray(problem.initial_solution, dtype=np.float64)[: problem.dimension]
     seed_task = int(seed) + 7919 * int(problem.id_function) + 104729 * int(problem.id_instance)
-    opt = S6X(x0, lo, hi, seed_task, budget=budget)
+    if r_quotient is None:
+        opt = S6X(x0, lo, hi, seed_task, budget=budget)
+    else:
+        opt = S6X(x0, lo, hi, seed_task, budget=budget, r_quotient=r_quotient)
     best = float("inf")
     hit = False
     while not opt.stop():

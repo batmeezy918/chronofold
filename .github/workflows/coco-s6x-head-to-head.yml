@@ -85,6 +85,13 @@ jobs:
         run: |
           python -m cocopp -o COCO_S6X_HEAD_TO_HEAD/ppdata exdata/S6X_H2H_S6X exdata/S6X_H2H_CMA
 
+      - name: Extract ERL/ERT standings
+        working-directory: benchmarks/coco_head_to_head
+        run: |
+          python ert_report.py exdata --budget 1000 --out COCO_S6X_HEAD_TO_HEAD/standings.json
+          mkdir -p ../../COCO_S6X_HEAD_TO_HEAD_EVIDENCE
+          cp COCO_S6X_HEAD_TO_HEAD/standings.json ../../COCO_S6X_HEAD_TO_HEAD_EVIDENCE/standings.json
+
       - name: Build comparison certificate
         run: |
           python - <<'PY'
@@ -144,4 +151,106 @@ jobs:
             benchmarks/coco_head_to_head/s6x_head_to_head.py
             benchmarks/coco_head_to_head/s6x.py
             benchmarks/coco_head_to_head/requirements.lock
+          if-no-files-found: warn
+
+  s6x-projection-sweep:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
+          cache: 'pip'
+          cache-dependency-path: benchmarks/coco_head_to_head/requirements.lock
+
+      - name: Install pinned dependencies
+        working-directory: benchmarks/coco_head_to_head
+        run: |
+          python -m pip install --upgrade "pip==25.2"
+          python -m pip install -r requirements.lock
+
+      - name: Verify benchmark stack
+        run: |
+          python - <<'PY'
+          import cma, cocoex, cocopp, numpy
+          assert cocoex.__version__ == '2.8.2'
+          assert cma.__version__ == '4.4.4'
+          assert numpy.__version__ == '2.2.6'
+          PY
+
+      - name: Run quotient projection sweep
+        working-directory: benchmarks/coco_head_to_head
+        run: |
+          rm -rf COCO_S6X_PROJECTION
+          python coco_projection_sweep.py --dims 2,3,5,10,20,40 --root COCO_S6X_PROJECTION --verify-dim 2 | tee ../../coco_projection_sweep_run1.txt
+
+      - name: Build ERL standings from sweep exdata
+        working-directory: benchmarks/coco_head_to_head
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from ert_report import build
+          root = Path('COCO_S6X_PROJECTION')
+          standings = {'budget_per_dim': {}, 'algorithms': {}}
+          for dimd in sorted(int(p.name[len('dim'):]) for p in root.iterdir() if p.is_dir() and p.name.startswith('dim')):
+              d2 = root / f'dim{dimd}'
+              budget = int(dimd) * 100
+              standings['budget_per_dim'][dimd] = budget
+              for algo in ('S6X', 'CMA_ES'):
+                  key = f'dim{dimd}/{algo}'
+                  standings['algorithms'][key] = build(d2 / 'exdata' / algo, budget)
+          outp = root / 'standings.json'
+          outp.write_text(json.dumps(standings, indent=2, sort_keys=True) + '\n')
+          print(f'SWEEP_STANDINGS_WRITTEN={outp}')
+          PY
+          mkdir -p ../../COCO_S6X_PROJECTION_SWEEP_EVIDENCE
+          cp COCO_S6X_PROJECTION/standings.json ../../COCO_S6X_PROJECTION_SWEEP_EVIDENCE/standings.json
+
+      - name: Build sweep certificate
+        run: |
+          python - <<'PY'
+          import json, hashlib, pathlib
+          root = pathlib.Path('benchmarks/coco_head_to_head/COCO_S6X_PROJECTION')
+          man = json.loads((root / 'manifest.json').read_text())
+          cert = {
+              'target': 'bbob 24 noiseless functions, dimension ladder {2,3,5,10,20,40}',
+              'budget_per_dim': man['budget_per_dim'],
+              'r_quotient_per_dim': man['r_quotient_per_dim'],
+              'best_win_dim': man['best_win_dim'],
+              'verdicts': man['verdicts'],
+          }
+          (root / 'manifest_certificate.json').write_text(json.dumps(cert, indent=2, sort_keys=True) + '\n')
+          print(json.dumps(cert, indent=2, sort_keys=True))
+          PY
+
+      - name: Capture sweep provenance
+        if: always()
+        run: |
+          mkdir -p COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance
+          git rev-parse HEAD > COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance/git_commit.txt
+          python --version > COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance/python_version.txt
+          python -m pip freeze > COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance/pip_freeze.txt
+          sha256sum benchmarks/coco_head_to_head/coco_projection_sweep.py > COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance/sweep_script.sha256
+          sha256sum benchmarks/coco_head_to_head/s6x.py > COCO_S6X_PROJECTION_SWEEP_EVIDENCE/provenance/s6x_algo.sha256
+          cp benchmarks/coco_head_to_head/COCO_S6X_PROJECTION/manifest.json COCO_S6X_PROJECTION_SWEEP_EVIDENCE/manifest.json || true
+          cp benchmarks/coco_head_to_head/COCO_S6X_PROJECTION/manifest_certificate.json COCO_S6X_PROJECTION_SWEEP_EVIDENCE/manifest_certificate.json || true
+
+      - name: Upload sweep evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coco-s6x-projection-sweep
+          path: |
+            benchmarks/coco_head_to_head/COCO_S6X_PROJECTION/
+            coco_projection_sweep_run1.txt
+            COCO_S6X_PROJECTION_SWEEP_EVIDENCE/
+            benchmarks/coco_head_to_head/s6x.py
+            benchmarks/coco_head_to_head/ert_report.py
+            benchmarks/coco_head_to_head/coco_projection_sweep.py
           if-no-files-found: warn
