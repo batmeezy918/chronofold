@@ -179,7 +179,6 @@ class S6X:
             self.B = np.eye(self.dim)
             self.D = np.ones(self.dim)
             self.invsqrtC = np.eye(self.dim)
-            self.Q = np.eye(self.dim)[:, : self.r_quotient].copy()
             self.stall = 0
 
     def stop(self) -> bool:
