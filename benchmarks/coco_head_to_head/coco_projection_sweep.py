@@ -192,8 +192,8 @@ def verify_replay(dim: int) -> bool:
     """Re-run the S6X pass for `dim` into a scratch root and byte-compare the
     S6X results.json against the recorded manifest hash. Mirrors the harness's
     two-pass determinism gate at sweep level."""
-    recorded = json.loads((ROOT / "manifest.json").read_text())["verdicts"][str(dim)]
     global ROOT
+    recorded = json.loads((ROOT / "manifest.json").read_text())["verdicts"][str(dim)]
     scratch = ROOT / f".replay_verify"
     saved, ROOT = ROOT, scratch
     try:
@@ -216,10 +216,10 @@ def main() -> None:
     ap.add_argument("--verify-dim", type=int, default=2,
                     help="replay S6X for this dim at the end and compare hashes (determinism gate)")
     args = ap.parse_args()
-    global ROOT
-    ROOT = args.root
-    os.environ.setdefault("PYTHONHASHSEED", "0")
     dims = [int(x) for x in args.dims.split(",")]
+    # bind module-global ROOT (used by run_algorithm/verify_replay) from CLI
+    globals()["ROOT"] = args.root
+    os.environ.setdefault("PYTHONHASHSEED", "0")
     sweep(dims)
     if args.verify_dim in dims:
         if not verify_replay(args.verify_dim):
