@@ -29,6 +29,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -121,7 +122,6 @@ def run_algorithm(name: str, dim: int, budget: int, rq: int) -> tuple[dict[str, 
         for child in written.iterdir():
             dest = target / child.name
             if child.is_dir():
-                import shutil
                 if dest.exists():
                     shutil.rmtree(dest)
                 shutil.move(str(child), str(dest))
@@ -217,7 +217,6 @@ def verify_replay(dim: int) -> bool:
     new_hash = sha256(scratch / f"dim{dim}" / "S6X" / "results.json")
     ok = new_hash == recorded["s6x_results_sha256"]
     print(f"REPLAY{dim}\t{'PASS' if ok else 'FAIL'}\t{new_hash} (recorded {recorded['s6x_results_sha256']})")
-    import shutil
     shutil.rmtree(scratch, ignore_errors=True)
     return ok
 
