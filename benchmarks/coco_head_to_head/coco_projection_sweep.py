@@ -226,19 +226,21 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dims", default="2,3,5,10,20,40")
     ap.add_argument("--root", type=Path, default=ROOT)
-    ap.add_argument("--verify-dim", type=int, default=2,
-                    help="replay S6X for this dim at the end and compare hashes (determinism gate)")
+    ap.add_argument("--verify-dims", default="2,10",
+                    help="replay S6X for these dims at the end and compare hashes (determinism gate)")
     args = ap.parse_args()
     dims = [int(x) for x in args.dims.split(",")]
     # bind module-global ROOT (used by run_algorithm/verify_replay) from CLI
     globals()["ROOT"] = args.root
     os.environ.setdefault("PYTHONHASHSEED", "0")
     sweep(dims)
-    if args.verify_dim in dims:
-        if not verify_replay(args.verify_dim):
-            raise SystemExit(f"REPLAY{args.verify_dim} failed: deterministic replay mismatch")
-    else:
-        raise SystemExit(f"--verify-dim {args.verify_dim} not in {dims}")
+    verify_dims = [int(x) for x in args.verify_dims.split(",")]
+    for d in verify_dims:
+        if d not in dims:
+            raise SystemExit(f"--verify-dims contains {d} not in {dims}")
+    for d in verify_dims:
+        if not verify_replay(d):
+            raise SystemExit(f"REPLAY{d} failed: deterministic replay mismatch")
 
 
 if __name__ == "__main__":

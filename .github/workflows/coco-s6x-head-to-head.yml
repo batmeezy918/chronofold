@@ -71,6 +71,12 @@ jobs:
           rm -rf COCO_S6X_HEAD_TO_HEAD exdata
           python s6x_head_to_head.py | tee ../../s6x_head_to_head_run2.txt
 
+      - name: Lock dim10 S6X to champion golden signature
+        working-directory: benchmarks/coco_head_to_head
+        run: |
+          python golden_gate.py COCO_S6X_HEAD_TO_HEAD/S6X/results.json
+          echo 'DIM10_CHAMPION_LOCKED=PASS'
+
       - name: Verify deterministic replay
         run: |
           set -euo pipefail
@@ -151,6 +157,8 @@ jobs:
             benchmarks/coco_head_to_head/s6x_head_to_head.py
             benchmarks/coco_head_to_head/s6x.py
             benchmarks/coco_head_to_head/requirements.lock
+            benchmarks/coco_head_to_head/golden_gate.py
+            benchmarks/coco_head_to_head/golden/s6x_dim10_champion_signature.json
           if-no-files-found: warn
 
   s6x-projection-sweep:
@@ -187,7 +195,9 @@ jobs:
         working-directory: benchmarks/coco_head_to_head
         run: |
           rm -rf COCO_S6X_PROJECTION
-          python coco_projection_sweep.py --dims 2,3,5,10,20,40 --root COCO_S6X_PROJECTION --verify-dim 2 | tee ../../coco_projection_sweep_run1.txt
+          python coco_projection_sweep.py --dims 2,3,5,10,20,40 --root COCO_S6X_PROJECTION --verify-dims 2,10 | tee ../../coco_projection_sweep_run1.txt
+          python golden_gate.py COCO_S6X_PROJECTION/dim10/S6X/results.json
+          echo 'SWEEP_DIM10_GOLDEN_MATCH=PASS'
 
       - name: Build ERL standings from sweep exdata
         working-directory: benchmarks/coco_head_to_head
@@ -253,4 +263,6 @@ jobs:
             benchmarks/coco_head_to_head/s6x.py
             benchmarks/coco_head_to_head/ert_report.py
             benchmarks/coco_head_to_head/coco_projection_sweep.py
+            benchmarks/coco_head_to_head/golden_gate.py
+            benchmarks/coco_head_to_head/golden/s6x_dim10_champion_signature.json
           if-no-files-found: warn
