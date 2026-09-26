@@ -100,7 +100,7 @@ def run_algorithm(name: str, dim: int, budget: int, rq: int) -> tuple[dict[str, 
     exroot.mkdir(parents=True, exist_ok=True)
     observer_dir = exroot / name
     observer_dir.mkdir(parents=True, exist_ok=True)
-    observer_name = str(observer_dir)
+    observer_name = str(observer_dir.resolve())
     observer = cocoex.Observer("bbob", f"result_folder: {observer_name}")
     suite = cocoex.Suite("bbob", "", f"dimensions:{dim}")
     rows: list[dict[str, Any]] = []

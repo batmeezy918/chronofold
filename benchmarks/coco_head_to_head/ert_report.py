@@ -144,11 +144,12 @@ def build(algo_dir: Path, budget: int = 1000) -> dict:
             "dimension": int(dm.group(1)) if dm else None,
             "instances": len(blocks),
             "ert": ert_rows(blocks, budget),
-            "best_precision_reached": max(
-                p for p in PRECISIONS if any(
+            "best_precision_reached": (
+                max(p for p in PRECISIONS if any(
                     evals_to_target(r, TARGET_VALUES[p]) >= 0 for r in blocks
-                )
-            ) if any(evals_to_target(r, 1e-8) >= 0 for r in blocks) else None,
+                ))
+                if any(evals_to_target(r, 1e-8) >= 0 for r in blocks) else None
+            ),
         }
     return {
         "algo_dir": str(algo_dir),
