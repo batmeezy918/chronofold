@@ -103,7 +103,8 @@ class S6X:
     def _adapt_basis(self, steps: np.ndarray) -> None:
         if steps.shape[0] < 2:
             return
-        X = steps - steps.mean(axis=0)
+        W = steps @ self.invsqrtC.T
+        X = W - W.mean(axis=0)
         try:
             _, s, vh = np.linalg.svd(X, full_matrices=False)
         except np.linalg.LinAlgError:
