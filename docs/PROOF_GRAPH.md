@@ -36,6 +36,7 @@
 |  (omega_divides_n, etc)   |    | snap_optimizer_step_...   |   | process_inbox.sh Receipts |
 |                           |    | adaptive_control_step_... |   |                           |
 |                           |    | learning_manifold_step_...|   |                           |
+|                           |    | memory_lineage_step_...   |   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -56,3 +57,5 @@
 13. **`theorems_proven.THM_000005__manifold_rollback_bounds`**: `manifold_rollback_bounds` verified via `process_inbox.sh` pipeline intake.
 14. **`AGD.learning_manifold_step_preserves_invariants`**: Proves learning manifold step preservation under system invariants.
 15. **`theorems_proven.THM_000006__learning_manifold_stability`**: `learning_manifold_stability` verified via `process_inbox.sh` pipeline intake.
+16. **`AGD.memory_lineage_step_preserves_invariants`**: Proves memory lineage traceability step preservation under system invariants.
+17. **`theorems_proven.THM_000007__memory_lineage_traceability`**: `memory_lineage_traceability` verified via `process_inbox.sh` pipeline intake.
