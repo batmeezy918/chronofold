@@ -72,11 +72,11 @@ class S6X:
         self.sigma = self.sigma0
         self.m = np.clip(np.asarray(x0, dtype=np.float64), self.lo, self.hi).astype(np.float64).copy()
         self.Q = np.eye(self.dim)[:, : self.r_quotient].copy()
-        self.diag = np.ones(self.dim, dtype=np.float64)
         self.pc = np.zeros(self.dim, dtype=np.float64)
         self.ps = np.zeros(self.dim, dtype=np.float64)
         self.B = np.eye(self.dim)
         self.D = np.ones(self.dim)
+        self.C = np.eye(self.dim, dtype=np.float64)
         self.invsqrtC = np.eye(self.dim)
         self.stall = 0
         self.restarts = 0
@@ -93,12 +93,11 @@ class S6X:
         ys = np.empty((self.lambd, self.dim), dtype=np.float64)
         for i in range(self.lambd):
             z = self.rng.standard_normal(self.dim)
+            u = self.B @ (z * self.D)
             if self.r_quotient < self.dim and self.rng.random() < 0.5:
-                zQ = (z @ self.Q) @ self.Q.T
-                y = self.m + self.sigma * (zQ + 0.25 * (z - zQ))
-            else:
-                y = self.m + self.sigma * (self.B @ (z * self.D))
-            ys[i] = self._clip(y)
+                uQ = (u @ self.Q) @ self.Q.T
+                u = uQ + 0.25 * (u - uQ)
+            ys[i] = self._clip(self.m + self.sigma * u)
         return ys
 
     def _adapt_basis(self, steps: np.ndarray) -> None:
@@ -141,15 +140,15 @@ class S6X:
         self.ps = (1.0 - self.cs) * self.ps + np.sqrt(self.cs * (2.0 - self.cs) * self.mueff) * (self.invsqrtC @ y)
         self.pc = (1.0 - self.cc) * self.pc + np.sqrt(self.cc * (2.0 - self.cc) * self.mueff) * y
 
-        var = np.var(xbest, axis=0)
-        target = np.sqrt(var + 1e-12)
-        norm = max(np.sum(target), 1e-12)
-        self.diag = 0.85 * self.diag + 0.15 * (target * (self.dim / norm))
-        self.diag = np.clip(self.diag, 1e-3, 1e3)
+        # Full CMA-style covariance with weighted-elite rank-one+rank-mu terms.
+        yelite = steps / max(self.sigma, 1e-12)
+        C = (1.0 - self.c1 - self.cmu) * self.C
+        C += self.c1 * np.outer(self.pc, self.pc)
+        C += self.cmu * (yelite.T @ (w[:, None] * yelite))
+        self.C = C
 
-        C = self.c1 * np.outer(self.pc, self.pc) + np.diag(self.diag)
         try:
-            vals, vecs = np.linalg.eigh(C)
+            vals, vecs = np.linalg.eigh(self.C)
             vals = np.clip(vals, 1e-12, 1e6)
             self.D = np.sqrt(vals)
             self.B = vecs
@@ -176,7 +175,10 @@ class S6X:
             self.m = self.lo + self.rng.random(self.dim) * (self.hi - self.lo)
             self.pc = np.zeros(self.dim)
             self.ps = np.zeros(self.dim)
-            self.diag = np.ones(self.dim)
+            self.C = np.eye(self.dim)
+            self.B = np.eye(self.dim)
+            self.D = np.ones(self.dim)
+            self.invsqrtC = np.eye(self.dim)
             self.Q = np.eye(self.dim)[:, : self.r_quotient].copy()
             self.stall = 0
 
