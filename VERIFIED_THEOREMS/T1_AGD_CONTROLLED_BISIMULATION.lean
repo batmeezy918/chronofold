@@ -3,155 +3,158 @@ import Mathlib
 /-!
 # T1 — AGD Controlled Quotient / Bisimulation Kernel
 
-This is the first core AGD theorem capsule deliberately expressed against Mathlib.
+First Mathlib-backed core theorem for the operational AGD layer.
 
-The theorem isolates the missing bridge identified by the adversarial elevation suite:
+Dependency spine:
 
-  information equivalence + controlled transition congruence
-    ⟹ well-defined quotient dynamics
-    ⟹ exact controlled bisimulation
-    ⟹ invariant preservation descends to the quotient
-    ⟹ finite admissible trajectories remain admissible.
+  Setoid information quotient
+      ↓
+  controlled congruence of admissible transitions
+      ↓
+  well-defined quotient transition
+      ↓
+  exact controlled bisimulation
+      ↓
+  finite-trace invariant preservation
 
-The result is deliberately abstract: it does not assume a particular telemetry
-model, Koopman approximation, network topology, or physical interpretation.
-Those are instantiations of the kernel, not premises hidden inside it.
-
-The empirical adversarial suite is therefore used to discover/refute candidate
-relations; Lean certifies the logical consequences once the hypotheses are supplied.
+This file deliberately separates logical certification from empirical model
+identification. A telemetry/Koopman experiment may propose a relation; Lean
+certifies the consequences only after the relation satisfies these hypotheses.
 -/
 
-universe u v w
+universe u v
 
 namespace Chronofold
 namespace AGD
 
-/-- A deterministic controlled transition system. -/
+/-- Deterministic controlled transition system. -/
 structure ControlledSystem where
   State : Type u
   Act   : Type v
   step  : Act → State → State
 
-/-- A relation is a controlled congruence when every admissible action preserves it. -/
-def ControlledCongruence (Sys : ControlledSystem) (R : Sys.State → Sys.State → Prop) : Prop :=
-  ∀ ⦃x y : Sys.State⦄, R x y → ∀ a : Sys.Act, R (Sys.step a x) (Sys.step a y)
+/-- Every common control action preserves the proposed information equivalence. -/
+def ControlledCongruence
+    (Sys : ControlledSystem)
+    (R : Sys.State → Sys.State → Prop) : Prop :=
+  ∀ ⦃x y : Sys.State⦄, R x y → ∀ a : Sys.Act,
+    R (Sys.step a x) (Sys.step a y)
 
-/-- A controlled bisimulation for a deterministic system is exactly a symmetric
-    relation whose successors remain related under every common action. -/
-def ControlledBisimulation (Sys : ControlledSystem) (R : Sys.State → Sys.State → Prop) : Prop :=
-  (∀ ⦃x y⦄, R x y → R y x) ∧ ControlledCongruence Sys R
+/-- Deterministic controlled bisimulation: symmetry plus successor preservation. -/
+def ControlledBisimulation
+    (Sys : ControlledSystem)
+    (R : Sys.State → Sys.State → Prop) : Prop :=
+  (∀ ⦃x y : Sys.State⦄, R x y → R y x) ∧
+  ControlledCongruence Sys R
 
-/-- A state predicate is invariant under the quotient relation. -/
-def RelationInvariant (R : α → α → Prop) (P : α → Prop) : Prop :=
-  ∀ ⦃x y⦄, R x y → (P x ↔ P y)
-
-/-- A predicate is one-step safe for every action. -/
-def StepInvariant (Sys : ControlledSystem) (P : Sys.State → Prop) : Prop :=
-  ∀ ⦃x : Sys.State⦄, P x → ∀ a : Sys.Act, P (Sys.step a x)
-
-/-- The canonical relation induced by a Setoid quotient. -/
-def QuotientRelation (S : Setoid α) : α → α → Prop :=
-  S.r
-
-/-- Main T1 theorem.
-
-If an information quotient is represented by a Setoid and the state relation is
-preserved by every control action, then the quotient dynamics are well-defined,
-the quotient relation is a controlled bisimulation, and every step-invariant
-state predicate descends to the quotient.
--/
-theorem controlled_quotient_bisimulation
+/-- The quotient transition induced by a congruent controlled system. -/
+def quotientStep
     {Sys : ControlledSystem}
     (S : Setoid Sys.State)
-    (hcong : ControlledCongruence Sys S.r) :
-    let Q := Quotient S
-    let qstep : Sys.Act → Q → Q :=
-      fun a => Quotient.lift
-        (fun x => Quotient.mk' (Sys.step a x))
-        (by
-          intro x y hxy
-          exact Quotient.sound (hcong hxy a))
-    let R := QuotientRelation S
-    let hquot : ∀ (a : Sys.Act) (x : Sys.State),
-        qstep a (Quotient.mk' x) = Quotient.mk' (Sys.step a x) := by
-      intro a x
-      rfl
-    let hbisim : ControlledBisimulation Sys R := by
-      constructor
-      · intro x y hxy
-        exact S.symm hxy
-      · exact hcong
-    let qSafe : (Sys.State → Prop) → Q → Prop :=
-      fun P q => ∀ x, q = Quotient.mk' x → P x
-    ∀ (P : Sys.State → Prop),
-      RelationInvariant S.r P →
-      StepInvariant Sys P →
-      (∀ x : Sys.State, P x →
-        ∀ a : Sys.Act, P (Sys.step a x)) →
-      ∀ q : Q, qSafe P q → True
+    (hcong : ControlledCongruence Sys S.r)
+    (a : Sys.Act) : Quotient S → Quotient S :=
+  Quotient.lift
+    (fun x => Quotient.mk' (Sys.step a x))
+    (by
+      intro x y hxy
+      exact Quotient.sound (hcong hxy a))
 
-/-- The operationally useful commutation lemma: quotienting before or after one
-    admissible action gives the same quotient state. -/
-theorem quotient_step_commutes
+/-- One-step quotient commutation: project-after-step equals step-on-quotient. -/
+theorem quotientStep_commutes
     {Sys : ControlledSystem}
     (S : Setoid Sys.State)
     (hcong : ControlledCongruence Sys S.r)
     (a : Sys.Act) (x : Sys.State) :
-    Quotient.lift
-        (fun y => Quotient.mk' (Sys.step a y))
-        (by
-          intro y z hyz
-          exact Quotient.sound (hcong hyz a))
-        (Quotient.mk' x)
-      = Quotient.mk' (Sys.step a x) := by
+    quotientStep S hcong a (Quotient.mk' x) =
+      Quotient.mk' (Sys.step a x) := by
   rfl
 
-/-- Reachability preserves a step-invariant predicate. This is the induction
-    principle needed to lift a local AGD invariant into a finite control trace. -/
-theorem reachable_step_invariant
+/-- The central T1 result.
+
+A Setoid information equivalence preserved by every control action induces
+well-defined quotient dynamics and an exact controlled bisimulation. The
+commutation law is explicit because it is the algebraic bridge required by
+the downstream AGD chain:
+
+    π ∘ Tₐ = T̄ₐ ∘ π.
+-/
+theorem agd_controlled_bisimulation
+    {Sys : ControlledSystem}
+    (S : Setoid Sys.State)
+    (hcong : ControlledCongruence Sys S.r) :
+    ControlledBisimulation Sys S.r ∧
+      (∀ (a : Sys.Act) (x : Sys.State),
+        quotientStep S hcong a (Quotient.mk' x) =
+          Quotient.mk' (Sys.step a x)) := by
+  constructor
+  · constructor
+    · intro x y hxy
+      exact S.symm hxy
+    · exact hcong
+  · intro a x
+    exact quotientStep_commutes S hcong a x
+
+/-- A state predicate is invariant under the information equivalence. -/
+def RelationInvariant
+    {α : Type u}
+    (R : α → α → Prop)
+    (P : α → Prop) : Prop :=
+  ∀ ⦃x y : α⦄, R x y → (P x ↔ P y)
+
+/-- One-step invariance under every control action. -/
+def StepInvariant
+    (Sys : ControlledSystem)
+    (P : Sys.State → Prop) : Prop :=
+  ∀ ⦃x : Sys.State⦄, P x → ∀ a : Sys.Act,
+    P (Sys.step a x)
+
+/-- Finite control traces preserve any predicate that is one-step invariant. -/
+theorem finite_trace_invariant
     {Sys : ControlledSystem}
     (P : Sys.State → Prop)
     (hP : StepInvariant Sys P)
-    {x : Sys.State}
-    (hx : P x) :
-    ∀ (n : Nat),
-      ∀ (actions : Fin n → Sys.Act),
-        P (List.foldl
-          (fun s i => Sys.step (actions i) s)
-          x
-          (List.ofFn actions)) := by
-  intro n
-  induction n with
-  | zero =>
-      intro actions
-      simp
-      exact hx
-  | succ n ih =>
-      intro actions
-      -- The finite-trace form is intentionally reduced to the step-invariant
-      -- premise. The exact fold representation can be specialized by clients.
-      simpa using hP (ih (fun i => actions i.castSucc)) (actions (Fin.last n))
+    {x0 : Sys.State}
+    (hx0 : P x0) :
+    ∀ actions : List Sys.Act,
+      P (actions.foldl (fun x a => Sys.step a x) x0) := by
+  intro actions
+  induction actions generalizing x0 with
+  | nil =>
+      simpa using hx0
+  | cons a as ih =>
+      apply ih (x0 := Sys.step a x0)
+      exact hP hx0 a
 
-/-- If the initial state is admissible and admissibility is step-invariant, every
-    finite trajectory generated by admissible controls remains admissible. -/
+/-- A predicate on the quotient induced by an invariant state predicate. -/
+def quotientPredicate
+    {Sys : ControlledSystem}
+    (S : Setoid Sys.State)
+    (P : Sys.State → Prop) : Quotient S → Prop :=
+  fun q => ∀ x : Sys.State, q = Quotient.mk' x → P x
+
+/-- Relation invariance is the exact condition needed for a quotient predicate
+not to depend on the chosen representative. -/
+theorem quotientPredicate_wellDefined
+    {Sys : ControlledSystem}
+    (S : Setoid Sys.State)
+    (P : Sys.State → Prop)
+    (hP : RelationInvariant S.r P)
+    {x y : Sys.State}
+    (hxy : S.r x y) :
+    P x ↔ P y := by
+  exact hP hxy
+
+/-- Operational corollary: an initially admissible state remains admissible
+under any finite action trace whenever admissibility is step-invariant. -/
 theorem admissible_trajectory_preservation
     {Sys : ControlledSystem}
     (Admissible : Sys.State → Prop)
     (hAdmissible : StepInvariant Sys Admissible)
     {x0 : Sys.State}
     (hx0 : Admissible x0) :
-    ∀ n : Nat, ∀ actions : List Sys.Act,
-      actions.length = n →
-      Admissible (actions.foldl (fun s a => Sys.step a s) x0) := by
-  intro n actions hlen
-  induction actions generalizing x0 with
-  | nil =>
-      simp at hlen
-      simpa using hx0
-  | cons a as ih =>
-      simp at hlen
-      have hs : Admissible (Sys.step a x0) := hAdmissible hx0 a
-      simpa [List.foldl] using ih (x0 := Sys.step a x0) hs (by omega)
+    ∀ actions : List Sys.Act,
+      Admissible (actions.foldl (fun x a => Sys.step a x) x0) := by
+  exact finite_trace_invariant Admissible hAdmissible hx0
 
 end AGD
 end Chronofold
