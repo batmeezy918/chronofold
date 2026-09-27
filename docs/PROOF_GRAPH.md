@@ -37,6 +37,7 @@
 |                           |    | adaptive_control_step_... |   |                           |
 |                           |    | learning_manifold_step_...|   |                           |
 |                           |    | memory_lineage_step_...   |   |                           |
+|                           |    | autonomous_closure_step_..|   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -59,3 +60,5 @@
 15. **`theorems_proven.THM_000006__learning_manifold_stability`**: `learning_manifold_stability` verified via `process_inbox.sh` pipeline intake.
 16. **`AGD.memory_lineage_step_preserves_invariants`**: Proves memory lineage state tracking step preservation under system invariants.
 17. **`theorems_proven.THM_000007__memory_lineage_traceability`**: `memory_lineage_traceability` verified via `process_inbox.sh` pipeline intake.
+18. **`AGD.autonomous_closure_step_preserves_invariants`**: Proves autonomous closure integration step preservation under system invariants.
+19. **`theorems_proven.THM_000008__autonomous_closure_integration`**: `autonomous_closure_integration` verified via `process_inbox.sh` pipeline intake.

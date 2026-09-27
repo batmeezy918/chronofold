@@ -25,6 +25,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-015** | `theorems_proven/THM_000006__learning_manifold_stability.lean` | Learning manifold stability formal receipt (`learning_manifold_stability`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-016** | `Verify.lean` | Memory lineage operator step invariant preservation (`memory_lineage_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-017** | `theorems_proven/THM_000007__memory_lineage_traceability.lean` | Memory lineage traceability formal receipt (`memory_lineage_traceability`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-018** | `Verify.lean` | Autonomous closure integration operator step invariant preservation (`autonomous_closure_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-019** | `theorems_proven/THM_000008__autonomous_closure_integration.lean` | Autonomous closure integration formal receipt (`autonomous_closure_integration`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 
