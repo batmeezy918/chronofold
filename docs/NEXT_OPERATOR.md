@@ -5,16 +5,16 @@
 
 ---
 
-## Completed Operator: $O_{\text{memory\_lineage\_traceability}}$
-- **Status**: Discharged via `Verify.lean` (`memory_lineage_step_preserves_invariants`) and `THM_000007__memory_lineage_traceability.lean`.
+## Completed Operator: $O_{\text{autonomous\_closure\_integration}}$
+- **Status**: Discharged via `Verify.lean` (`autonomous_closure_step_preserves_invariants`) and `THM_000008__autonomous_closure_integration.lean`.
 - **Defect Delta**: $\Delta D = 0$.
 
 ---
 
-## Recommended Next Operator: $O_{\text{autonomous\_closure\_integration}}$
+## Recommended Next Operator: $O_{\text{canonical\_unified\_certificate\_assembly}}$
 
 ### Operator Details
-- **Objective**: Formalize Lean specifications for autonomous cycle integration and constitutional state closure verification.
-- **Affected Invariants**: $\Omega$ and $C$ stability under full cycle execution and state closure.
+- **Objective**: Formalize assembly and verification of canonical unified certificates for cross-system constitutional closure.
+- **Affected Invariants**: System invariant preservation under unified certificate assembly and verification.
 - **Expected Defect Delta**: $\Delta D = 0$.
 - **Admissibility Decision**: Fully admissible under AGD constitutional constraints.

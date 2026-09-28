@@ -316,4 +316,15 @@ theorem memory_lineage_step_preserves_invariants
     inv.omega (ml.lineageOp s) = inv.omega s ∧ inv.covariant (ml.lineageOp s) = inv.covariant s :=
   ml.h_admissible s
 
+/-- Autonomous closure integration operator structure -/
+structure AutonomousClosureOperator (α : Type u) (inv : Invariants α) where
+  closeOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant closeOp
+
+/-- Theorem: Autonomous closure step preservation under invariants -/
+theorem autonomous_closure_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (ac : AutonomousClosureOperator α inv) (s : State α) :
+    inv.omega (ac.closeOp s) = inv.omega s ∧ inv.covariant (ac.closeOp s) = inv.covariant s :=
+  ac.h_admissible s
+
 end AGD

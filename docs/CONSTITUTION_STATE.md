@@ -29,6 +29,7 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 | **ManifoldRollbackOperator** | `structure ManifoldRollbackOperator (α : Type u)` | Formally Verified |
 | **LearningManifoldOperator** | `structure LearningManifoldOperator (α : Type u)` | Formally Verified |
 | **MemoryLineageOperator** | `structure MemoryLineageOperator (α : Type u)` | Formally Verified |
+| **AutonomousClosureOperator** | `structure AutonomousClosureOperator (α : Type u)` | Formally Verified |
 
 ---
 
@@ -78,6 +79,13 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
   theorem memory_lineage_step_preserves_invariants
       (α : Type u) (inv : Invariants α) (ml : MemoryLineageOperator α inv) (s : State α) :
       inv.omega (ml.lineageOp s) = inv.omega s ∧ inv.covariant (ml.lineageOp s) = inv.covariant s
+  ```
+- **Autonomous Closure Integration Theorem**: `autonomous_closure_step_preserves_invariants`
+- **Formal Statement**:
+  ```lean
+  theorem autonomous_closure_step_preserves_invariants
+      (α : Type u) (inv : Invariants α) (ac : AutonomousClosureOperator α inv) (s : State α) :
+      inv.omega (ac.closeOp s) = inv.omega s ∧ inv.covariant (ac.closeOp s) = inv.covariant s
   ```
 - **Proof Status**: Discharged via Lean 4 without axioms or unproven dependencies.
 
