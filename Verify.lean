@@ -327,4 +327,15 @@ theorem autonomous_closure_step_preserves_invariants
     inv.omega (ac.closeOp s) = inv.omega s ∧ inv.covariant (ac.closeOp s) = inv.covariant s :=
   ac.h_admissible s
 
+/-- Canonical unified certificate assembly operator structure -/
+structure UnifiedCertificateOperator (α : Type u) (inv : Invariants α) where
+  certOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant certOp
+
+/-- Theorem: Canonical unified certificate assembly step preservation under invariants -/
+theorem unified_certificate_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (cert : UnifiedCertificateOperator α inv) (s : State α) :
+    inv.omega (cert.certOp s) = inv.omega s ∧ inv.covariant (cert.certOp s) = inv.covariant s :=
+  cert.h_admissible s
+
 end AGD

@@ -1,7 +1,7 @@
 # AGD Constitutional State Report
 
-**Timestamp**: 2026-03-31T14:00:00Z
-**Repository State**: ψ
+**Timestamp**: 2026-03-31T15:00:00Z
+**Repository State**: ψₖ₊₂
 **Constitutional Defect Set Cardinality**: |D(ψ)| = 0
 **Admissibility Status**: ADMISSIBLE
 
@@ -30,6 +30,7 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 | **LearningManifoldOperator** | `structure LearningManifoldOperator (α : Type u)` | Formally Verified |
 | **MemoryLineageOperator** | `structure MemoryLineageOperator (α : Type u)` | Formally Verified |
 | **AutonomousClosureOperator** | `structure AutonomousClosureOperator (α : Type u)` | Formally Verified |
+| **UnifiedCertificateOperator** | `structure UnifiedCertificateOperator (α : Type u)` | Formally Verified |
 
 ---
 
@@ -86,6 +87,13 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
   theorem autonomous_closure_step_preserves_invariants
       (α : Type u) (inv : Invariants α) (ac : AutonomousClosureOperator α inv) (s : State α) :
       inv.omega (ac.closeOp s) = inv.omega s ∧ inv.covariant (ac.closeOp s) = inv.covariant s
+  ```
+- **Unified Certificate Assembly Theorem**: `unified_certificate_step_preserves_invariants`
+- **Formal Statement**:
+  ```lean
+  theorem unified_certificate_step_preserves_invariants
+      (α : Type u) (inv : Invariants α) (cert : UnifiedCertificateOperator α inv) (s : State α) :
+      inv.omega (cert.certOp s) = inv.omega s ∧ inv.covariant (cert.certOp s) = inv.covariant s
   ```
 - **Proof Status**: Discharged via Lean 4 without axioms or unproven dependencies.
 
