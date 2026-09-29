@@ -1,0 +1,40 @@
+{
+  "lock_id": "QX-TLX-QUANTUM-CORPUS-2026-09-28",
+  "status": "FROZEN-WITH-OPEN-FORMAL-GATES",
+  "evidence_rule": "ClaimStrength <= EvidenceStrength",
+  "repository": "batmeezy918/chronofold",
+  "source_sha256": "5115f920bce2c50cc7fda81f0de640ea6159bffe7fd444bed310908d464dc0ca",
+  "run": {
+    "python": "3.13.5",
+    "numpy": "2.2.4",
+    "scipy": "1.15.3",
+    "platform": "Linux-6.17.0-PRoot-Distro-aarch64-with-glibc2.41",
+    "seed": 20260928,
+    "wall_seconds": 0.227,
+    "total": 193,
+    "PASS": 104,
+    "OBSERVED": 80,
+    "FAIL": 4,
+    "FAIL_CONTROL": 2,
+    "PASS_REJECTED": 3
+  },
+  "claims": [
+    {"id":"T0","claim":"S(S(H))=H","status":"THEOREM"},
+    {"id":"T1","claim":"F_t(rho,H^-1)=-F_t(rho,H)","status":"THEOREM"},
+    {"id":"T2","claim":"D_t(rho,H^-1)=D_t(rho,H)","status":"THEOREM"},
+    {"id":"T3","claim":"BKM curvature is nonnegative under faithful-state hypotheses","status":"ESTABLISHED; FORMALIZATION OPEN"},
+    {"id":"T4","claim":"X=-i Tr_A[H_AB,rho_ABC]","status":"THEOREM"},
+    {"id":"T5","claim":"Y=-Tr_A[H_AB,[H_AB,rho_ABC]]","status":"THEOREM"},
+    {"id":"T6","claim":"I''(0)=-Gamma_BKM(sigma_BC;X)-Tr[Y log sigma_BC]","status":"DERIVED; LEAN OPEN"},
+    {"id":"T7","claim":"I''+Gamma_BKM+Tr[Y log sigma_BC]=0","status":"PRIMARY FORMAL PROOF GATE"},
+    {"id":"T8","claim":"If Tr[Y log sigma_BC]=0 then I''=-Gamma_BKM<=0","status":"CONDITIONAL THEOREM"},
+    {"id":"T9","claim":"I''=Gamma_ABC(H)-Gamma_AB(H) universally","status":"REJECTED AS GENERAL"}
+  ],
+  "artifacts": [
+    "DOSSIERS/QX_TLX_QUANTUM_CORPUS_LOCK_2026-09-28.md",
+    "DOSSIERS/QX_TLX_QUANTUM_CORPUS_LOCK_2026-09-28.json",
+    "DOSSIERS/QX_TLX_CMI_BKM_BRIDGE_SCAFFOLD.lean"
+  ],
+  "formal_substrate": "VERIFIED_THEOREMS/T1_AGD_CONTROLLED_BISIMULATION.lean",
+  "next_gate": "Formalize finite-dimensional density operators, partial trace, Frechet derivative of log, entropy Hessian, and prove T7 without axiomatization."
+}
