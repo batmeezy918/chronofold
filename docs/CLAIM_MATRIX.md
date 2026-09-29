@@ -27,6 +27,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-017** | `theorems_proven/THM_000007__memory_lineage_traceability.lean` | Memory lineage traceability formal receipt (`memory_lineage_traceability`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-018** | `Verify.lean` | Autonomous closure integration operator step invariant preservation (`autonomous_closure_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-019** | `theorems_proven/THM_000008__autonomous_closure_integration.lean` | Autonomous closure integration formal receipt (`autonomous_closure_integration`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-020** | `Verify.lean` | Canonical unified certificate assembly step invariant preservation (`unified_certificate_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-021** | `theorems_proven/THM_000009__canonical_unified_certificate.lean` | Canonical unified certificate formal receipt (`canonical_unified_certificate`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 

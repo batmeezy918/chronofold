@@ -38,6 +38,7 @@
 |                           |    | learning_manifold_step_...|   |                           |
 |                           |    | memory_lineage_step_...   |   |                           |
 |                           |    | autonomous_closure_step_..|   |                           |
+|                           |    | unified_certificate_step_ |   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -62,3 +63,5 @@
 17. **`theorems_proven.THM_000007__memory_lineage_traceability`**: `memory_lineage_traceability` verified via `process_inbox.sh` pipeline intake.
 18. **`AGD.autonomous_closure_step_preserves_invariants`**: Proves autonomous closure integration step preservation under system invariants.
 19. **`theorems_proven.THM_000008__autonomous_closure_integration`**: `autonomous_closure_integration` verified via `process_inbox.sh` pipeline intake.
+20. **`AGD.unified_certificate_step_preserves_invariants`**: Proves canonical unified certificate assembly step preservation under system invariants.
+21. **`theorems_proven.THM_000009__canonical_unified_certificate`**: `canonical_unified_certificate` verified via `process_inbox.sh` pipeline intake.
