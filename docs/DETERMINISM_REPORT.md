@@ -11,7 +11,7 @@
 - **Lean Toolchain**: Pinned in `lean-toolchain` (`leanprover/lean4:v4.33.1`).
 - **Lake Build System**: Reproducible build tree verified via `lake build`.
 - **Executable Determinism**: `lake exe Main` produces canonical output `ChronoFold system active`.
-- **Pipeline Self-Test**: Deterministic theorem intake verification confirmed via `./scripts/self_test_pipeline.sh` and theorem receipts through `THM_000009__canonical_unified_certificate.json`.
+- **Pipeline Self-Test**: Deterministic theorem intake verification confirmed via `./scripts/self_test_pipeline.sh` and theorem receipts through `THM_000010__spectral_closure_verification.json`.
 
 ---
 

@@ -28,7 +28,9 @@ jobs:
       - name: Install Lean toolchain
         run: |
           set -euxo pipefail
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          for i in 1 2 3 4 5; do
+            curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain $(cat lean-toolchain) && break || sleep 5
+          done
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install system dependencies
@@ -48,7 +50,7 @@ jobs:
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          lake update
+          for i in 1 2 3 4 5; do lake update && break || sleep 5; done
 
       - name: Run verification engine
         run: |
