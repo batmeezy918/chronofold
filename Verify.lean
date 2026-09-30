@@ -338,4 +338,15 @@ theorem unified_certificate_step_preserves_invariants
     inv.omega (cert.certOp s) = inv.omega s ∧ inv.covariant (cert.certOp s) = inv.covariant s :=
   cert.h_admissible s
 
+/-- Spectral closure verification operator structure -/
+structure SpectralClosureOperator (α : Type u) (inv : Invariants α) where
+  spectralOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant spectralOp
+
+/-- Theorem: Spectral closure verification step preservation under invariants -/
+theorem spectral_closure_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (sc : SpectralClosureOperator α inv) (s : State α) :
+    inv.omega (sc.spectralOp s) = inv.omega s ∧ inv.covariant (sc.spectralOp s) = inv.covariant s :=
+  sc.h_admissible s
+
 end AGD
