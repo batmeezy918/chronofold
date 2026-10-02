@@ -1,0 +1,131 @@
+# Repository Census Report
+
+**Current State (ψ) Hash:** `122780364d50c27c43a9a4fca642d395eb7eafee2349e0f93b7aa463446895ec`
+**Artifact Count:** 124
+
+| Path | Type | Language | Size (Bytes) | Category |
+| --- | --- | --- | --- | --- |
+| `.github/workflows/build.yml` | file | YAML | 2108 | Workflows |
+| `.github/workflows/chronofold-auto.yml` | file | YAML | 2819 | Workflows |
+| `.github/workflows/chronofold.yml` | file | YAML | 2203 | Workflows |
+| `.github/workflows/coco.yml` | file | YAML | 1162 | Workflows |
+| `.github/workflows/flutter.yml` | file | YAML | 1175 | Workflows |
+| `.github/workflows/lean.yml` | file | YAML | 1321 | Workflows |
+| `.github/workflows/pages.yml` | file | YAML | 822 | Workflows |
+| `.github/workflows/snap-benchmark.yml` | file | YAML | 955 | Workflows |
+| `.github/workflows/snap.yml` | file | YAML | 1063 | Workflows |
+| `.github/workflows/theorem-intake.yml` | file | YAML | 982 | Workflows |
+| `AGENTS.md` | file | Markdown | 866 | Documentation |
+| `ChronoFold.lean` | file | Lean | 54 | Core Library |
+| `ChronoFold/Auto.lean` | file | Lean | 1076 | Core Library |
+| `ChronoFold/Auto/T1.lean` | file | Lean | 85 | Core Library |
+| `Chronofold.lean` | file | Lean | 111 | Core Library |
+| `FORCE_REAL_BUILD.sh` | file | Shell | 1259 | Scripts |
+| `Main.lean` | file | Lean | 77 | Executable |
+| `README.md` | file | Markdown | 308 | Documentation |
+| `S6_RESULTS.json` | file | JSON | 167 | Miscellaneous |
+| `S7_PLUS_RESULTS.json` | file | JSON | 168 | Miscellaneous |
+| `S7_RESULTS.json` | file | JSON | 166 | Miscellaneous |
+| `S7_STATS.json` | file | JSON | 876 | Miscellaneous |
+| `Verify.lean` | file | Lean | 36 | Core Library |
+| `benchmark.py` | file | Python | 2286 | Benchmarks |
+| `benchmark_snap.py` | file | Python | 379 | Benchmarks |
+| `bootstrap_chronofold_theorem_system.sh` | file | Shell | 8480 | Scripts |
+| `build.log` | file | Unknown | 198 | Miscellaneous |
+| `cement` | file | Unknown | 2534 | Miscellaneous |
+| `chronofold.zip` | file | Unknown | 186 | Miscellaneous |
+| `chronofold_auto_fix.sh` | file | Shell | 2237 | Scripts |
+| `chronofold_ci_engine.sh` | file | Shell | 765 | Scripts |
+| `chronofold_final_fix.sh` | file | Shell | 1701 | Scripts |
+| `chronofold_finalize_cycle.sh` | file | Shell | 1904 | Scripts |
+| `chronofold_full_system.sh` | file | Shell | 4104 | Scripts |
+| `chronofold_loop.sh` | file | Shell | 265 | Scripts |
+| `chronofold_pipeline_with_bench.sh` | file | Shell | 3113 | Scripts |
+| `chronofold_push.sh` | file | Shell | 263 | Scripts |
+| `cleanup.sh` | file | Shell | 103 | Scripts |
+| `coco_final_pipeline.sh` | file | Shell | 2700 | Scripts |
+| `coco_s6_benchmark.py` | file | Python | 1023 | Benchmarks |
+| `codex_prompt.txt` | file | Text | 1296 | Miscellaneous |
+| `disabled/Auto.lean` | file | Lean | 1076 | Disabled |
+| `disabled/Base.lean` | file | Lean | 148 | Disabled |
+| `disabled/Operators.lean` | file | Lean | 332 | Disabled |
+| `disabled/Theorems.lean` | file | Lean | 243 | Disabled |
+| `docs/index.html` | file | Unknown | 482 | Documentation |
+| `docs/theorem_ui_contract.md` | file | Markdown | 298 | Documentation |
+| `enable_theorem_pipeline.sh` | file | Shell | 2466 | Scripts |
+| `finalize_chronofold.sh` | file | Shell | 2129 | Scripts |
+| `fix_and_push_project.sh` | file | Shell | 1691 | Scripts |
+| `fix_binding_real.sh` | file | Shell | 1445 | Scripts |
+| `fix_chronofold_build.sh` | file | Shell | 1884 | Scripts |
+| `fix_chronofold_ci.sh` | file | Shell | 2430 | Scripts |
+| `fix_chronofold_full.sh` | file | Shell | 2228 | Scripts |
+| `fix_coco_build.sh` | file | Shell | 1458 | Scripts |
+| `fix_final_system.sh` | file | Shell | 934 | Scripts |
+| `fix_full_pipeline.sh` | file | Shell | 2325 | Scripts |
+| `fix_git_auth.sh` | file | Shell | 1417 | Scripts |
+| `fix_lake_manifest.sh` | file | Shell | 1165 | Scripts |
+| `fix_snap_dispatch.sh` | file | Shell | 1386 | Scripts |
+| `fix_snap_workflow.sh` | file | Shell | 2471 | Scripts |
+| `generate_theorem.py` | file | Python | 493 | Scripts |
+| `get_artifact.sh` | file | Shell | 699 | Scripts |
+| `install_chronofold_full.sh` | file | Shell | 1981 | Scripts |
+| `install_coco.sh` | file | Shell | 561 | Scripts |
+| `install_codex_scaffold.sh` | file | Shell | 3031 | Scripts |
+| `lake-manifest.json` | file | JSON | 116 | Build/Config |
+| `lakefile.lean` | file | Lean | 118 | Build/Config |
+| `lean-toolchain` | file | Unknown | 24 | Build/Config |
+| `logs/THM_000001__nat_add_zero_right.log` | file | Unknown | 59 | Miscellaneous |
+| `papers/thm_1774769187.md` | file | Markdown | 1058 | Documentation |
+| `push_chronofold_baseline.sh` | file | Shell | 2036 | Scripts |
+| `push_chronofold_fix.sh` | file | Shell | 2615 | Scripts |
+| `push_full_required.sh` | file | Shell | 1137 | Scripts |
+| `push_project.sh` | file | Shell | 1542 | Scripts |
+| `push_snap.sh` | file | Shell | 1227 | Scripts |
+| `real_results.json` | file | JSON | 587 | Miscellaneous |
+| `requirements.txt` | file | Text | 22 | Build/Config |
+| `results.json` | file | JSON | 565 | Miscellaneous |
+| `run_iqvf_coco_full.py` | file | Python | 1884 | Benchmarks |
+| `run_s6_coco_equivalent.py` | file | Python | 3111 | Benchmarks |
+| `run_s7_coco_equivalent.py` | file | Python | 3829 | Benchmarks |
+| `run_s7_plus.py` | file | Python | 2584 | Benchmarks |
+| `run_s8_covariance.py` | file | Python | 3721 | Benchmarks |
+| `s7_plus_full_pipeline.sh` | file | Shell | 3260 | Scripts |
+| `s7_stats.py` | file | Python | 1478 | Scripts |
+| `scripts/process_inbox.sh` | file | Shell | 1130 | Scripts |
+| `scripts/validate_theorem.py` | file | Python | 807 | Scripts |
+| `scripts/verify_codex_prereqs.sh` | file | Shell | 306 | Scripts |
+| `setup_coco_pipeline.sh` | file | Shell | 2634 | Scripts |
+| `snap_cma_harness.py` | file | Python | 1543 | Scripts |
+| `snap_coco_real.sh` | file | Shell | 2082 | Scripts |
+| `snap_core.py` | file | Python | 1172 | Scripts |
+| `snap_core_fixed.sh` | file | Shell | 1519 | Scripts |
+| `snap_final.py` | file | Python | 1831 | Scripts |
+| `snap_final_fixed.sh` | file | Shell | 1877 | Scripts |
+| `snap_final_verified.sh` | file | Shell | 2188 | Scripts |
+| `snap_fixed.py` | file | Python | 1526 | Scripts |
+| `snap_plus.py` | file | Python | 2883 | Scripts |
+| `snap_plus_benchmark.sh` | file | Shell | 3266 | Benchmarks |
+| `snap_plus_results.json` | file | JSON | 609 | Miscellaneous |
+| `snap_pp.py` | file | Python | 2544 | Scripts |
+| `snap_pp_benchmark.sh` | file | Shell | 2912 | Benchmarks |
+| `snap_pp_results.json` | file | JSON | 599 | Miscellaneous |
+| `snap_ppp_benchmark.sh` | file | Shell | 3074 | Benchmarks |
+| `snap_pure_evolution.py` | file | Python | 2205 | Scripts |
+| `snap_pure_evolution.sh` | file | Shell | 2609 | Scripts |
+| `snap_real_optimizer.py` | file | Python | 2439 | Scripts |
+| `snap_real_optimizer.sh` | file | Shell | 2816 | Scripts |
+| `snap_release.py` | file | Python | 1379 | Scripts |
+| `snap_release_final.sh` | file | Shell | 1730 | Scripts |
+| `snap_true.py` | file | Python | 1315 | Scripts |
+| `snap_true_final.sh` | file | Shell | 1662 | Scripts |
+| `snap_vs_cma.py` | file | Python | 1674 | Scripts |
+| `snap_vs_cma_benchmark.sh` | file | Shell | 3405 | Benchmarks |
+| `snap_vs_cma_fast.sh` | file | Shell | 2213 | Scripts |
+| `snap_vs_cma_real.sh` | file | Shell | 2759 | Scripts |
+| `snap_vs_cma_zero.sh` | file | Shell | 2055 | Scripts |
+| `templates/theorem_candidate.lean` | file | Lean | 166 | Core Library |
+| `theorem_receipts/THM_000001__nat_add_zero_right.json` | file | JSON | 156 | Miscellaneous |
+| `theorems_inbox/README.md` | file | Markdown | 737 | Documentation |
+| `theorems_inbox/THM_000001__smoke_test.lean` | file | Lean | 141 | Tests |
+| `theorems_proven/T1.lean` | file | Lean | 36 | Tests |
+| `theorems_rejected/THM_000001__nat_add_zero_right.lean` | file | Lean | 180 | Tests |
