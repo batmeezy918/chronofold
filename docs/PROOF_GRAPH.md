@@ -39,6 +39,7 @@
 |                           |    | memory_lineage_step_...   |   |                           |
 |                           |    | autonomous_closure_step_..|   |                           |
 |                           |    | unified_certificate_step_ |   |                           |
+|                           |    | spectral_closure_step_... |   |                           |
 +---------------------------+    +---------------------------+   +---------------------------+
 ```
 
@@ -65,3 +66,5 @@
 19. **`theorems_proven.THM_000008__autonomous_closure_integration`**: `autonomous_closure_integration` verified via `process_inbox.sh` pipeline intake.
 20. **`AGD.unified_certificate_step_preserves_invariants`**: Proves canonical unified certificate assembly step preservation under system invariants.
 21. **`theorems_proven.THM_000009__canonical_unified_certificate`**: `canonical_unified_certificate` verified via `process_inbox.sh` pipeline intake.
+22. **`AGD.spectral_closure_step_preserves_invariants`**: Proves spectral closure verification step preservation under system invariants.
+23. **`theorems_proven.THM_000010__spectral_closure_verification`**: `spectral_closure_verification` verified via `process_inbox.sh` pipeline intake.
