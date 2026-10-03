@@ -1,7 +1,7 @@
 # AGD Constitutional State Report
 
-**Timestamp**: 2026-03-31T15:00:00Z
-**Repository State**: ψₖ₊₂
+**Timestamp**: 2026-03-31T15:30:00Z
+**Repository State**: ψₖ₊₃
 **Constitutional Defect Set Cardinality**: |D(ψ)| = 0
 **Admissibility Status**: ADMISSIBLE
 
@@ -31,6 +31,7 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 | **MemoryLineageOperator** | `structure MemoryLineageOperator (α : Type u)` | Formally Verified |
 | **AutonomousClosureOperator** | `structure AutonomousClosureOperator (α : Type u)` | Formally Verified |
 | **UnifiedCertificateOperator** | `structure UnifiedCertificateOperator (α : Type u)` | Formally Verified |
+| **SpectralClosureOperator** | `structure SpectralClosureOperator (α : Type u)` | Formally Verified |
 
 ---
 
@@ -94,6 +95,13 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
   theorem unified_certificate_step_preserves_invariants
       (α : Type u) (inv : Invariants α) (cert : UnifiedCertificateOperator α inv) (s : State α) :
       inv.omega (cert.certOp s) = inv.omega s ∧ inv.covariant (cert.certOp s) = inv.covariant s
+  ```
+- **Spectral Closure Verification Theorem**: `spectral_closure_step_preserves_invariants`
+- **Formal Statement**:
+  ```lean
+  theorem spectral_closure_step_preserves_invariants
+      (α : Type u) (inv : Invariants α) (sc : SpectralClosureOperator α inv) (s : State α) :
+      inv.omega (sc.closureOp s) = inv.omega s ∧ inv.covariant (sc.closureOp s) = inv.covariant s
   ```
 - **Proof Status**: Discharged via Lean 4 without axioms or unproven dependencies.
 
