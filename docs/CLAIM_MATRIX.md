@@ -29,6 +29,8 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-019** | `theorems_proven/THM_000008__autonomous_closure_integration.lean` | Autonomous closure integration formal receipt (`autonomous_closure_integration`) | Lean 4 Intake Pipeline Receipt |
 | **CLM-020** | `Verify.lean` | Canonical unified certificate assembly step invariant preservation (`unified_certificate_step_preserves_invariants`) | Lean 4 Theorem |
 | **CLM-021** | `theorems_proven/THM_000009__canonical_unified_certificate.lean` | Canonical unified certificate formal receipt (`canonical_unified_certificate`) | Lean 4 Intake Pipeline Receipt |
+| **CLM-022** | `Verify.lean` | Spectral closure verification step invariant preservation (`spectral_closure_step_preserves_invariants`) | Lean 4 Theorem |
+| **CLM-023** | `theorems_proven/THM_000010__spectral_closure_verification.lean` | Spectral closure verification formal receipt (`spectral_closure_verification`) | Lean 4 Intake Pipeline Receipt |
 
 ---
 
