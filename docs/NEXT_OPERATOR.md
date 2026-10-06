@@ -1,17 +1,17 @@
 # Next Admissible Operator Recommendation
 
-**Current System State**: $\psi_{k+3}$
+**Current System State**: $\psi_{k+4}$
 **Defect Cardinality**: $|D(\psi)| = 0$
 
 ---
 
-## Completed Operator: $O_{\text{spectral\_closure\_verification}}$
-- **Status**: Discharged via `Verify.lean` (`spectral_closure_step_preserves_invariants`) and `THM_000010__spectral_closure_verification.lean`.
+## Completed Operator: $O_{\text{complete\_system\_closure\_and\_audit}}$
+- **Status**: Discharged via `Verify.lean`, `lake build`, pipeline intake self-test, and benchmark replay.
 - **Defect Delta**: $\Delta D = 0$.
 
 ---
 
-## Recommended Next Operator: $O_{\text{complete\_system\_closure\_and\_audit}}$
+## Recommended Next Operator: $O_{\text{continuous_repository_maintenance}}$
 
 ### Operator Details
 - **Objective**: Maintain continuous repository verification, invariant integrity, and zero defect cardinality across Lean specifications, benchmarks, and documentation.
