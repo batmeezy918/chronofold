@@ -1,0 +1,53 @@
+name: Nrebbi-El Simulation Kernel
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/Chronofold/NrebbiElSimulation.lean'
+      - '.github/workflows/nrebbi-el-simulation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Install project toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f lean-toolchain
+          TOOLCHAIN="$(cat lean-toolchain)"
+          elan toolchain install "$TOOLCHAIN"
+          elan default "$TOOLCHAIN"
+          lake --version
+          lean --version
+
+      - name: Compile standalone kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean src/Chronofold/NrebbiElSimulation.lean
+
+      - name: Fail closed on proof placeholders
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE '\b(sorry|admit|axiom|unsafe)\b' src/Chronofold/NrebbiElSimulation.lean; then
+            echo 'Forbidden proof placeholder or unsafe/axiomatic declaration detected.'
+            exit 1
+          fi
+          echo 'No forbidden proof placeholders found.'
