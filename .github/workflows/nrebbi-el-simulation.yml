@@ -46,8 +46,48 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE '\b(sorry|admit|axiom|unsafe)\b' src/Chronofold/NrebbiElSimulation.lean; then
-            echo 'Forbidden proof placeholder or unsafe/axiomatic declaration detected.'
-            exit 1
-          fi
-          echo 'No forbidden proof placeholders found.'
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          path = Path("src/Chronofold/NrebbiElSimulation.lean")
+          source = path.read_text()
+          # Remove Lean line comments and nested block comments first.
+          code = []
+          i = 0
+          depth = 0
+          while i < len(source):
+              if depth:
+                  if source.startswith("/-", i):
+                      depth += 1
+                      code.extend("  ")
+                      i += 2
+                  elif source.startswith("-/", i):
+                      depth -= 1
+                      code.extend("  ")
+                      i += 2
+                  else:
+                      code.append("\\n" if source[i] == "\\n" else " ")
+                      i += 1
+              elif source.startswith("/-", i):
+                  depth = 1
+                  code.extend("  ")
+                  i += 2
+              elif source.startswith("--", i):
+                  while i < len(source) and source[i] != "\\n":
+                      code.append(" ")
+                      i += 1
+              else:
+                  code.append(source[i])
+                  i += 1
+
+          stripped = "".join(code)
+          pattern = re.compile(r"\\b(?:sorry|admit|axiom|unsafe)\\b")
+          matches = [(stripped.count("\\n", 0, m.start()) + 1, m.group(0))
+                     for m in pattern.finditer(stripped)]
+          if matches:
+              for line, token in matches:
+                  print(f"{path}:{line}: forbidden token {token!r}")
+              raise SystemExit("Forbidden proof placeholder/declaration token detected.")
+          print("No forbidden proof/declaration tokens found in Lean code.")
+          PY
