@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          lake env lean src/Chronofold/NrebbiElSimulation.lean
+          lean src/Chronofold/NrebbiElSimulation.lean
 
       - name: Fail closed on proof placeholders
         shell: bash
