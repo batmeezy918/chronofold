@@ -270,4 +270,24 @@ theorem nrebbi_el_simulation_theorem
   · exact admissible_implies_identity_simulation π
   · exact admissible_implies_recursive_identity_simulation π
 
+
+/-- Recursive simulation is exactly finite trajectory correspondence.
+
+This packages the reusable induction result as the direct bridge from the
+one-step quotient relation to equality of every projected concrete trajectory.
+It remains conditional on the supplied concrete operators and projection
+satisfying the simulation contract; it is not by itself a performance claim.
+-/
+theorem recursive_simulation_iff_exact_trajectory
+    {H : Type u} {Q : Type v}
+    (π : Projection H Q) (T : Operator H) (Tbar : QuotientOperator Q) :
+    RecursivelySimulates π T Tbar ↔ ExactTrajectoryCorrespondence π T Tbar := by
+  constructor
+  · intro h
+    exact (simulation_iff_exact_trajectory π T Tbar).mp
+      ((simulation_iff_recursive_simulation π T Tbar).mpr h)
+  · intro h
+    exact (simulation_iff_recursive_simulation π T Tbar).mp
+      ((simulation_iff_exact_trajectory π T Tbar).mpr h)
+
 end NrebbiElSimulation
