@@ -137,7 +137,7 @@ theorem descends_implies_recursive_simulates
       have hsim := ih x q hx
       rcases hsim with ⟨q', hq', hgraph'⟩
       refine ⟨Tbar q', ?_, ?_⟩
-      · rw [hq']
+      · simpa [iterate] using congrArg Tbar hq'
       · calc
           π (iterate T (n + 1) x)
               = π (T (iterate T n x)) := rfl
