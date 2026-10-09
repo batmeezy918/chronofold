@@ -67,14 +67,14 @@ jobs:
                       code.extend("  ")
                       i += 2
                   else:
-                      code.append("\\n" if source[i] == "\\n" else " ")
+                      code.append("\n" if source[i] == "\n" else " ")
                       i += 1
               elif source.startswith("/-", i):
                   depth = 1
                   code.extend("  ")
                   i += 2
               elif source.startswith("--", i):
-                  while i < len(source) and source[i] != "\\n":
+                  while i < len(source) and source[i] != "\n":
                       code.append(" ")
                       i += 1
               else:
@@ -82,8 +82,8 @@ jobs:
                   i += 1
 
           stripped = "".join(code)
-          pattern = re.compile(r"\\b(?:sorry|admit|axiom|unsafe)\\b")
-          matches = [(stripped.count("\\n", 0, m.start()) + 1, m.group(0))
+          pattern = re.compile(r"\b(?:sorry|admit|axiom|unsafe)\b")
+          matches = [(stripped.count("\n", 0, m.start()) + 1, m.group(0))
                      for m in pattern.finditer(stripped)]
           if matches:
               for line, token in matches:
