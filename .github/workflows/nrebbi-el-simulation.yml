@@ -1,0 +1,97 @@
+name: Nrebbi-El Simulation Kernel
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/Chronofold/NrebbiElSimulation.lean'
+      - '.github/workflows/nrebbi-el-simulation.yml'
+  push:
+    paths:
+      - 'src/Chronofold/NrebbiElSimulation.lean'
+      - '.github/workflows/nrebbi-el-simulation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Install project toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f lean-toolchain
+          TOOLCHAIN="$(cat lean-toolchain)"
+          elan toolchain install "$TOOLCHAIN"
+          elan default "$TOOLCHAIN"
+          lake --version
+          lean --version
+
+      - name: Compile standalone kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean src/Chronofold/NrebbiElSimulation.lean
+
+      - name: Fail closed on proof placeholders
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          path = Path("src/Chronofold/NrebbiElSimulation.lean")
+          source = path.read_text()
+          # Remove Lean line comments and nested block comments first.
+          code = []
+          i = 0
+          depth = 0
+          while i < len(source):
+              if depth:
+                  if source.startswith("/-", i):
+                      depth += 1
+                      code.extend("  ")
+                      i += 2
+                  elif source.startswith("-/", i):
+                      depth -= 1
+                      code.extend("  ")
+                      i += 2
+                  else:
+                      code.append("\n" if source[i] == "\n" else " ")
+                      i += 1
+              elif source.startswith("/-", i):
+                  depth = 1
+                  code.extend("  ")
+                  i += 2
+              elif source.startswith("--", i):
+                  while i < len(source) and source[i] != "\n":
+                      code.append(" ")
+                      i += 1
+              else:
+                  code.append(source[i])
+                  i += 1
+
+          stripped = "".join(code)
+          pattern = re.compile(r"\b(?:sorry|admit|axiom|unsafe)\b")
+          matches = [(stripped.count("\n", 0, m.start()) + 1, m.group(0))
+                     for m in pattern.finditer(stripped)]
+          if matches:
+              for line, token in matches:
+                  print(f"{path}:{line}: forbidden token {token!r}")
+              raise SystemExit("Forbidden proof placeholder/declaration token detected.")
+          print("No forbidden proof/declaration tokens found in Lean code.")
+          PY

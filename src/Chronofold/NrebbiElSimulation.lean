@@ -69,7 +69,7 @@ def RecursivelySimulates {H : Type u} {Q : Type v}
     (π : Projection H Q) (T : Operator H)
     (Tbar : QuotientOperator Q) : Prop :=
   ∀ n x q,
-    GraphRel π (iterate T n x) q →
+    GraphRel π x q →
       ∃ q', q' = iterate Tbar n q ∧
         GraphRel π (iterate T n x) q'
 
@@ -134,19 +134,15 @@ theorem descends_implies_recursive_simulates
       rfl
   | succ n ih =>
       intro x q hx
-      have hprev :
-          GraphRel π (iterate T n x) q := by
-        exact hx
-      have hsim := ih x q hprev
+      have hsim := ih x q hx
       rcases hsim with ⟨q', hq', hgraph'⟩
       refine ⟨Tbar q', ?_, ?_⟩
-      · rw [hq']
+      · simpa [iterate] using congrArg Tbar hq'
       · calc
           π (iterate T (n + 1) x)
               = π (T (iterate T n x)) := rfl
           _ = Tbar (π (iterate T n x)) := h (iterate T n x)
           _ = Tbar q' := by rw [hgraph']
-
 /-! ## Recursive simulation implies one-step simulation -/
 theorem recursively_simulates_implies_simulates
     {H : Type u} {Q : Type v}
