@@ -21,7 +21,7 @@ jobs:
           import json
           d=json.load(open("artifacts/maximal-elevation/receipt.json"))
           assert d["promotion"] is True, d
-          assert len(d["gates"]) == 7, d
+          assert len(d["gates"]) == 8, d
           print("MAXIMAL_ELEVATION_PROMOTION=1")
           print("RECEIPT_SHA256="+d["sha256"])
           PY
