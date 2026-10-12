@@ -74,10 +74,11 @@ def nested_gate():
     n,q1,q2=16,8,4; C1=[x%q1 for x in range(n)]; C2=[x%q2 for x in range(q1)]
     cases=10000; failures=0
     for _ in range(cases):
-        bar1=[rng.randrange(q1) for _ in range(q1)]
+        bar2=[rng.randrange(q2) for _ in range(q2)]
+        bar1=[rng.choice([y for y in range(q1) if C2[y]==bar2[c%q2]]) for c in range(q1)]
         T=tuple(rng.choice([y for y in range(n) if C1[y]==bar1[C1[x]]]) for x in range(n))
-        bar2=induced(bar1,C2,q2)
-        if bar2 is None: failures+=1; continue
+        derived=induced(bar1,C2,q2)
+        if derived != bar2: failures+=1; continue
         # Verify composed quotient dynamics, not class preservation.
         for x in range(n):
             y=x; c=C2[C1[x]]
