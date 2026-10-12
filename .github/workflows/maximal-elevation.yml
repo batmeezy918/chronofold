@@ -1,0 +1,31 @@
+name: Counterexample-Guided Maximal Elevation
+on:
+  push:
+    paths: ["tests/maximal_elevation/**","docs/MAXIMAL_ELEVATION_PROTOCOL.md",".github/workflows/maximal-elevation.yml"]
+  pull_request:
+    paths: ["tests/maximal_elevation/**","docs/MAXIMAL_ELEVATION_PROTOCOL.md",".github/workflows/maximal-elevation.yml"]
+  workflow_dispatch:
+jobs:
+  maximal-elevation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run maximal elevation
+        run: |
+          mkdir -p artifacts/maximal-elevation
+          python3 tests/maximal_elevation/cg_maximal_elevation.py | tee artifacts/maximal-elevation/receipt.json
+      - name: Validate promotion
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open("artifacts/maximal-elevation/receipt.json"))
+          assert d["promotion"] is True, d
+          assert len(d["gates"]) == 7, d
+          print("MAXIMAL_ELEVATION_PROMOTION=1")
+          print("RECEIPT_SHA256="+d["sha256"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maximal-elevation-receipt
+          path: artifacts/maximal-elevation/receipt.json
