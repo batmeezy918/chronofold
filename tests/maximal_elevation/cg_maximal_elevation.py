@@ -6,7 +6,11 @@ from itertools import product
 SEED=0xC0FFEE
 rng=random.Random(SEED)
 
+def well_defined(T,C,q):
+    return induced(T,C,q) is not None
+
 def descends(T,C):
+    # Stronger invariant-preservation predicate, retained for mutation tests.
     return all(C[T[x]]==C[x] for x in range(len(T)))
 def induced(T,C,q):
     out=[None]*q
@@ -28,7 +32,7 @@ def exhaustive_gate():
                 for _ in range(9):
                     if C[y]!=bc: iterative_fail+=1; break
                     y=T[y]; bc=bar[bc]
-        if valid_now != descends(T,C):
+        if valid_now != well_defined(T,C,q):
             false_accept+=1
     return {"states":n,"classes":q,"operators":total,"valid_descents":valid,
             "false_accepts":false_accept,"iterative_failures":iterative_fail,
@@ -59,11 +63,11 @@ def metamorphic_gate():
     for _ in range(cases):
         bar=[rng.randrange(q) for _ in range(q)]
         T=tuple(rng.choice([y for y in range(n) if C[y]==bar[C[x]]]) for x in range(n))
-        if not descends(T,C): failures+=1; continue
+        if not well_defined(T,C,q): failures+=1; continue
         p=list(range(n)); rng.shuffle(p); inv={p[i]:i for i in range(n)}
         C2=[C[inv[i]] for i in range(n)]
         T2=tuple(p[T[inv[i]]] for i in range(n))
-        failures += not descends(T2,C2)
+        failures += not well_defined(T2,C2,q)
     return {"cases":cases,"failures":failures,"pass":failures==0}
 
 def nested_gate():
@@ -74,10 +78,11 @@ def nested_gate():
         T=tuple(rng.choice([y for y in range(n) if C1[y]==bar1[C1[x]]]) for x in range(n))
         bar2=induced(bar1,C2,q2)
         if bar2 is None: failures+=1; continue
+        # Verify composed quotient dynamics, not class preservation.
         for x in range(n):
             y=x; c=C2[C1[x]]
             for _ in range(13):
-                if C2[C1[y]]!=c: failures+=1; break
+                if C2[C1[y]] != c: failures+=1; break
                 y=T[y]; c=bar2[c]
     return {"cases":cases,"iterations":13,"failures":failures,"pass":failures==0}
 
