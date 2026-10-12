@@ -25,7 +25,20 @@ jobs:
           print("MAXIMAL_ELEVATION_PROMOTION=1")
           print("RECEIPT_SHA256="+d["sha256"])
           PY
+      - name: Run minimal-frontier candidate
+        run: python3 tests/maximal_elevation/minimal_frontier_candidate.py | tee artifacts/maximal-elevation/minimal-frontier-receipt.json
+      - name: Validate minimal-frontier candidate
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open("artifacts/maximal-elevation/minimal-frontier-receipt.json"))
+          assert d["pass"] is True, d
+          assert d["correctness_failures"] == 0, d
+          assert d["adversarial_invalidation_pass"] is True, d
+          print("MINIMAL_FRONTIER_CANDIDATE_PASS=1")
+          print("MINIMAL_FRONTIER_RECEIPT_SHA256="+d["sha256"])
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: maximal-elevation-receipt
-          path: artifacts/maximal-elevation/receipt.json
+          path: artifacts/maximal-elevation/*.json
