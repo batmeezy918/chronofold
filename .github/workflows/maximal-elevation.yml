@@ -35,8 +35,24 @@ jobs:
           assert d["pass"] is True, d
           assert d["correctness_failures"] == 0, d
           assert d["adversarial_invalidation_pass"] is True, d
+          assert d["reuse_time_ratio"] > 1, d
           print("MINIMAL_FRONTIER_CANDIDATE_PASS=1")
           print("MINIMAL_FRONTIER_RECEIPT_SHA256="+d["sha256"])
+          PY
+      - name: Run end-to-end elevation validation
+        run: python3 tests/maximal_elevation/e2e_elevation_validation.py | tee artifacts/maximal-elevation/e2e-elevation-receipt.json
+      - name: Validate end-to-end promotion
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open("artifacts/maximal-elevation/e2e-elevation-receipt.json"))
+          assert d["promotion"] is True, d
+          assert d["gates"]["correctness"] is True, d
+          assert d["gates"]["mutation_invalidation"] is True, d
+          assert d["gates"]["end_to_end_minimal_frontier"] is True, d
+          assert d["gates"]["end_to_end_incremental"] is True, d
+          print("E2E_ELEVATION_PROMOTION=1")
+          print("E2E_RECEIPT_SHA256="+d["sha256"])
           PY
       - uses: actions/upload-artifact@v4
         with:
