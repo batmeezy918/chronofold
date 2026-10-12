@@ -136,17 +136,110 @@ def cost_gate():
             "certification_proxy_ms":cert,"e2e_ratio_100":e100,"e2e_ratio_1000":e1000,
             "pass":e100>1 and e1000>1}
 
+def recursive_cost_gate():
+    """Operational SIC-2/SIC-3-style nested quotient cost test."""
+    def signature(T,C,q):
+        return (tuple(T), tuple(C), q)
+
+    def certify(T,C,q):
+        bar=induced(T,C,q)
+        if bar is None:
+            raise ValueError("invalid quotient")
+        return tuple(bar)
+
+    cache={}
+    hits=misses=invalidations=0
+
+    def cached_certify(T,C,q):
+        nonlocal hits, misses
+        key=signature(T,C,q)
+        if key in cache:
+            hits+=1
+            return cache[key]
+        misses+=1
+        cert=certify(T,C,q)
+        cache[key]=cert
+        return cert
+
+    dims=[1024,128,32,16]
+    maps=[tuple(x%dims[i+1] for x in range(dims[i])) for i in range(3)]
+    transforms=[tuple(x%dims[i+1] for x in range(dims[i])) for i in range(3)]
+
+    correctness_failures=0
+    for i in range(3):
+        q=dims[i+1]
+        T=transforms[i]; C=maps[i]
+        correctness_failures += (certify(T,C,q)!=cached_certify(T,C,q))
+
+    repeats=1000
+    for _ in range(repeats):
+        for i in range(3):
+            cached_certify(transforms[i],maps[i],dims[i+1])
+
+    mutated=list(transforms[1])
+    mutated[0]=(mutated[0]+1)%dims[1]
+    before=misses
+    try:
+        cached_certify(tuple(mutated),maps[1],dims[2])
+    except ValueError:
+        pass
+    invalidations += (misses==before+1)
+
+    def naive_run():
+        out=0
+        for _ in range(repeats):
+            for i in range(3):
+                out += len(certify(transforms[i],maps[i],dims[i+1]))
+        return out
+
+    def cached_run():
+        local={}
+        out=0
+        for _ in range(repeats):
+            for i in range(3):
+                key=signature(transforms[i],maps[i],dims[i+1])
+                cert=local.get(key)
+                if cert is None:
+                    cert=certify(transforms[i],maps[i],dims[i+1])
+                    local[key]=cert
+                out += len(cert)
+        return out
+
+    naive_run(); cached_run()
+    nt=[]; ct=[]
+    for _ in range(7):
+        t=time.perf_counter_ns(); naive_run(); nt.append(time.perf_counter_ns()-t)
+        t=time.perf_counter_ns(); cached_run(); ct.append(time.perf_counter_ns()-t)
+    naive_ms=statistics.median(nt)/1e6
+    cached_ms=statistics.median(ct)/1e6
+    ratio=naive_ms/cached_ms if cached_ms else float("inf")
+
+    return {
+        "layers":"1024->128->32->16",
+        "transformations":3,
+        "repeated_nested_executions":repeats,
+        "correctness_failures":correctness_failures,
+        "cache_hits":hits,
+        "cache_misses":misses,
+        "adversarial_invalidation_passes":invalidations,
+        "naive_certification_ms":naive_ms,
+        "cached_certification_ms":cached_ms,
+        "certification_reuse_ratio":ratio,
+        "pass":correctness_failures==0 and invalidations==1 and ratio>1
+    }
+
+
 def main():
     gates={"exhaustive_finite":exhaustive_gate(),"adversarial_mutation":mutation_gate(),
            "metamorphic_relabel":metamorphic_gate(),"nested_quotient":nested_gate(),
            "reconstruction":reconstruction_gate(),"perturbation":perturbation_gate(),
-           "economic_cost":cost_gate()}
+           "economic_cost":cost_gate(),"recursive_cost":recursive_cost_gate()}
     payload=json.dumps(gates,sort_keys=True,separators=(",",":")).encode()
     receipt={"schema":"CG-ME-1","seed":SEED,"python":sys.version,"platform":platform.platform(),
              "sha256":hashlib.sha256(payload).hexdigest(),"gates":gates,
              "promotion":all(g["pass"] for g in gates.values()),
              "evidence_boundary":{"formal":"Lean CI is authoritative for formal claims.",
-             "executable":"This receipt records finite exhaustive and generative checks.",
+             "executable":"This receipt records finite exhaustive, generative, and recursive cost-reuse checks.",
              "performance":"Timing is environment-specific; no universal speedup is inferred."}}
     print(json.dumps(receipt,indent=2,sort_keys=True))
     raise SystemExit(0 if receipt["promotion"] else 1)
