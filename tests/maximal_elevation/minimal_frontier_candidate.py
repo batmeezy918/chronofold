@@ -102,7 +102,7 @@ def run():
         "reuse_time_ratio":ratio,
         "python":sys.version,
         "platform":platform.platform(),
-        "pass":failures==0 and invalidation_pass and len(frontier_payload)<len(full_payload) and ratio>0
+        "pass":failures==0 and invalidation_pass and len(frontier_payload)<len(full_payload) and ratio>1 and len(full_payload)>len(frontier_payload)
     }
     result["sha256"]=hashlib.sha256(json.dumps(result,sort_keys=True,separators=(",",":")).encode()).hexdigest()
     print(json.dumps(result,indent=2,sort_keys=True))
