@@ -86,5 +86,6 @@ rm -f theorem_receipts/THM_999999__selftest_pass.json
 rm -f theorem_receipts/THM_999998__selftest_fail.json
 rm -f logs/THM_999999__selftest_pass.log
 rm -f logs/THM_999998__selftest_fail.log
+git reset HEAD theorems_proven/ theorems_rejected/ theorem_receipts/ logs/ theorems_inbox/ theorems_checked/ 2>/dev/null || true
 
 echo "SELF-TEST PASSED"
