@@ -31,11 +31,12 @@ def s6_optimize(problem, budget=1000):
     return problem(x)
 
 observer = cocoex.Observer("bbob", "result_folder: S6_RESULTS")
-suite = cocoex.Suite("bbob", "", "dimensions:10", observer)
+suite = cocoex.Suite("bbob", "", "dimensions:10")  # Observer is not a constructor argument
 
 print("RUNNING S6 COCO")
 
 for problem in suite:
+    problem.observe_with(observer)  # correct attachment point
     print(problem.id)
     print("Final:", s6_optimize(problem))
 
