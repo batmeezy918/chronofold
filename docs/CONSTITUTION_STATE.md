@@ -1,7 +1,7 @@
 # AGD Constitutional State Report
 
-**Timestamp**: 2026-03-31T18:00:00Z
-**Repository State**: ψₖ₊₅
+**Timestamp**: 2026-03-31T20:00:00Z
+**Repository State**: ψₖ₊₆
 **Constitutional Defect Set Cardinality**: |D(ψ)| = 0
 **Admissibility Status**: ADMISSIBLE
 
@@ -114,4 +114,5 @@ The Lean metamodel serves as the single source of truth for the AGD/CTG system, 
 - **Unsafe / Unjustified Axioms**: 0
 - **Broken Proofs**: 0
 - **Workflow / Build Failures**: 0
+- **Repaired Artifacts**: `elan-init.sh` replaced with valid functional wrapper.
 - **Current Defect Measure |D(ψ)|**: 0

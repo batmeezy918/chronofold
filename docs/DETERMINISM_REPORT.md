@@ -1,7 +1,7 @@
 # AGD Determinism & Replayability Audit
 
-**Timestamp**: 2026-03-31T18:00:00Z
-**Repository State**: ψₖ₊₅
+**Timestamp**: 2026-03-31T20:00:00Z
+**Repository State**: ψₖ₊₆
 **Toolchain**: Lean v4.33.1 / Lake 5.0.0
 **Python Runtime**: Python 3.12.13
 **Deterministic Environment**: Linux x86_64 sandbox
@@ -13,6 +13,7 @@
 - **Lean Toolchain**: Pinned in `lean-toolchain` (`leanprover/lean4:v4.33.1`).
 - **Lake Build System**: Reproducible build tree verified via `lake build`.
 - **Executable Determinism**: `lake exe Main` produces canonical output `ChronoFold system active`.
+- **Elan Initializer**: Repaired `elan-init.sh` as a valid executable installer wrapper.
 - **Pipeline Self-Test**: Deterministic theorem intake verification confirmed via `./scripts/self_test_pipeline.sh` and theorem receipts through `THM_000010__spectral_closure_verification.json`.
 
 ---
