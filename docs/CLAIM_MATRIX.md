@@ -41,6 +41,7 @@ Every technical claim across Lean specifications, Python optimizer implementatio
 | **CLM-101** | `benchmark.py` | SNAP gradient optimizer convergence on Sphere benchmark (dim 5 & 10) | `real_results.json` |
 | **CLM-102** | `benchmark.py` | SNAP vs CMA-ES comparative performance on Rastrigin & Rosenbrock benchmarks | `real_results.json` |
 | **CLM-103** | `scripts/process_inbox.sh` & `scripts/self_test_pipeline.sh` | Automated inbox theorem validation, pipeline self-test, and receipt generation | `theorem_receipts/*.json` & `logs/*.log` |
+| **CLM-104** | `elan-init.sh` | Deterministic Elan installation wrapper script execution | Clean local execution and workflow reproducibility |
 
 ---
 
