@@ -1,6 +1,6 @@
 # Next Admissible Operator Recommendation
 
-**Current System State**: $\psi_{k+5}$
+**Current System State**: $\psi_{k+6}$
 **Defect Cardinality**: $|D(\psi)| = 0$
 
 ---
