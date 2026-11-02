@@ -349,4 +349,15 @@ theorem spectral_closure_step_preserves_invariants
     inv.omega (sc.closureOp s) = inv.omega s ∧ inv.covariant (sc.closureOp s) = inv.covariant s :=
   sc.h_admissible s
 
+/-- Continuous repository maintenance operator structure -/
+structure MaintenanceOperator (α : Type u) (inv : Invariants α) where
+  maintOp : Operator α
+  h_admissible : Admissible α inv.omega inv.covariant maintOp
+
+/-- Theorem: Continuous repository maintenance step preservation under invariants -/
+theorem maintenance_step_preserves_invariants
+    (α : Type u) (inv : Invariants α) (mo : MaintenanceOperator α inv) (s : State α) :
+    inv.omega (mo.maintOp s) = inv.omega s ∧ inv.covariant (mo.maintOp s) = inv.covariant s :=
+  mo.h_admissible s
+
 end AGD
